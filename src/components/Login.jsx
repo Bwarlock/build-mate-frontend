@@ -4,6 +4,10 @@ import { useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
+import CustomTypingText from "./CustomTypingText";
+import { TypeAnimation } from "react-type-animation";
+
 // const onFinish = (values) => {
 // 	console.log("Success:", values);
 // };
@@ -40,79 +44,120 @@ const Login = () => {
 			});
 	};
 	return (
-		<Form
-			name="login"
-			labelCol={{
-				span: 8,
-			}}
-			wrapperCol={{
-				span: 16,
-			}}
-			style={{
-				maxWidth: 600,
-			}}
-			initialValues={{
-				remember: true,
-			}}
-			// onFinish={onFinish}
-			// onFinishFailed={onFinishFailed}
-			autoComplete="off">
-			<Form.Item
-				label="Email"
-				name="email"
-				rules={[
-					{
-						required: true,
-						message: "Please input your Email!",
-					},
-				]}>
-				<Input
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, email: e.target.value };
-						});
+		<div className="full">
+			<nav className="menuBar">
+				{/* <div className="logo">
+						<a href="">logo</a>
+					</div> */}
+				<TypeAnimation
+					sequence={[
+						"Build",
+						1000, // wait 1s before replacing "Mice" with "Hamsters"
+						"Build-",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-",
+						1000,
+						"Build",
+						1000,
+						"",
+						2000,
+					]}
+					wrapper="span"
+					speed={50}
+					style={{
+						fontSize: "5em",
+						// fontWeight: "Bold",
+						fontFamily:
+							"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+						display: "inline-block",
 					}}
+					repeat={Infinity}
 				/>
-			</Form.Item>
-
-			<Form.Item
-				label="Password"
-				name="password"
-				rules={[
-					{
-						required: true,
-						message: "Please input your password!",
-					},
-				]}>
-				<Input.Password
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, password: e.target.value };
-						});
+			</nav>
+			<div className="centered">
+				<Form
+					name="login"
+					labelCol={{
+						span: 8,
 					}}
-				/>
-			</Form.Item>
+					wrapperCol={{
+						span: 16,
+					}}
+					style={{
+						maxWidth: 600,
+						backgroundColor: "white",
+						padding: "2rem 2rem 0rem",
+						boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+						borderRadius: "10px",
+					}}
+					initialValues={{
+						remember: true,
+					}}
+					// onFinish={onFinish}
+					// onFinishFailed={onFinishFailed}
+					autoComplete="off">
+					<Form.Item
+						label="Email"
+						name="email"
+						rules={[
+							{
+								required: true,
+								message: "Please input your Email!",
+							},
+						]}>
+						<Input
+							onChange={(e) => {
+								setValues((val) => {
+									return { ...val, email: e.target.value };
+								});
+							}}
+						/>
+					</Form.Item>
 
-			<Form.Item
-				name="remember"
-				valuePropName="checked"
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
-				<Checkbox>Remember me</Checkbox>
-			</Form.Item>
+					<Form.Item
+						label="Password"
+						name="password"
+						rules={[
+							{
+								required: true,
+								message: "Please input your password!",
+							},
+						]}>
+						<Input.Password
+							onChange={(e) => {
+								setValues((val) => {
+									return { ...val, password: e.target.value };
+								});
+							}}
+						/>
+					</Form.Item>
 
-			<Form.Item
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
-				<Button type="primary" htmlType="submit" onClick={handleSubmit}>
-					Submit
-				</Button>
-			</Form.Item>
-		</Form>
+					<Form.Item
+						name="remember"
+						valuePropName="checked"
+						wrapperCol={{
+							offset: 8,
+							span: 16,
+						}}>
+						<Checkbox>Remember me</Checkbox>
+					</Form.Item>
+
+					<Form.Item
+						wrapperCol={{
+							offset: 8,
+							span: 16,
+						}}>
+						<Button type="primary" htmlType="submit" onClick={handleSubmit}>
+							Submit
+						</Button>
+					</Form.Item>
+				</Form>
+			</div>
+		</div>
 	);
 };
 export default Login;

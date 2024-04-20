@@ -10,13 +10,14 @@ import Dashboard from "./components/Dashboard";
 import Staff from "./components/Staff";
 import Tasks from "./components/Tasks";
 import Add_Task from "./components/Add_Task";
+import LandingPage from "./components/LandingPage";
 
 function App() {
 	return (
 		<AuthProvider>
 			<BrowserRouter>
 				<Routes>
-					<Route path="/" element={<Dashboard />} />
+					<Route path="/" element={<LandingPage />}></Route>
 					<Route path="/login" element={<Login />}></Route>
 					<Route path="/register" element={<Register />}></Route>
 					<Route path="/project" element={<Project />}></Route>

@@ -3,6 +3,7 @@ import { Form, Input, Button, message, Steps, theme, Select } from "antd";
 import axios from "axios";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
+import { TypeAnimation } from "react-type-animation";
 
 const Register = () => {
 	//Register Page Component
@@ -251,7 +252,7 @@ const Register = () => {
 		lineHeight: "260px",
 		textAlign: "center",
 		color: token.colorTextTertiary,
-		backgroundColor: token.colorFillAlter,
+		// backgroundColor: token.colorFillAlter,
 		borderRadius: token.borderRadiusLG,
 		border: `1px dashed ${token.colorBorder}`,
 		marginTop: 16,
@@ -261,6 +262,9 @@ const Register = () => {
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
+		backgroundColor: "white",
+		padding: "2rem 2rem 0rem",
+		boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 	};
 	axios.defaults.withCredentials = true;
 	const handleSubmit = () => {
@@ -282,34 +286,69 @@ const Register = () => {
 	};
 
 	return (
-		<>
-			<Steps current={current} items={items} />
-			<div style={contentStyle}>{steps[current].content}</div>
-			<div
-				style={{
-					marginTop: 24,
-				}}>
-				{current < steps.length - 1 && (
-					<Button type="primary" onClick={() => next()}>
-						Next
-					</Button>
-				)}
-				{current === steps.length - 1 && (
-					<Button type="primary" onClick={handleSubmit}>
-						Done
-					</Button>
-				)}
-				{current > 0 && (
-					<Button
-						style={{
-							margin: "0 8px",
-						}}
-						onClick={() => prev()}>
-						Previous
-					</Button>
-				)}
+		<div className="full">
+			<nav className="menuBar">
+				{/* <div className="logo">
+						<a href="">logo</a>
+					</div> */}
+				<TypeAnimation
+					sequence={[
+						"Build",
+						1000, // wait 1s before replacing "Mice" with "Hamsters"
+						"Build-",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-",
+						1000,
+						"Build",
+						1000,
+						"",
+						2000,
+					]}
+					wrapper="span"
+					speed={50}
+					style={{
+						fontSize: "5em",
+						// fontWeight: "Bold",
+						fontFamily:
+							"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+						display: "inline-block",
+					}}
+					repeat={Infinity}
+				/>
+			</nav>
+			<div className="">
+				<Steps current={current} items={items} />
+				<div style={contentStyle}>{steps[current].content}</div>
+				<div
+					style={{
+						marginTop: 24,
+					}}>
+					{current < steps.length - 1 && (
+						<Button type="primary" onClick={() => next()}>
+							Next
+						</Button>
+					)}
+					{current === steps.length - 1 && (
+						<Button type="primary" onClick={handleSubmit}>
+							Done
+						</Button>
+					)}
+					{current > 0 && (
+						<Button
+							style={{
+								margin: "0 8px",
+							}}
+							onClick={() => prev()}>
+							Previous
+						</Button>
+					)}
+				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 export default Register;

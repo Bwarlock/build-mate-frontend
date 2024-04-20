@@ -80,6 +80,10 @@ function Add_Task() {
 			}}
 			style={{
 				maxWidth: 600,
+				backgroundColor: "white",
+				padding: "2rem 2rem 0rem",
+				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+				borderRadius: "10px",
 			}}
 			initialValues={{
 				remember: true,
