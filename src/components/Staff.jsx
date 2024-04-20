@@ -1,7 +1,7 @@
 import { Space, Table, Tag, Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../env/axios";
-
+import { Link } from "react-router-dom";
 //Column Titles
 const columns = [
 	{
@@ -76,8 +76,24 @@ const Staff = () => {
 			.catch((e) => {
 				console.log(e);
 				message.error(e);
+				return <></>;
 			});
 	}, []);
-	return <Table columns={columns} dataSource={data} />;
+	return (
+		<>
+			<Link
+				to="/dashboard/add_staff"
+				style={{
+					alignSelf: "start",
+					marginBottom: "1rem",
+					minWidth: "100px",
+				}}>
+				<Button style={{ width: "100%" }} type="primary">
+					Add
+				</Button>
+			</Link>
+			<Table columns={columns} dataSource={data} />
+		</>
+	);
 };
 export default Staff;

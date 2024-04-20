@@ -1,4 +1,4 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
+import { Button, Checkbox, ConfigProvider, Form, Input, message } from "antd";
 import axios from "axios";
 import { useState } from "react";
 import { BASE_URL } from "../env/api";
@@ -78,85 +78,87 @@ const Login = () => {
 					repeat={Infinity}
 				/>
 			</nav>
-			<div className="centered">
-				<Form
-					name="login"
-					labelCol={{
-						span: 8,
-					}}
-					wrapperCol={{
-						span: 16,
-					}}
-					style={{
-						maxWidth: 600,
-						backgroundColor: "white",
-						padding: "2rem 2rem 0rem",
-						boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-						borderRadius: "10px",
-					}}
-					initialValues={{
-						remember: true,
-					}}
-					// onFinish={onFinish}
-					// onFinishFailed={onFinishFailed}
-					autoComplete="off">
-					<Form.Item
-						label="Email"
-						name="email"
-						rules={[
-							{
-								required: true,
-								message: "Please input your Email!",
-							},
-						]}>
-						<Input
-							onChange={(e) => {
-								setValues((val) => {
-									return { ...val, email: e.target.value };
-								});
-							}}
-						/>
-					</Form.Item>
+			<ConfigProvider
+				theme={{
+					token: {
+						// Seed Token
+						colorPrimary: "#283149",
+						// borderRadius: 2,
 
-					<Form.Item
-						label="Password"
-						name="password"
-						rules={[
-							{
-								required: true,
-								message: "Please input your password!",
-							},
-						]}>
-						<Input.Password
-							onChange={(e) => {
-								setValues((val) => {
-									return { ...val, password: e.target.value };
-								});
-							}}
-						/>
-					</Form.Item>
+						// Alias Token
+						// colorBgContainer: "#f6ffed",
+					},
+				}}>
+				<div className="centered">
+					<Form
+						name="login"
+						labelCol={{}}
+						wrapperCol={{}}
+						style={{
+							maxWidth: 600,
+							backgroundColor: "white",
+							padding: "2rem 2rem 0rem",
+							boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+							borderRadius: "10px",
+						}}
+						initialValues={{
+							remember: true,
+						}}
+						// onFinish={onFinish}
+						// onFinishFailed={onFinishFailed}
+						autoComplete="off">
+						<Form.Item
+							label="Email"
+							name="email"
+							rules={[
+								{
+									required: true,
+									message: "Please input your Email!",
+								},
+							]}>
+							<Input
+								onChange={(e) => {
+									setValues((val) => {
+										return { ...val, email: e.target.value };
+									});
+								}}
+							/>
+						</Form.Item>
 
-					<Form.Item
-						name="remember"
-						valuePropName="checked"
-						wrapperCol={{
-							offset: 8,
-							span: 16,
-						}}>
-						<Checkbox>Remember me</Checkbox>
-					</Form.Item>
+						<Form.Item
+							label="Password"
+							name="password"
+							rules={[
+								{
+									required: true,
+									message: "Please input your password!",
+								},
+							]}>
+							<Input.Password
+								onChange={(e) => {
+									setValues((val) => {
+										return { ...val, password: e.target.value };
+									});
+								}}
+							/>
+						</Form.Item>
 
-					<Form.Item
-						wrapperCol={{
-							offset: 8,
-							span: 16,
-						}}>
-						<Button type="primary" htmlType="submit" onClick={handleSubmit}>
-							Submit
-						</Button>
-					</Form.Item>
-				</Form>
-			</div>
+						<Form.Item name="remember" valuePropName="checked" wrapperCol={{}}>
+							<Checkbox>Remember me</Checkbox>
+						</Form.Item>
+
+						<Form.Item wrapperCol={{}}>
+							<Button
+								style={{ width: "100%" }}
+								type="primary"
+								htmlType="submit"
+								onClick={handleSubmit}>
+								Submit
+							</Button>
+						</Form.Item>
+					</Form>
+				</div>
+			</ConfigProvider>
 		</div>
 	);
 };

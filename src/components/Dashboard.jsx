@@ -1,6 +1,6 @@
 import { Button, Menu } from "antd";
 import { Outlet, Link } from "react-router-dom";
-import one from "../assets/one.jpg";
+import logo from "../assets/logo.png";
 
 const Dashboard = () => {
 	//Default Route Dashboard Component
@@ -14,41 +14,32 @@ const Dashboard = () => {
 				}}
 				defaultSelectedKeys={["home"]}
 				mode="inline">
-				<Menu.Item key="home">
-					<Link style={{ maxWidth: 256, maxHeight: 200 }} to="/">
-						<img style={{ width: "100%", height: "auto" }} src={one} alt="" />
-					</Link>
-				</Menu.Item>
-				{/* <Menu.Item key="login">
-					<Link to="/login">Login</Link>
-				</Menu.Item> */}
-				<Menu.Item key="register">
-					<Link to="/register">Register</Link>
-				</Menu.Item>
+				<div style={{ maxWidth: 256 }} to="/">
+					<img style={{ width: "100%", height: "auto" }} src={logo} alt="" />
+				</div>
+
 				<Menu.Item key="project">
-					<Link to="/register">Project</Link>
+					<Link to="/dashboard/project">Project</Link>
 				</Menu.Item>
-				<Menu.Item key="add_project">
+				{/* <Menu.Item key="add_project">
 					<Link to="/add_project">Add Project</Link>
-				</Menu.Item>
+				</Menu.Item> */}
 				<Menu.Item key="staff">
-					<Link to="/staff">Staff</Link>
+					<Link to="/dashboard/staff">Staff</Link>
 				</Menu.Item>
-				<Menu.Item key="add_staff">
+				{/* <Menu.Item key="add_staff">
 					<Link to="/staff">Add Staff</Link>
-				</Menu.Item>
+				</Menu.Item> */}
 				<Menu.Item key="tasks">
-					<Link to="/tasks">Tasks</Link>
+					<Link to="/dashboard/tasks">Tasks</Link>
 				</Menu.Item>
-				<Menu.Item key="add_task">
+				{/* <Menu.Item key="add_task">
 					<Link to="/add_task">Add Task</Link>
-				</Menu.Item>
+				</Menu.Item> */}
 			</Menu>
 			<div id="inside">
-				<nav className="menuBar">
-					{/* <div className="logo">
-						<a href="">logo</a>
-					</div> */}
+				{/* <nav className="menuBar">
+					
 					<div className="about">
 						<Link
 							style={{
@@ -60,8 +51,8 @@ const Dashboard = () => {
 							About
 						</Link>
 					</div>
-				</nav>
-				<br />
+				</nav> */}
+
 				<div className="outlet">
 					<Outlet />
 				</div>

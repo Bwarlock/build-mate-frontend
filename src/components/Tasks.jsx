@@ -1,7 +1,7 @@
 import { Space, Table, Tag, Button, Select, message } from "antd";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../env/axios";
-
+import { Link } from "react-router-dom";
 const columns = [
 	{
 		title: "Name",
@@ -89,6 +89,17 @@ const Project = () => {
 	}, []);
 	return (
 		<>
+			<Link
+				to="/dashboard/add_staff"
+				style={{
+					alignSelf: "start",
+					marginBottom: "1rem",
+					minWidth: "100px",
+				}}>
+				<Button style={{ width: "100%" }} type="primary">
+					Add
+				</Button>
+			</Link>
 			<Table columns={columns} dataSource={data} />
 		</>
 	);

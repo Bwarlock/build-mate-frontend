@@ -32,7 +32,6 @@ body {
 }
 
 .outlet {
-	flex-grow: 1;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -62,6 +61,13 @@ body {
 	align-items: center;
 }
 
-.animate {
-	font-size: xx-large;
+.gridded {
+	display: grid;
+	gap: 2rem;
+	padding: 4rem;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-row-end: auto;
+}
+.gridded .card {
+	/* max-width: 256px; */
 }

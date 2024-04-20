@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Form, Input, Button, message, Steps, theme, Select } from "antd";
+import {
+	Form,
+	Input,
+	Button,
+	message,
+	Steps,
+	theme,
+	Select,
+	ConfigProvider,
+} from "antd";
 import axios from "axios";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
@@ -320,34 +329,46 @@ const Register = () => {
 					repeat={Infinity}
 				/>
 			</nav>
-			<div className="">
-				<Steps current={current} items={items} />
-				<div style={contentStyle}>{steps[current].content}</div>
-				<div
-					style={{
-						marginTop: 24,
-					}}>
-					{current < steps.length - 1 && (
-						<Button type="primary" onClick={() => next()}>
-							Next
-						</Button>
-					)}
-					{current === steps.length - 1 && (
-						<Button type="primary" onClick={handleSubmit}>
-							Done
-						</Button>
-					)}
-					{current > 0 && (
-						<Button
-							style={{
-								margin: "0 8px",
-							}}
-							onClick={() => prev()}>
-							Previous
-						</Button>
-					)}
+			<ConfigProvider
+				theme={{
+					token: {
+						// Seed Token
+						colorPrimary: "#283149",
+						// borderRadius: 2,
+
+						// Alias Token
+						// colorBgContainer: "#f6ffed",
+					},
+				}}>
+				<div className="">
+					<Steps current={current} items={items} />
+					<div style={contentStyle}>{steps[current].content}</div>
+					<div
+						style={{
+							marginTop: 24,
+						}}>
+						{current < steps.length - 1 && (
+							<Button type="primary" onClick={() => next()}>
+								Next
+							</Button>
+						)}
+						{current === steps.length - 1 && (
+							<Button type="primary" onClick={handleSubmit}>
+								Done
+							</Button>
+						)}
+						{current > 0 && (
+							<Button
+								style={{
+									margin: "0 8px",
+								}}
+								onClick={() => prev()}>
+								Previous
+							</Button>
+						)}
+					</div>
 				</div>
-			</div>
+			</ConfigProvider>
 		</div>
 	);
 };
