@@ -1,1 +1,1 @@
-export const BASE_URL = "https://build-mate.in/api";
+export const BASE_URL = "https://api.build-mate.in/api";

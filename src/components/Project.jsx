@@ -166,6 +166,7 @@ const Project = () => {
 				{data.map((pro, index) => {
 					return (
 						<Card
+							hoverable
 							className="card"
 							key={index}
 							title={pro.name}

@@ -90,7 +90,7 @@ const Project = () => {
 	return (
 		<>
 			<Link
-				to="/dashboard/add_staff"
+				to="/dashboard/add_task"
 				style={{
 					alignSelf: "end",
 					marginBottom: "1rem",

@@ -9,7 +9,6 @@ function Add_Project() {
 	//Add Project Page Component
 	const [values, setValues] = useState({
 		name: "",
-		startDate: "",
 		description: "",
 		owner: "",
 		staff: [],
@@ -20,7 +19,7 @@ function Add_Project() {
 	useEffect(() => {
 		//Set Non Visible Values To Request
 		setValues((val) => {
-			return { ...val, owner: user.name, startDate: Date() };
+			return { ...val, owner: user.name };
 		});
 		console.log(user);
 	}, []);
@@ -166,11 +165,7 @@ function Add_Project() {
 					options={values.tasks}
 				/>
 			</Form.Item>
-			<Form.Item
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
+			<Form.Item wrapperCol={{}}>
 				<Button type="primary" htmlType="submit" onClick={handleSubmit}>
 					Submit
 				</Button>
