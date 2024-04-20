@@ -13,6 +13,7 @@ import axios from "axios";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { TypeAnimation } from "react-type-animation";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
 	//Register Page Component
@@ -275,6 +276,8 @@ const Register = () => {
 		padding: "2rem 2rem 0rem",
 		boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 	};
+	const navigate = useNavigate();
+	const { login } = useAuth();
 	axios.defaults.withCredentials = true;
 	const handleSubmit = () => {
 		if (confirmPass == values.password) {
@@ -286,7 +289,9 @@ const Register = () => {
 				})
 				.then((res) => {
 					console.log(res.data);
+					login(res.data.token, res.data.user);
 					message.success("Processing complete!");
+					navigate("/dashboard/project");
 				})
 				.catch((err) => console.error(err));
 		} else {

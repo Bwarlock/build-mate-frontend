@@ -92,11 +92,12 @@ const Project = () => {
 			<Link
 				to="/dashboard/add_staff"
 				style={{
-					alignSelf: "start",
+					alignSelf: "end",
 					marginBottom: "1rem",
-					minWidth: "100px",
+					minWidth: "140px",
+					minHeight: "40px",
 				}}>
-				<Button style={{ width: "100%" }} type="primary">
+				<Button style={{ width: "100%", height: "100%" }} type="primary">
 					Add
 				</Button>
 			</Link>
