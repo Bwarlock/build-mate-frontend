@@ -7,6 +7,9 @@ import Add_Project from "./components/Add_Project";
 import { AuthProvider } from "./auth/AuthProvider";
 import Add_Staff from "./components/Add_Staff";
 import Dashboard from "./components/Dashboard";
+import Staff from "./components/Staff";
+import Tasks from "./components/Tasks";
+import Add_Task from "./components/Add_Task";
 
 function App() {
 	return (
@@ -17,8 +20,11 @@ function App() {
 					<Route path="/login" element={<Login />}></Route>
 					<Route path="/register" element={<Register />}></Route>
 					<Route path="/project" element={<Project />}></Route>
+					<Route path="/staff" element={<Staff />}></Route>
+					<Route path="/tasks" element={<Tasks />}></Route>
 					<Route path="/add_project" element={<Add_Project />}></Route>
 					<Route path="/add_staff" element={<Add_Staff />}></Route>
+					<Route path="/add_task" element={<Add_Task />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</AuthProvider>

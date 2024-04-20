@@ -1,4 +1,4 @@
-import { Space, Table, Tag, Button,Select } from "antd";
+import { Space, Table, Tag, Button, Select } from "antd";
 
 const columns = [
 	{
@@ -139,11 +139,11 @@ const data = [
 	},
 ];
 const Project = () => {
-	return <>
-	
-	<Table columns={columns} dataSource={data} />
-	</>
-}
-		
+	return (
+		<>
+			<Table columns={columns} dataSource={data} />
+		</>
+	);
 };
+
 export default Project;

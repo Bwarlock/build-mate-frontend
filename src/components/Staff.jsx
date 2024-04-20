@@ -11,20 +11,25 @@ const columns = [
 		render: (text) => <a>{text}</a>,
 	},
 	{
-		title: "StartDate",
-		dataIndex: "startdate",
-		key: "startdate",
+		title: "Compnay Name",
+		dataIndex: "companyName",
+		key: "companyName",
 	},
 	{
-		title: "Owner",
-		dataIndex: "owner",
-		key: "owner",
+		title: "Email",
+		dataIndex: "email",
+		key: "email",
 	},
 	{
-		title: "Staff",
-		dataIndex: "staff",
-		key: "staff",
-		render: (_, { staff }) => {
+		title: "PhoneNumber",
+		dataIndex: "phoneNumber",
+		key: "phoneNumber",
+	},
+	{
+		title: "Projects",
+		dataIndex: "projects",
+		key: "projects",
+		render: (_, { projects }) => {
 			return (
 				<Space
 					size="middle"
@@ -33,48 +38,8 @@ const columns = [
 						textOverflow: "ellipsis",
 						overflow: "hidden",
 					}}>
-					{staff.map((worker) => {
-						return worker + ",";
-					})}
-				</Space>
-			);
-		},
-	},
-	{
-		title: "Client",
-		dataIndex: "client",
-		key: "client",
-		render: (_, { client }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{client.map((clien) => {
-						return clien + ",";
-					})}
-				</Space>
-			);
-		},
-	},
-	{
-		title: "Tasks",
-		dataIndex: "tasks",
-		key: "tasks",
-		render: (_, { tasks }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{tasks.map((task) => {
-						return task + ",";
+					{projects.map((proj) => {
+						return proj + ",";
 					})}
 				</Space>
 			);
@@ -94,82 +59,25 @@ const columns = [
 	},
 ];
 
-//Dummy Data
-const data = [
-	{
-		key: "1",
-		name: "Project 1",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: [],
-		client: [],
-		tasks: [],
-	},
-	{
-		key: "2",
-		name: "Project 2",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: ["nice", "developer"],
-		client: ["someone"],
-		tasks: ["do something"],
-	},
-	{
-		key: "3",
-		name: "Project 3",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-		client: ["someone"],
-		tasks: ["do something"],
-	},
-];
-
 const Staff = () => {
 	//Projects Table Page Component
-	// const [data, setData] = useState([]);
-	// useEffect(() => {
-	// 	axiosInstance
-	// 		.get("/owner/get-projects?page=1&limit=2")
-	// 		.then((res) => {
-	// 			console.log(
-	// 				res.data,
-	// 				res.data.projects.map((val, index) => {
-	// 					return {
-	// 						...val,
-	// 						key: "" + index,
-	// 						startdate: val.createdAt,
-	// 						name: val.name,
-	// 						owner: val.owner,
-	// 						staff: val.staff,
-	// 						client: val.client,
-	// 						tasks: val.tasks,
-	// 					};
-	// 				})
-	// 			);
-
-	// 			setData({
-	// 				...res.data.projects.map((val, index) => {
-	// 					return {
-	// 						...val,
-	// 						key: "" + index + 1,
-	// 						startdate: val.createdAt,
-
-	// 						name: val.name,
-
-	// 						owner: val.owner,
-	// 						staff: val.staff,
-	// 						client: val.client,
-	// 						tasks: val.tasks,
-	// 					};
-	// 				}),
-	// 			});
-	// 		})
-	// 		.catch((e) => {
-	// 			console.log(e);
-	// 			message.error(e);
-	// 		});
-	// }, []);
+	const [data, setData] = useState([]);
+	useEffect(() => {
+		axiosInstance
+			.get("/owner/get-staff?page=1&limit=5")
+			.then((res) => {
+				console.log(res.data);
+				setData(
+					res.data.staffData.map((val, index) => {
+						return { ...val, key: "" + index };
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+	}, []);
 	return <Table columns={columns} dataSource={data} />;
 };
 export default Staff;

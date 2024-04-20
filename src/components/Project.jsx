@@ -127,49 +127,28 @@ const data = [
 
 const Project = () => {
 	//Projects Table Page Component
-	// const [data, setData] = useState([]);
-	// useEffect(() => {
-	// 	axiosInstance
-	// 		.get("/owner/get-projects?page=1&limit=2")
-	// 		.then((res) => {
-	// 			console.log(
-	// 				res.data,
-	// 				res.data.projects.map((val, index) => {
-	// 					return {
-	// 						...val,
-	// 						key: "" + index,
-	// 						startdate: val.createdAt,
-	// 						name: val.name,
-	// 						owner: val.owner,
-	// 						staff: val.staff,
-	// 						client: val.client,
-	// 						tasks: val.tasks,
-	// 					};
-	// 				})
-	// 			);
+	const [data, setData] = useState([]);
+	useEffect(() => {
+		axiosInstance
+			.get("/owner/get-projects?page=1&limit=2")
+			.then((res) => {
+				console.log(res.data);
 
-	// 			setData({
-	// 				...res.data.projects.map((val, index) => {
-	// 					return {
-	// 						...val,
-	// 						key: "" + index + 1,
-	// 						startdate: val.createdAt,
-
-	// 						name: val.name,
-
-	// 						owner: val.owner,
-	// 						staff: val.staff,
-	// 						client: val.client,
-	// 						tasks: val.tasks,
-	// 					};
-	// 				}),
-	// 			});
-	// 		})
-	// 		.catch((e) => {
-	// 			console.log(e);
-	// 			message.error(e);
-	// 		});
-	// }, []);
+				setData(
+					res.data.projects.map((val, index) => {
+						return {
+							...val,
+							key: "" + index,
+							startdate: val.createdAt,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+	}, []);
 	return <Table columns={columns} dataSource={data} />;
 };
 export default Project;

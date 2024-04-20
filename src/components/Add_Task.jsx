@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 
-function Add_Tasks() {
+function Add_Task() {
 	//Add Task Page Component
 	const [values, setValues] = useState({
 		name: "",
@@ -177,4 +177,4 @@ function Add_Tasks() {
 	);
 }
 
-export default Add_Tasks;
+export default Add_Task;
