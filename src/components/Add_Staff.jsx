@@ -27,14 +27,18 @@ const Add_Staff = () => {
 	return (
 		<Form
 			name="addStaff"
-			labelCol={{
-				span: 8,
-			}}
-			wrapperCol={{
-				span: 16,
-			}}
+			// labelCol={{
+			// 	span: 8,
+			// }}
+			// wrapperCol={{
+			// 	span: 16,
+			// }}
 			style={{
 				maxWidth: 600,
+				backgroundColor: "white",
+				padding: "2rem 2rem 0rem",
+				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+				borderRadius: "10px",
 			}}
 			initialValues={{
 				remember: true,
@@ -112,11 +116,7 @@ const Add_Staff = () => {
 				/>
 			</Form.Item>
 
-			<Form.Item
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
+			<Form.Item wrapperCol={{}}>
 				<Button type="primary" htmlType="submit" onClick={handleSubmit}>
 					Submit
 				</Button>

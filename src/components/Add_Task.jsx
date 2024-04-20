@@ -72,12 +72,6 @@ function Add_Task() {
 	return (
 		<Form
 			name="addproject"
-			labelCol={{
-				span: 8,
-			}}
-			wrapperCol={{
-				span: 16,
-			}}
 			style={{
 				maxWidth: 600,
 				backgroundColor: "white",
@@ -125,28 +119,6 @@ function Add_Task() {
 					}}
 				/>
 			</Form.Item>
-
-			<Form.Item
-				label="Project"
-				name="project"
-				rules={[
-					{
-						message: "Please input your Staff!",
-					},
-				]}>
-				<Select
-					// defaultValue="lucy"
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, project: e };
-						});
-					}}
-					style={{
-						width: 120,
-					}}
-					options={projectData}
-				/>
-			</Form.Item>
 			<Form.Item
 				label="AssignedTo"
 				name="assignedTo"
@@ -178,6 +150,28 @@ function Add_Task() {
 						message: "Please input your Staff!",
 					},
 				]}>
+				<Select
+					// defaultValue="lucy"
+					onChange={(e) => {
+						setValues((val) => {
+							return { ...val, project: e };
+						});
+					}}
+					style={{
+						width: 120,
+					}}
+					options={projectData}
+				/>
+			</Form.Item>
+
+			<Form.Item
+				label="Project"
+				name="project"
+				rules={[
+					{
+						message: "Please input your Staff!",
+					},
+				]}>
 				<DatePicker
 					onChange={(e) => {
 						setValues((val) => {
@@ -186,11 +180,7 @@ function Add_Task() {
 					}}
 				/>
 			</Form.Item>
-			<Form.Item
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
+			<Form.Item wrapperCol={{}}>
 				<Button type="primary" htmlType="submit" onClick={handleSubmit}>
 					Submit
 				</Button>
