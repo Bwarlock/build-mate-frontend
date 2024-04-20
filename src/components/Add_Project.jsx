@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
@@ -33,144 +33,156 @@ function Add_Project() {
 			});
 	};
 	return (
-		<Form
-			name="addproject"
-			// labelCol={{
-			// 	span: 8,
-			// }}
-			// wrapperCol={{
-			// 	span: 16,
-			// }}
-			style={{
-				maxWidth: 600,
-				backgroundColor: "white",
-				padding: "2rem 2rem 0rem",
-				boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-				borderRadius: "10px",
-			}}
-			initialValues={{
-				remember: true,
-			}}
-			// onFinish={onFinish}
-			// onFinishFailed={onFinishFailed}
-			autoComplete="off">
-			<Form.Item
-				label="Name"
-				name="name"
-				rules={[
-					{
-						required: true,
-						message: "Please input your name!",
-					},
-				]}>
-				<Input
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, name: e.target.value };
-						});
-					}}
-				/>
-			</Form.Item>
-			<Form.Item
-				label="Description"
-				name="description"
-				rules={[
-					{
-						required: true,
-						message: "Please input your Description!",
-					},
-				]}>
-				<Input
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, description: e.target.value };
-						});
-					}}
-				/>
-			</Form.Item>
+		<ConfigProvider
+			theme={{
+				token: {
+					// Seed Token
+					colorPrimary: "#283149",
+					// borderRadius: 2,
 
-			<Form.Item
-				label="Staff"
-				name="staff"
-				rules={[
-					{
-						message: "Please input your Staff!",
-					},
-				]}>
-				<Select
-					mode="multiple"
-					// defaultValue="lucy"
-					onChange={(e) => {
-						setValues((val) => {
-							return { ...val, staff: [...e] };
-						});
-					}}
-					style={{
-						width: 120,
-					}}
-					options={[
+					// Alias Token
+					// colorBgContainer: "#f6ffed",
+				},
+			}}>
+			<Form
+				name="addproject"
+				// labelCol={{
+				// 	span: 8,
+				// }}
+				// wrapperCol={{
+				// 	span: 16,
+				// }}
+				style={{
+					maxWidth: 600,
+					backgroundColor: "white",
+					padding: "2rem 2rem 0rem",
+					boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+					borderRadius: "10px",
+				}}
+				initialValues={{
+					remember: true,
+				}}
+				// onFinish={onFinish}
+				// onFinishFailed={onFinishFailed}
+				autoComplete="off">
+				<Form.Item
+					label="Name"
+					name="name"
+					rules={[
 						{
-							value: "jack",
-							label: "Jack",
+							required: true,
+							message: "Please input your name!",
 						},
+					]}>
+					<Input
+						onChange={(e) => {
+							setValues((val) => {
+								return { ...val, name: e.target.value };
+							});
+						}}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Description"
+					name="description"
+					rules={[
 						{
-							value: "lucy",
-							label: "Lucy",
+							required: true,
+							message: "Please input your Description!",
 						},
-						{
-							value: "Yiminghe",
-							label: "yiminghe",
-						},
-						{
-							value: "disabled",
-							label: "Disabled",
-							disabled: true,
-						},
-					]}
-				/>
-			</Form.Item>
+					]}>
+					<Input
+						onChange={(e) => {
+							setValues((val) => {
+								return { ...val, description: e.target.value };
+							});
+						}}
+					/>
+				</Form.Item>
 
-			<Form.Item
-				label="Clients"
-				name="clients"
-				rules={[
-					{
-						message: "Please input your Clients!",
-					},
-				]}>
-				<Select
-					// defaultValue="lucy"
+				<Form.Item
+					label="Staff"
+					name="staff"
+					rules={[
+						{
+							message: "Please input your Staff!",
+						},
+					]}>
+					<Select
+						mode="multiple"
+						// defaultValue="lucy"
+						onChange={(e) => {
+							setValues((val) => {
+								return { ...val, staff: [...e] };
+							});
+						}}
+						style={{
+							width: 120,
+						}}
+						options={[
+							{
+								value: "jack",
+								label: "Jack",
+							},
+							{
+								value: "lucy",
+								label: "Lucy",
+							},
+							{
+								value: "Yiminghe",
+								label: "yiminghe",
+							},
+							{
+								value: "disabled",
+								label: "Disabled",
+								disabled: true,
+							},
+						]}
+					/>
+				</Form.Item>
 
-					style={{
-						width: 120,
-					}}
-					options={values.clients}
-				/>
-			</Form.Item>
+				<Form.Item
+					label="Clients"
+					name="clients"
+					rules={[
+						{
+							message: "Please input your Clients!",
+						},
+					]}>
+					<Select
+						// defaultValue="lucy"
 
-			<Form.Item
-				label="Tasks"
-				name="tasks"
-				rules={[
-					{
-						message: "Please input your Tasks!",
-					},
-				]}>
-				<Select
-					mode="multiple"
-					// defaultValue="lucy"
-					style={{
-						width: 120,
-					}}
-					options={values.tasks}
-				/>
-			</Form.Item>
-			<Form.Item wrapperCol={{}}>
-				<Button type="primary" htmlType="submit" onClick={handleSubmit}>
-					Submit
-				</Button>
-			</Form.Item>
-		</Form>
+						style={{
+							width: 120,
+						}}
+						options={values.clients}
+					/>
+				</Form.Item>
+
+				<Form.Item
+					label="Tasks"
+					name="tasks"
+					rules={[
+						{
+							message: "Please input your Tasks!",
+						},
+					]}>
+					<Select
+						mode="multiple"
+						// defaultValue="lucy"
+						style={{
+							width: 120,
+						}}
+						options={values.tasks}
+					/>
+				</Form.Item>
+				<Form.Item wrapperCol={{}}>
+					<Button type="primary" htmlType="submit" onClick={handleSubmit}>
+						Submit
+					</Button>
+				</Form.Item>
+			</Form>
+		</ConfigProvider>
 	);
 }
 

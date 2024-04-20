@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { jwtDecode } from "jwt-decode";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CustomTypingText from "./CustomTypingText";
 import { TypeAnimation } from "react-type-animation";
 
@@ -23,6 +23,7 @@ const Login = () => {
 	});
 	const { login } = useAuth();
 	axios.defaults.withCredentials = true;
+	const navigate = useNavigate();
 	const handleSubmit = () => {
 		//Getting Domain Name For Subdomains
 		console.log(window.location.hostname);
@@ -37,6 +38,7 @@ const Login = () => {
 				console.log(res.data);
 				console.log(jwtDecode(res.data.token));
 				login(res.data.token, res.data.user);
+				navigate("/dashboard");
 			})
 			.catch((e) => {
 				console.log(e);
