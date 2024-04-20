@@ -1,8 +1,10 @@
-import { Button, Form, Input, Select } from "antd";
+import { Button, Form, Input, Select, message, DatePicker } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
+import Project from "./Project";
+import { axiosInstance } from "../env/axios";
 
 function Add_Task() {
 	//Add Task Page Component
@@ -10,23 +12,58 @@ function Add_Task() {
 		name: "",
 		startDate: "",
 		description: "",
-		owner: "",
-		staff: [],
-		clients: [],
-		tasks: [],
+		project: "",
+		assignedTo: [],
+		dueDate: "",
 	});
-	const { user } = useAuth();
+	const [projectData, setProjectData] = useState([]);
+	const [staffData, setStaffData] = useState([]);
+
 	useEffect(() => {
 		setValues((val) => {
-			return { ...val, owner: user.name, startDate: Date() };
+			return { ...val, startDate: Date() };
 		});
-		console.log(user);
+		axiosInstance
+			.get("/owner/get-projects?page=1&limit=5")
+			.then((res) => {
+				console.log(res.data);
+
+				setProjectData(
+					res.data.projects.map((val) => {
+						return {
+							label: val.name,
+							value: val.id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+		axiosInstance
+			.get("/owner/get-staff?page=1&limit=5")
+			.then((res) => {
+				console.log(res.data);
+				setStaffData(
+					res.data.staffData.map((val) => {
+						return {
+							label: val.name,
+							value: val.id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
 	}, []);
 
 	axios.defaults.withCredentials = true;
 	const handleSubmit = () => {
 		axios
-			.post("/owner/create-project", values)
+			.post("/owner/create-task", values)
 			.then((res) => console.log(res.data))
 			.catch((e) => {
 				console.log(e);
@@ -86,8 +123,29 @@ function Add_Task() {
 			</Form.Item>
 
 			<Form.Item
-				label="Staff"
-				name="staff"
+				label="Project"
+				name="project"
+				rules={[
+					{
+						message: "Please input your Staff!",
+					},
+				]}>
+				<Select
+					// defaultValue="lucy"
+					onChange={(e) => {
+						setValues((val) => {
+							return { ...val, project: e };
+						});
+					}}
+					style={{
+						width: 120,
+					}}
+					options={projectData}
+				/>
+			</Form.Item>
+			<Form.Item
+				label="AssignedTo"
+				name="assignedTo"
 				rules={[
 					{
 						required: true,
@@ -105,63 +163,23 @@ function Add_Task() {
 					style={{
 						width: 120,
 					}}
-					options={[
-						{
-							value: "jack",
-							label: "Jack",
-						},
-						{
-							value: "lucy",
-							label: "Lucy",
-						},
-						{
-							value: "Yiminghe",
-							label: "yiminghe",
-						},
-						{
-							value: "disabled",
-							label: "Disabled",
-							disabled: true,
-						},
-					]}
+					options={staffData}
 				/>
 			</Form.Item>
-
 			<Form.Item
-				label="Clients"
-				name="clients"
+				label="Project"
+				name="project"
 				rules={[
 					{
-						required: true,
-						message: "Please input your Clients!",
+						message: "Please input your Staff!",
 					},
 				]}>
-				<Select
-					// defaultValue="lucy"
-
-					style={{
-						width: 120,
+				<DatePicker
+					onChange={(e) => {
+						setValues((val) => {
+							return { ...val, dueDate: e.target.value };
+						});
 					}}
-					options={values.clients}
-				/>
-			</Form.Item>
-
-			<Form.Item
-				label="Tasks"
-				name="tasks"
-				rules={[
-					{
-						required: true,
-						message: "Please input your Tasks!",
-					},
-				]}>
-				<Select
-					mode="multiple"
-					// defaultValue="lucy"
-					style={{
-						width: 120,
-					}}
-					options={values.tasks}
 				/>
 			</Form.Item>
 			<Form.Item

@@ -1,4 +1,6 @@
-import { Space, Table, Tag, Button, Select } from "antd";
+import { Space, Table, Tag, Button, Select, message } from "antd";
+import { useEffect, useState } from "react";
+import { axiosInstance } from "../env/axios";
 
 const columns = [
 	{
@@ -13,15 +15,21 @@ const columns = [
 		key: "startdate",
 	},
 	{
-		title: "Owner",
-		dataIndex: "owner",
-		key: "owner",
+		title: "Description",
+		dataIndex: "description",
+		key: "description",
 	},
 	{
-		title: "Workers",
-		dataIndex: "workers",
-		key: "workers",
-		render: (_, { workers }) => {
+		title: "Project",
+		dataIndex: "project",
+		key: "project",
+	},
+
+	{
+		title: "AssignedTo",
+		dataIndex: "assignedTo",
+		key: "assignedTo",
+		render: (_, { assignedTo }) => {
 			return (
 				<Space
 					size="middle"
@@ -30,73 +38,19 @@ const columns = [
 						textOverflow: "ellipsis",
 						overflow: "hidden",
 					}}>
-					{workers.map((worker) => {
-						return worker + ",";
+					{assignedTo.map((staf) => {
+						return staf + ",";
 					})}
 				</Space>
 			);
 		},
 	},
 	{
-		title: "Clients",
-		dataIndex: "clients",
-		key: "clients",
-		render: (_, { clients }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{clients.map((client) => {
-						return client + ",";
-					})}
-				</Space>
-			);
-		},
+		title: "DueDate",
+		dataIndex: "dueDate",
+		key: "dueDate",
 	},
-	{
-		title: "Tasks",
-		dataIndex: "tasks",
-		key: "tasks",
-		render: (_, { tasks }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{tasks.map((task) => {
-						return task + ",";
-					})}
-				</Space>
-			);
-		},
-	},
-	// {
-	// 	title: "Tags",
-	// 	key: "tags",
-	// 	dataIndex: "tags",
-	// 	render: (_, { tags }) => (
-	// 		<>
-	// 			{tags.map((tag) => {
-	// 				let color = tag.length > 5 ? "geekblue" : "green";
-	// 				if (tag === "loser") {
-	// 					color = "volcano";
-	// 				}
-	// 				return (
-	// 					<Tag color={color} key={tag}>
-	// 						{tag.toUpperCase()}
-	// 					</Tag>
-	// 				);
-	// 			})}
-	// 		</>
-	// 	),
-	// },
+
 	{
 		title: "Action",
 		key: "action",
@@ -109,36 +63,30 @@ const columns = [
 		),
 	},
 ];
-const data = [
-	{
-		key: "1",
-		name: "Project 1",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		workers: ["nice", "developer"],
-		clients: ["someone"],
-		tasks: ["do something"],
-	},
-	{
-		key: "2",
-		name: "Project 2",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		workers: ["nice", "developer"],
-		clients: ["someone"],
-		tasks: ["do something"],
-	},
-	{
-		key: "3",
-		name: "Project 3",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		workers: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-		clients: ["someone"],
-		tasks: ["do something"],
-	},
-];
+
 const Project = () => {
+	const [data, setData] = useState([]);
+	useEffect(() => {
+		axiosInstance
+			.get("/owner/get-tasks?page=1&limit=5")
+			.then((res) => {
+				console.log(res.data);
+
+				setData(
+					res.data.projects.map((val, index) => {
+						return {
+							...val,
+							key: "" + index,
+							startdate: val.createdAt,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+	}, []);
 	return (
 		<>
 			<Table columns={columns} dataSource={data} />

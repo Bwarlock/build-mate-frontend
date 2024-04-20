@@ -276,6 +276,8 @@ const Register = () => {
 					message.success("Processing complete!");
 				})
 				.catch((err) => console.error(err));
+		} else {
+			message.error("Wrong Confirmation Password");
 		}
 	};
 
