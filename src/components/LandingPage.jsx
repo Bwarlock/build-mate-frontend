@@ -12,13 +12,17 @@ import { TypeAnimation } from "react-type-animation";
 // import "../styles/responsive.css";
 // import "../styles/slick.css";
 // import "../styles/themify-icons.css";
-
+import logo from "../assets/logo.png";
 const LandingPage = () => {
 	return (
 		<>
 			<header>
 				<div className="logo">
-					<img src="logo.png" alt="Build-Mate Logo" />
+					<img
+						style={{ width: 140, height: "auto" }}
+						src={logo}
+						alt="Build-Mate Logo"
+					/>
 				</div>
 				<nav>
 					<ul>
@@ -33,7 +37,7 @@ const LandingPage = () => {
 						</li> */}
 						<li>
 							<a href="/login">
-							<button>Login</button>
+								<button>Login</button>
 							</a>
 						</li>
 					</ul>
@@ -50,33 +54,33 @@ const LandingPage = () => {
 						</a>
 					</form>
 					<TypeAnimation
-					sequence={[
-						"Build",
-						1000, // wait 1s before replacing "Mice" with "Hamsters"
-						"Build-",
-						1000,
-						"Build-Mate",
-						1000,
-						"Build-Mate",
-						1000,
-						"Build-",
-						1000,
-						"Build",
-						1000,
-						"",
-						2000,
-					]}
-					wrapper="span"
-					speed={50}
-					style={{
-						fontSize: "5em",
-						// fontWeight: "Bold",
-						fontFamily:
-							"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
-						display: "inline-block",
-					}}
-					repeat={Infinity}
-				/>
+						sequence={[
+							"Build",
+							1000, // wait 1s before replacing "Mice" with "Hamsters"
+							"Build-",
+							1000,
+							"Build-Mate",
+							1000,
+							"Build-Mate",
+							1000,
+							"Build-",
+							1000,
+							"Build",
+							1000,
+							"",
+							2000,
+						]}
+						wrapper="span"
+						speed={50}
+						style={{
+							fontSize: "5em",
+							// fontWeight: "Bold",
+							fontFamily:
+								"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+							display: "inline-block",
+						}}
+						repeat={Infinity}
+					/>
 				</div>
 			</section>
 

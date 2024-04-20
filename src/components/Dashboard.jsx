@@ -1,14 +1,20 @@
 import { Button, Menu } from "antd";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../auth/AuthProvider";
+import { useEffect } from "react";
 
 const Dashboard = () => {
 	//Default Route Dashboard Component
 	const { logout } = useAuth();
+	const navigate = useNavigate();
 	const handleLogout = () => {
 		logout();
+		navigate("/login");
 	};
+	useEffect(() => {
+		navigate("/dashboard/tasks");
+	}, []);
 	return (
 		<div id="main">
 			<Menu
