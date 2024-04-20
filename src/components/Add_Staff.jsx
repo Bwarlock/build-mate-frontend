@@ -1,38 +1,23 @@
-import { Button, Checkbox, Form, Input, message } from "antd";
-import axios from "axios";
+import { Button, Form, Input, message } from "antd";
 import { useState } from "react";
 import { BASE_URL } from "../env/api";
-import { useAuth } from "../auth/AuthProvider";
-import { jwtDecode } from "jwt-decode";
-// const onFinish = (values) => {
-// 	console.log("Success:", values);
-// };
-// const onFinishFailed = (errorInfo) => {
-// 	console.log("Failed:", errorInfo);
-// };
-const Login = () => {
-	//Login Page Component
+import { axiosInstance } from "../env/axios";
+
+const Add_Staff = () => {
+	//Add Staff Page Component
 	const [values, setValues] = useState({
+		name: "",
 		email: "",
 		password: "",
-		domainName: "",
+		phoneNumber: "",
 	});
-	const { login } = useAuth();
-	axios.defaults.withCredentials = true;
-	const handleSubmit = () => {
-		//Getting Domain Name For Subdomains
-		console.log(window.location.hostname);
-		let domainName = window.location.hostname;
 
-		axios
-			.post(BASE_URL + "/auth/login", {
-				...values,
-				domainName,
-			})
+	const handleSubmit = () => {
+		//Using Intercepted AxiosInstance For Everything other than Login Register
+		axiosInstance
+			.post("/owner/create-staff", values)
 			.then((res) => {
 				console.log(res.data);
-				console.log(jwtDecode(res.data.token));
-				login(res.data.token, res.data.user);
 			})
 			.catch((e) => {
 				console.log(e);
@@ -41,7 +26,7 @@ const Login = () => {
 	};
 	return (
 		<Form
-			name="login"
+			name="addStaff"
 			labelCol={{
 				span: 8,
 			}}
@@ -57,6 +42,23 @@ const Login = () => {
 			// onFinish={onFinish}
 			// onFinishFailed={onFinishFailed}
 			autoComplete="off">
+			<Form.Item
+				label="Name"
+				name="name"
+				rules={[
+					{
+						required: true,
+						message: "Please input your Name!",
+					},
+				]}>
+				<Input
+					onChange={(e) => {
+						setValues((val) => {
+							return { ...val, name: e.target.value };
+						});
+					}}
+				/>
+			</Form.Item>
 			<Form.Item
 				label="Email"
 				name="email"
@@ -92,15 +94,22 @@ const Login = () => {
 					}}
 				/>
 			</Form.Item>
-
 			<Form.Item
-				name="remember"
-				valuePropName="checked"
-				wrapperCol={{
-					offset: 8,
-					span: 16,
-				}}>
-				<Checkbox>Remember me</Checkbox>
+				label="PhoneNumber"
+				name="phoneNumber"
+				rules={[
+					{
+						required: true,
+						message: "Please input your PhoneNumber!",
+					},
+				]}>
+				<Input
+					onChange={(e) => {
+						setValues((val) => {
+							return { ...val, phoneNumber: e.target.value };
+						});
+					}}
+				/>
 			</Form.Item>
 
 			<Form.Item
@@ -115,4 +124,4 @@ const Login = () => {
 		</Form>
 	);
 };
-export default Login;
+export default Add_Staff;
