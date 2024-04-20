@@ -1,16 +1,17 @@
-// import "../styles/LandingPage.css";
-import "../styles/animate.min.css";
-import "../styles/bootstrap.min.css";
-import "../styles/elegant-font-icons.css";
-import "../styles/elegant-font-icons.css";
-import "../styles/flaticon.css";
-import "../styles/fontawesome.min.css";
-import "../styles/main.css";
-import "../styles/odometer.min.css";
-import "../styles/owl.carousel.css";
-import "../styles/responsive.css";
-import "../styles/slick.css";
-import "../styles/themify-icons.css";
+import "../styles/LandingPage.css";
+import { TypeAnimation } from "react-type-animation";
+// import "../styles/animate.min.css";
+// import "../styles/bootstrap.min.css";
+// import "../styles/elegant-font-icons.css";
+// import "../styles/elegant-font-icons.css";
+// import "../styles/flaticon.css";
+// import "../styles/fontawesome.min.css";
+// import "../styles/main.css";
+// import "../styles/odometer.min.css";
+// import "../styles/owl.carousel.css";
+// import "../styles/responsive.css";
+// import "../styles/slick.css";
+// import "../styles/themify-icons.css";
 
 const LandingPage = () => {
 	return (
@@ -21,7 +22,7 @@ const LandingPage = () => {
 				</div>
 				<nav>
 					<ul>
-						<li>
+						{/* <li>
 							<a href="#home">Home</a>
 						</li>
 						<li>
@@ -29,9 +30,11 @@ const LandingPage = () => {
 						</li>
 						<li>
 							<a href="#pricing">Pricing</a>
-						</li>
+						</li> */}
 						<li>
-							<a href="#contact">Contact</a>
+							<a href="/login">
+							<button>Login</button>
+							</a>
 						</li>
 					</ul>
 				</nav>
@@ -42,11 +45,38 @@ const LandingPage = () => {
 					<h1>Transform Your Construction Projects with Build-Mate</h1>
 					<p>Join our platform to streamline project management</p>
 					<form>
-						<span>Add Build MAte animation</span>
 						<a href="/register">
 							<button type="button">Register Now</button>
 						</a>
 					</form>
+					<TypeAnimation
+					sequence={[
+						"Build",
+						1000, // wait 1s before replacing "Mice" with "Hamsters"
+						"Build-",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-Mate",
+						1000,
+						"Build-",
+						1000,
+						"Build",
+						1000,
+						"",
+						2000,
+					]}
+					wrapper="span"
+					speed={50}
+					style={{
+						fontSize: "5em",
+						// fontWeight: "Bold",
+						fontFamily:
+							"-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji",
+						display: "inline-block",
+					}}
+					repeat={Infinity}
+				/>
 				</div>
 			</section>
 
