@@ -6,12 +6,11 @@ function ProtectedRoute() {
 	const { user, token } = useAuth();
 	const navigate = useNavigate();
 	useEffect(() => {
-		if (user && token) {
-			return <Outlet />;
-		} else {
+		if (!user && !token) {
 			navigate("/login");
 		}
 	}, []);
+	return <Outlet />;
 }
 
 export default ProtectedRoute;

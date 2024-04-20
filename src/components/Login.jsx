@@ -1,6 +1,6 @@
 import { Button, Checkbox, ConfigProvider, Form, Input, message } from "antd";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { jwtDecode } from "jwt-decode";
@@ -21,7 +21,7 @@ const Login = () => {
 		password: "",
 		domainName: "",
 	});
-	const { login } = useAuth();
+	const { login, user, token } = useAuth();
 	axios.defaults.withCredentials = true;
 	const navigate = useNavigate();
 	const handleSubmit = () => {
@@ -38,13 +38,20 @@ const Login = () => {
 				console.log(res.data);
 				console.log(jwtDecode(res.data.token));
 				login(res.data.token, res.data.user);
-				navigate("/dashboard");
+				setTimeout(() => {
+					navigate("/dashboard");
+				}, 1000);
 			})
 			.catch((e) => {
 				console.log(e);
 				message.error(e);
 			});
 	};
+	useEffect(() => {
+		if (user && token) {
+			navigate("/dashboard");
+		}
+	}, []);
 	return (
 		<div className="full">
 			<nav className="menuBar">

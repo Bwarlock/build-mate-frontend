@@ -291,7 +291,9 @@ const Register = () => {
 					console.log(res.data);
 					login(res.data.token, res.data.user);
 					message.success("Processing complete!");
-					navigate("/dashboard/project");
+					setTimeout(() => {
+						navigate("/dashboard/project");
+					}, 1000);
 				})
 				.catch((err) => console.error(err));
 		} else {
