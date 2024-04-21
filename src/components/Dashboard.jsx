@@ -1,11 +1,11 @@
-import { Button, Menu } from "antd";
+import { Menu } from "antd";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../auth/AuthProvider";
 import { useEffect } from "react";
 
 const Dashboard = () => {
-	//Default Route Dashboard Component
+	//Dashboard Route Component
 	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const handleLogout = () => {
@@ -24,19 +24,23 @@ const Dashboard = () => {
 					display: "flex",
 					flexDirection: "column",
 				}}
-				defaultSelectedKeys={["home"]}
+				defaultSelectedKeys={["tasks"]}
 				mode="inline">
 				<div
 					style={{ maxWidth: 256, maxHeight: 256, textAlign: "center" }}
 					to="/">
-					<img style={{ width: "70%", height: "auto" }} src={logo} alt="" />
+					<img
+						style={{ width: "70%", height: "auto" }}
+						src={logo}
+						alt="Build-Mate Logo"
+					/>
 				</div>
 
 				<Menu.Item style={{ fontWeight: "bold" }} key="project">
 					<Link to="/dashboard/project">Project</Link>
 				</Menu.Item>
 				{/* <Menu.Item key="add_project">
-					<Link to="/add_project">Add Project</Link>
+					<Link to="/dashboard/add_project">Add Project</Link>
 				</Menu.Item> */}
 				<Menu.Item key="staff">
 					<Link style={{ fontWeight: "bold" }} to="/dashboard/staff">
@@ -44,17 +48,17 @@ const Dashboard = () => {
 					</Link>
 				</Menu.Item>
 				{/* <Menu.Item key="add_staff">
-					<Link to="/staff">Add Staff</Link>
+					<Link to="/dashboard/add_staff">Add Staff</Link>
 				</Menu.Item> */}
 				<Menu.Item style={{ fontWeight: "bold" }} key="tasks">
 					<Link to="/dashboard/tasks">Tasks</Link>
 				</Menu.Item>
+				{/* <Menu.Item key="add_task">
+					<Link to="/dashboard/add_task">Add Task</Link>
+				</Menu.Item> */}
 				<Menu.Item style={{ fontWeight: "bold" }} key="clients">
 					<Link to="/dashboard/clients">Clients</Link>
 				</Menu.Item>
-				{/* <Menu.Item key="add_task">
-					<Link to="/add_task">Add Task</Link>
-				</Menu.Item> */}
 
 				<Menu.Item
 					style={{

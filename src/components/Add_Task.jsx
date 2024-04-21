@@ -7,11 +7,7 @@ import {
 	DatePicker,
 	ConfigProvider,
 } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../env/api";
-import { useAuth } from "../auth/AuthProvider";
-import Project from "./Project";
 import { axiosInstance } from "../env/axios";
 import { useNavigate } from "react-router-dom";
 
@@ -69,7 +65,6 @@ function Add_Task() {
 			});
 	}, []);
 
-	axios.defaults.withCredentials = true;
 	const handleSubmit = () => {
 		axiosInstance
 			.post("/owner/create-task", values)
@@ -79,18 +74,14 @@ function Add_Task() {
 			})
 			.catch((e) => {
 				console.log(e);
+				message.error(e);
 			});
 	};
 	return (
 		<ConfigProvider
 			theme={{
 				token: {
-					// Seed Token
 					colorPrimary: "#283149",
-					// borderRadius: 2,
-
-					// Alias Token
-					// colorBgContainer: "#f6ffed",
 				},
 			}}>
 			<Form
@@ -105,8 +96,6 @@ function Add_Task() {
 				initialValues={{
 					remember: true,
 				}}
-				// onFinish={onFinish}
-				// onFinishFailed={onFinishFailed}
 				autoComplete="off">
 				<Form.Item
 					label="Name"
@@ -114,7 +103,7 @@ function Add_Task() {
 					rules={[
 						{
 							required: true,
-							message: "Please input task name!",
+							message: "Please input Task name!",
 						},
 					]}>
 					<Input
@@ -131,7 +120,7 @@ function Add_Task() {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Description!",
+							message: "Please input Task Description!",
 						},
 					]}>
 					<Input
@@ -148,12 +137,11 @@ function Add_Task() {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Staff!",
+							message: "Please input Task Staff!",
 						},
 					]}>
 					<Select
 						mode="multiple"
-						// defaultValue="lucy"
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, assignedTo: [...e] };
@@ -165,18 +153,8 @@ function Add_Task() {
 						options={staffData}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="Project"
-					name="project"
-					rules={
-						[
-							// {
-							// 	message: "Please input your Staff!",
-							// },
-						]
-					}>
+				<Form.Item label="Project" name="project" rules={[]}>
 					<Select
-						// defaultValue="lucy"
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, project: e };
@@ -189,16 +167,7 @@ function Add_Task() {
 					/>
 				</Form.Item>
 
-				<Form.Item
-					label="Due Date"
-					name="dueDate"
-					rules={
-						[
-							// {
-							// 	message: "Please input your Due Date!",
-							// },
-						]
-					}>
+				<Form.Item label="Due Date" name="dueDate" rules={[]}>
 					<DatePicker
 						onChange={(_, e) => {
 							console.log(e);

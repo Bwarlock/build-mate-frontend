@@ -4,16 +4,9 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { jwtDecode } from "jwt-decode";
-import { Link, useNavigate } from "react-router-dom";
-import CustomTypingText from "./CustomTypingText";
+import { useNavigate } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
 
-// const onFinish = (values) => {
-// 	console.log("Success:", values);
-// };
-// const onFinishFailed = (errorInfo) => {
-// 	console.log("Failed:", errorInfo);
-// };
 const Login = () => {
 	//Login Page Component
 	const [values, setValues] = useState({
@@ -61,7 +54,7 @@ const Login = () => {
 				<TypeAnimation
 					sequence={[
 						"Build",
-						1000, // wait 1s before replacing "Mice" with "Hamsters"
+						1000, // wait 1s before writing "-" infront of Build
 						"Build-",
 						1000,
 						"Build-Mate",
@@ -90,12 +83,7 @@ const Login = () => {
 			<ConfigProvider
 				theme={{
 					token: {
-						// Seed Token
 						colorPrimary: "#283149",
-						// borderRadius: 2,
-
-						// Alias Token
-						// colorBgContainer: "#f6ffed",
 					},
 				}}>
 				<div className="centered">
@@ -113,8 +101,6 @@ const Login = () => {
 						initialValues={{
 							remember: true,
 						}}
-						// onFinish={onFinish}
-						// onFinishFailed={onFinishFailed}
 						autoComplete="off">
 						<Form.Item
 							label="Email"

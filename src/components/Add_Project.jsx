@@ -1,7 +1,5 @@
 import { Button, ConfigProvider, Form, Input, Select, message } from "antd";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { axiosInstance } from "../env/axios";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +16,10 @@ function Add_Project() {
 	});
 	const { user } = useAuth();
 	const [staffData, setStaffData] = useState([]);
+	const [clientData, setClientData] = useState([]);
+	const [taskData, setTaskData] = useState([]);
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		//Set Non Visible Values To Request
 		setValues((val) => {
@@ -40,9 +42,45 @@ function Add_Project() {
 				console.log(e);
 				message.error(e);
 			});
-		console.log(user);
+
+		axiosInstance
+			.get("/owner/get-clients?page=1&limit=10")
+			.then((res) => {
+				console.log(res.data);
+				setClientData(
+					res.data.clientData.map((val) => {
+						return {
+							label: val.name,
+							value: val._id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+
+		axiosInstance
+			.get("/owner/get-tasks?page=1&limit=10")
+			.then((res) => {
+				console.log(res.data);
+
+				setTaskData(
+					res.data.tasks.map((val) => {
+						return {
+							label: val.name,
+							value: val._id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
 	}, []);
-	const navigate = useNavigate();
+
 	const handleSubmit = () => {
 		axiosInstance
 			.post("/owner/create-project", values)
@@ -52,28 +90,18 @@ function Add_Project() {
 			})
 			.catch((e) => {
 				console.log(e);
+				message.error(e);
 			});
 	};
 	return (
 		<ConfigProvider
 			theme={{
 				token: {
-					// Seed Token
 					colorPrimary: "#283149",
-					// borderRadius: 2,
-
-					// Alias Token
-					// colorBgContainer: "#f6ffed",
 				},
 			}}>
 			<Form
-				name="addproject"
-				// labelCol={{
-				// 	span: 8,
-				// }}
-				// wrapperCol={{
-				// 	span: 16,
-				// }}
+				name="addProject"
 				style={{
 					maxWidth: 600,
 					backgroundColor: "white",
@@ -84,8 +112,6 @@ function Add_Project() {
 				initialValues={{
 					remember: true,
 				}}
-				// onFinish={onFinish}
-				// onFinishFailed={onFinishFailed}
 				autoComplete="off">
 				<Form.Item
 					label="Name"
@@ -93,7 +119,7 @@ function Add_Project() {
 					rules={[
 						{
 							required: true,
-							message: "Please input your name!",
+							message: "Please input Project name!",
 						},
 					]}>
 					<Input
@@ -110,7 +136,7 @@ function Add_Project() {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Description!",
+							message: "Please input Project Description!",
 						},
 					]}>
 					<Input
@@ -122,19 +148,9 @@ function Add_Project() {
 					/>
 				</Form.Item>
 
-				<Form.Item
-					label="Staff"
-					name="staff"
-					rules={
-						[
-							// {
-							// 	message: "Please input your Staff!",
-							// },
-						]
-					}>
+				<Form.Item label="Staff" name="staff" rules={[]}>
 					<Select
 						mode="multiple"
-						// defaultValue="lucy"
 						onChange={(e) => {
 							console.log(e);
 							setValues((val) => {
@@ -153,34 +169,36 @@ function Add_Project() {
 					name="clients"
 					rules={[
 						{
-							message: "Please input your Clients!",
+							message: "Please input Project Clients!",
 						},
 					]}>
 					<Select
-						// defaultValue="lucy"
-
+						onChange={(e) => {
+							console.log(e);
+							setValues((val) => {
+								return { ...val, clients: [e] };
+							});
+						}}
 						style={{
 							width: 120,
 						}}
-						options={values.clients}
+						options={clientData}
 					/>
 				</Form.Item>
 
-				<Form.Item
-					label="Tasks"
-					name="tasks"
-					rules={[
-						{
-							message: "Please input your Tasks!",
-						},
-					]}>
+				<Form.Item label="Tasks" name="tasks" rules={[]}>
 					<Select
+						onChange={(e) => {
+							console.log(e);
+							setValues((val) => {
+								return { ...val, tasks: [...e] };
+							});
+						}}
 						mode="multiple"
-						// defaultValue="lucy"
 						style={{
 							width: 120,
 						}}
-						options={values.tasks}
+						options={taskData}
 					/>
 				</Form.Item>
 				<Form.Item wrapperCol={{}}>

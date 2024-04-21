@@ -1,11 +1,10 @@
 import { Button, ConfigProvider, Form, Input, message, Select } from "antd";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../env/api";
 import { axiosInstance } from "../env/axios";
 import { useNavigate } from "react-router-dom";
 
 const Add_Client = () => {
-	//Add Staff Page Component
+	//Add Client Page Component
 	const [values, setValues] = useState({
 		name: "",
 		email: "",
@@ -15,10 +14,9 @@ const Add_Client = () => {
 		project: [],
 	});
 	const [projectData, setProjectData] = useState([]);
+	const navigate = useNavigate();
+
 	useEffect(() => {
-		setValues((val) => {
-			return { ...val, startDate: Date() };
-		});
 		axiosInstance
 			.get("/owner/get-projects?page=1&limit=10")
 			.then((res) => {
@@ -39,9 +37,8 @@ const Add_Client = () => {
 			});
 	}, []);
 
-	const navigate = useNavigate();
 	const handleSubmit = () => {
-		//Using Intercepted AxiosInstance For Everything other than Login Register
+		//Using Intercepted AxiosInstance
 		axiosInstance
 			.post("/owner/create-client", values)
 			.then((res) => {
@@ -57,12 +54,7 @@ const Add_Client = () => {
 		<ConfigProvider
 			theme={{
 				token: {
-					// Seed Token
 					colorPrimary: "#283149",
-					// borderRadius: 2,
-
-					// Alias Token
-					// colorBgContainer: "#f6ffed",
 				},
 			}}>
 			<Form
@@ -83,8 +75,6 @@ const Add_Client = () => {
 				initialValues={{
 					remember: true,
 				}}
-				// onFinish={onFinish}
-				// onFinishFailed={onFinishFailed}
 				autoComplete="off">
 				<Form.Item
 					label="Name"
@@ -92,7 +82,7 @@ const Add_Client = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Name!",
+							message: "Please input Client Name!",
 						},
 					]}>
 					<Input
@@ -128,7 +118,7 @@ const Add_Client = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Email!",
+							message: "Please input Client Email!",
 						},
 					]}>
 					<Input
@@ -146,7 +136,7 @@ const Add_Client = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your password!",
+							message: "Please input Client password!",
 						},
 					]}>
 					<Input.Password
@@ -163,7 +153,7 @@ const Add_Client = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your PhoneNumber!",
+							message: "Please input Client PhoneNumber!",
 						},
 					]}>
 					<Input
@@ -186,7 +176,6 @@ const Add_Client = () => {
 					}>
 					<Select
 						mode="multiple"
-						// defaultValue="lucy"
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, project: [...e] };

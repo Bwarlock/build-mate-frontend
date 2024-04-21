@@ -1,100 +1,100 @@
-import { Space, Table, Tag, Button, message, Card } from "antd";
+import { message, Card } from "antd";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../env/axios";
 import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 
 //Column Titles
-const columns = [
-	{
-		title: "Name",
-		dataIndex: "name",
-		key: "name",
-		render: (text) => <a>{text}</a>,
-	},
-	{
-		title: "StartDate",
-		dataIndex: "startdate",
-		key: "startdate",
-	},
-	{
-		title: "Owner",
-		dataIndex: "owner",
-		key: "owner",
-	},
-	{
-		title: "Staff",
-		dataIndex: "staff",
-		key: "staff",
-		render: (_, { staff }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{staff.map((worker) => {
-						return worker + ",";
-					})}
-				</Space>
-			);
-		},
-	},
-	{
-		title: "Client",
-		dataIndex: "client",
-		key: "client",
-		render: (_, { client }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{client.map((clien) => {
-						return clien + ",";
-					})}
-				</Space>
-			);
-		},
-	},
-	{
-		title: "Tasks",
-		dataIndex: "tasks",
-		key: "tasks",
-		render: (_, { tasks }) => {
-			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{tasks.map((task) => {
-						return task + ",";
-					})}
-				</Space>
-			);
-		},
-	},
+// const columns = [
+// 	{
+// 		title: "Name",
+// 		dataIndex: "name",
+// 		key: "name",
+// 		render: (text) => <a>{text}</a>,
+// 	},
+// 	{
+// 		title: "StartDate",
+// 		dataIndex: "startdate",
+// 		key: "startdate",
+// 	},
+// 	{
+// 		title: "Owner",
+// 		dataIndex: "owner",
+// 		key: "owner",
+// 	},
+// 	{
+// 		title: "Staff",
+// 		dataIndex: "staff",
+// 		key: "staff",
+// 		render: (_, { staff }) => {
+// 			return (
+// 				<Space
+// 					size="middle"
+// 					style={{
+// 						maxWidth: "100px",
+// 						textOverflow: "ellipsis",
+// 						overflow: "hidden",
+// 					}}>
+// 					{staff.map((worker) => {
+// 						return worker + ",";
+// 					})}
+// 				</Space>
+// 			);
+// 		},
+// 	},
+// 	{
+// 		title: "Client",
+// 		dataIndex: "client",
+// 		key: "client",
+// 		render: (_, { client }) => {
+// 			return (
+// 				<Space
+// 					size="middle"
+// 					style={{
+// 						maxWidth: "100px",
+// 						textOverflow: "ellipsis",
+// 						overflow: "hidden",
+// 					}}>
+// 					{client.map((clien) => {
+// 						return clien + ",";
+// 					})}
+// 				</Space>
+// 			);
+// 		},
+// 	},
+// 	{
+// 		title: "Tasks",
+// 		dataIndex: "tasks",
+// 		key: "tasks",
+// 		render: (_, { tasks }) => {
+// 			return (
+// 				<Space
+// 					size="middle"
+// 					style={{
+// 						maxWidth: "100px",
+// 						textOverflow: "ellipsis",
+// 						overflow: "hidden",
+// 					}}>
+// 					{tasks.map((task) => {
+// 						return task + ",";
+// 					})}
+// 				</Space>
+// 			);
+// 		},
+// 	},
 
-	{
-		title: "Action",
-		key: "action",
-		render: () => (
-			<Space size="middle">
-				<Button type="primary" danger>
-					Delete
-				</Button>
-			</Space>
-		),
-	},
-];
+// 	{
+// 		title: "Action",
+// 		key: "action",
+// 		render: () => (
+// 			<Space size="middle">
+// 				<Button type="primary" danger>
+// 					Delete
+// 				</Button>
+// 			</Space>
+// 		),
+// 	},
+// ];
 
 //Dummy Data
 // const data = [
@@ -137,7 +137,7 @@ const columns = [
 // ];
 
 const Project = () => {
-	//Projects Table Page Component
+	//Projects Page Component
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		axiosInstance
@@ -171,7 +171,7 @@ const Project = () => {
 							key={index}
 							title={pro.name}
 							extra={
-								<Link to={"/dashboard/project/" + pro.id ? pro.id : ""}>
+								<Link to={"/dashboard/project/" + pro._id ? pro._id : ""}>
 									More
 								</Link>
 							}
@@ -186,7 +186,7 @@ const Project = () => {
 								{pro.description}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-								<span style={{ fontWeight: "bold" }}>STAFF : </span>
+								<span style={{ fontWeight: "bold" }}>Staff : </span>
 								{pro.staff
 									.map((sta) => {
 										return sta.name;
@@ -194,11 +194,11 @@ const Project = () => {
 									.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-								<span style={{ fontWeight: "bold" }}>CLIENT : </span>
+								<span style={{ fontWeight: "bold" }}>Client : </span>
 								{pro.client.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-								<span style={{ fontWeight: "bold" }}>TASKS : </span>
+								<span style={{ fontWeight: "bold" }}>Tasks : </span>
 								{pro.tasks.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>

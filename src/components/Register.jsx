@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
 	Form,
 	Input,
@@ -6,7 +6,6 @@ import {
 	message,
 	Steps,
 	theme,
-	Select,
 	ConfigProvider,
 } from "antd";
 import axios from "axios";
@@ -26,12 +25,7 @@ const Register = () => {
 		password: "",
 		companyName: "",
 		domainName: "",
-		// role: "staff",
 	});
-	const { user } = useAuth();
-	useEffect(() => {
-		console.log(user);
-	}, []);
 	const [confirmPass, setConfirmPass] = useState("");
 	const steps = [
 		{
@@ -111,7 +105,7 @@ const Register = () => {
 			title: "Second",
 			content: (
 				<Form
-					name="registerFirst"
+					name="registerSecond"
 					labelCol={{
 						span: 8,
 					}}
@@ -124,8 +118,6 @@ const Register = () => {
 					initialValues={{
 						remember: true,
 					}}
-					// onFinish={onFinish}
-					// onFinishFailed={onFinishFailed}
 					autoComplete="off">
 					<Form.Item
 						label="Domain Name"
@@ -151,7 +143,7 @@ const Register = () => {
 			title: "Last",
 			content: (
 				<Form
-					name="registerFirst"
+					name="registerThird"
 					labelCol={{
 						span: 8,
 					}}
@@ -164,8 +156,6 @@ const Register = () => {
 					initialValues={{
 						remember: true,
 					}}
-					// onFinish={onFinish}
-					// onFinishFailed={onFinishFailed}
 					autoComplete="off">
 					<Form.Item
 						label="Email"
@@ -295,7 +285,10 @@ const Register = () => {
 						navigate("/dashboard/project");
 					}, 1000);
 				})
-				.catch((err) => console.error(err));
+				.catch((err) => {
+					console.error(err);
+					message.error(err);
+				});
 		} else {
 			message.error("Wrong Confirmation Password");
 		}
@@ -310,7 +303,7 @@ const Register = () => {
 				<TypeAnimation
 					sequence={[
 						"Build",
-						1000, // wait 1s before replacing "Mice" with "Hamsters"
+						1000, // wait 1s before writing "-" infront of Build
 						"Build-",
 						1000,
 						"Build-Mate",
@@ -339,12 +332,7 @@ const Register = () => {
 			<ConfigProvider
 				theme={{
 					token: {
-						// Seed Token
 						colorPrimary: "#283149",
-						// borderRadius: 2,
-
-						// Alias Token
-						// colorBgContainer: "#f6ffed",
 					},
 				}}>
 				<div className="">

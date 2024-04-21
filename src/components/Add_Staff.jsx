@@ -1,6 +1,5 @@
 import { Button, ConfigProvider, Form, Input, message } from "antd";
 import { useState } from "react";
-import { BASE_URL } from "../env/api";
 import { axiosInstance } from "../env/axios";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +13,7 @@ const Add_Staff = () => {
 	});
 	const navigate = useNavigate();
 	const handleSubmit = () => {
-		//Using Intercepted AxiosInstance For Everything other than Login Register
+		//Using Intercepted AxiosInstance
 		axiosInstance
 			.post("/owner/create-staff", values)
 			.then((res) => {
@@ -30,22 +29,11 @@ const Add_Staff = () => {
 		<ConfigProvider
 			theme={{
 				token: {
-					// Seed Token
 					colorPrimary: "#283149",
-					// borderRadius: 2,
-
-					// Alias Token
-					// colorBgContainer: "#f6ffed",
 				},
 			}}>
 			<Form
 				name="addStaff"
-				// labelCol={{
-				// 	span: 8,
-				// }}
-				// wrapperCol={{
-				// 	span: 16,
-				// }}
 				style={{
 					maxWidth: 600,
 					backgroundColor: "white",
@@ -56,8 +44,6 @@ const Add_Staff = () => {
 				initialValues={{
 					remember: true,
 				}}
-				// onFinish={onFinish}
-				// onFinishFailed={onFinishFailed}
 				autoComplete="off">
 				<Form.Item
 					label="Name"
@@ -65,7 +51,7 @@ const Add_Staff = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Name!",
+							message: "Please input Staff Name!",
 						},
 					]}>
 					<Input
@@ -82,7 +68,7 @@ const Add_Staff = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your Email!",
+							message: "Please input Staff Email!",
 						},
 					]}>
 					<Input
@@ -100,7 +86,7 @@ const Add_Staff = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your password!",
+							message: "Please input Staff password!",
 						},
 					]}>
 					<Input.Password
@@ -117,7 +103,7 @@ const Add_Staff = () => {
 					rules={[
 						{
 							required: true,
-							message: "Please input your PhoneNumber!",
+							message: "Please input Staff PhoneNumber!",
 						},
 					]}>
 					<Input

@@ -56,7 +56,7 @@ const LandingPage = () => {
 					<TypeAnimation
 						sequence={[
 							"Build",
-							1000, // wait 1s before replacing "Mice" with "Hamsters"
+							1000, // wait 1s before writing "-" infront of Build
 							"Build-",
 							1000,
 							"Build-Mate",

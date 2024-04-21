@@ -1,4 +1,4 @@
-import { Space, Table, Tag, Button, message } from "antd";
+import { Space, Table, Button, message } from "antd";
 import { useEffect, useState } from "react";
 import { axiosInstance } from "../env/axios";
 import { Link } from "react-router-dom";
@@ -60,7 +60,7 @@ const columns = [
 ];
 
 const Clients = () => {
-	//Projects Table Page Component
+	//Clients Table Page Component
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		axiosInstance
@@ -76,7 +76,6 @@ const Clients = () => {
 			.catch((e) => {
 				console.log(e);
 				message.error(e);
-				return <></>;
 			});
 	}, []);
 	return (
