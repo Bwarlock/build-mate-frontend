@@ -168,11 +168,13 @@ function Add_Task() {
 				<Form.Item
 					label="Project"
 					name="project"
-					rules={[
-						{
-							message: "Please input your Staff!",
-						},
-					]}>
+					rules={
+						[
+							// {
+							// 	message: "Please input your Staff!",
+							// },
+						]
+					}>
 					<Select
 						// defaultValue="lucy"
 						onChange={(e) => {

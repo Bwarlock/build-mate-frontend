@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import { axiosInstance } from "../env/axios";
+import { useNavigate } from "react-router-dom";
 
 function Add_Project() {
 	//Add Project Page Component
@@ -41,11 +42,14 @@ function Add_Project() {
 			});
 		console.log(user);
 	}, []);
-
+	const navigate = useNavigate();
 	const handleSubmit = () => {
 		axiosInstance
 			.post("/owner/create-project", values)
-			.then((res) => console.log(res.data))
+			.then((res) => {
+				console.log(res.data);
+				navigate("/dashboard/project");
+			})
 			.catch((e) => {
 				console.log(e);
 			});

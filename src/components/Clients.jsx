@@ -68,7 +68,7 @@ const Clients = () => {
 			.then((res) => {
 				console.log(res.data);
 				setData(
-					res.data.staffData.map((val, index) => {
+					res.data.clientData.map((val, index) => {
 						return { ...val, key: "" + index };
 					})
 				);
@@ -82,7 +82,7 @@ const Clients = () => {
 	return (
 		<>
 			<Link
-				to="/dashboard/add_staff"
+				to="/dashboard/add_client"
 				style={{
 					alignSelf: "end",
 					marginBottom: "1rem",

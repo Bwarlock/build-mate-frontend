@@ -13,6 +13,8 @@ import Add_Task from "./components/Add_Task";
 import LandingPage from "./components/LandingPage";
 import "./custom.less";
 import ProtectedRoute from "./auth/ProtectedRoute";
+import Clients from "./components/Clients";
+import Add_Client from "./components/Add_Client";
 
 function App() {
 	return (
@@ -27,6 +29,10 @@ function App() {
 							<Route path="/dashboard/project" element={<Project />}></Route>
 							<Route path="/dashboard/staff" element={<Staff />}></Route>
 							<Route path="/dashboard/tasks" element={<Tasks />}></Route>
+							<Route path="/dashboard/clients" element={<Clients />}></Route>
+							<Route
+								path="/dashboard/add_client"
+								element={<Add_Client />}></Route>
 							<Route
 								path="/dashboard/add_project"
 								element={<Add_Project />}></Route>

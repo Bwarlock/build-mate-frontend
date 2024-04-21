@@ -2,6 +2,7 @@ import { Button, ConfigProvider, Form, Input, message } from "antd";
 import { useState } from "react";
 import { BASE_URL } from "../env/api";
 import { axiosInstance } from "../env/axios";
+import { useNavigate } from "react-router-dom";
 
 const Add_Staff = () => {
 	//Add Staff Page Component
@@ -11,13 +12,14 @@ const Add_Staff = () => {
 		password: "",
 		phoneNumber: "",
 	});
-
+	const navigate = useNavigate();
 	const handleSubmit = () => {
 		//Using Intercepted AxiosInstance For Everything other than Login Register
 		axiosInstance
 			.post("/owner/create-staff", values)
 			.then((res) => {
 				console.log(res.data);
+				navigate("/dashboard/staff");
 			})
 			.catch((e) => {
 				console.log(e);

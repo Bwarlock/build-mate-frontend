@@ -49,6 +49,9 @@ const Dashboard = () => {
 				<Menu.Item style={{ fontWeight: "bold" }} key="tasks">
 					<Link to="/dashboard/tasks">Tasks</Link>
 				</Menu.Item>
+				<Menu.Item style={{ fontWeight: "bold" }} key="clients">
+					<Link to="/dashboard/clients">Clients</Link>
+				</Menu.Item>
 				{/* <Menu.Item key="add_task">
 					<Link to="/add_task">Add Task</Link>
 				</Menu.Item> */}

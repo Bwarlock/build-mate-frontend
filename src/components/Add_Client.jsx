@@ -1,7 +1,8 @@
-import { Button, ConfigProvider, Form, Input, message } from "antd";
-import { useState } from "react";
+import { Button, ConfigProvider, Form, Input, message, Select } from "antd";
+import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
 import { axiosInstance } from "../env/axios";
+import { useNavigate } from "react-router-dom";
 
 const Add_Client = () => {
 	//Add Staff Page Component
@@ -11,14 +12,41 @@ const Add_Client = () => {
 		password: "",
 		phoneNumber: "",
 		companyName: "",
+		project: [],
 	});
+	const [projectData, setProjectData] = useState([]);
+	useEffect(() => {
+		setValues((val) => {
+			return { ...val, startDate: Date() };
+		});
+		axiosInstance
+			.get("/owner/get-projects?page=1&limit=10")
+			.then((res) => {
+				console.log(res.data);
 
+				setProjectData(
+					res.data.projects.map((val) => {
+						return {
+							label: val.name,
+							value: val._id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+	}, []);
+
+	const navigate = useNavigate();
 	const handleSubmit = () => {
 		//Using Intercepted AxiosInstance For Everything other than Login Register
 		axiosInstance
-			.post("/owner/create-staff", values)
+			.post("/owner/create-client", values)
 			.then((res) => {
 				console.log(res.data);
+				navigate("/dashboard/clients");
 			})
 			.catch((e) => {
 				console.log(e);
@@ -38,7 +66,7 @@ const Add_Client = () => {
 				},
 			}}>
 			<Form
-				name="addStaff"
+				name="addClient"
 				// labelCol={{
 				// 	span: 8,
 				// }}
@@ -144,6 +172,30 @@ const Add_Client = () => {
 								return { ...val, phoneNumber: e.target.value };
 							});
 						}}
+					/>
+				</Form.Item>
+				<Form.Item
+					label="Project"
+					name="project"
+					rules={
+						[
+							// {
+							// 	message: "Please input your Staff!",
+							// },
+						]
+					}>
+					<Select
+						mode="multiple"
+						// defaultValue="lucy"
+						onChange={(e) => {
+							setValues((val) => {
+								return { ...val, project: [...e] };
+							});
+						}}
+						style={{
+							width: 120,
+						}}
+						options={projectData}
 					/>
 				</Form.Item>
 
