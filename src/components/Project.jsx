@@ -97,69 +97,69 @@ const columns = [
 ];
 
 //Dummy Data
-const data = [
-	{
-		key: "1",
-		name: "Project 1",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: [],
-		client: [],
-		tasks: [],
-	},
-	{
-		key: "2",
-		name: "Project 2",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: ["nice", "developer"],
-		client: ["someone"],
-		tasks: ["do something"],
-	},
-	{
-		key: "3",
-		name: "Project 3",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-		client: ["someone"],
-		tasks: ["do something"],
-	},
-	{
-		key: "4",
-		name: "Project 3",
-		startdate: "32-20-2004",
-		owner: "First Owner",
-		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-		client: ["someone"],
-		tasks: ["do something"],
-	},
-];
+// const data = [
+// 	{
+// 		key: "1",
+// 		name: "Project 1",
+// 		startdate: "32-20-2004",
+// 		owner: "First Owner",
+// 		staff: [],
+// 		client: [],
+// 		tasks: [],
+// 	},
+// 	{
+// 		key: "2",
+// 		name: "Project 2",
+// 		startdate: "32-20-2004",
+// 		owner: "First Owner",
+// 		staff: ["nice", "developer"],
+// 		client: ["someone"],
+// 		tasks: ["do something"],
+// 	},
+// 	{
+// 		key: "3",
+// 		name: "Project 3",
+// 		startdate: "32-20-2004",
+// 		owner: "First Owner",
+// 		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
+// 		client: ["someone"],
+// 		tasks: ["do something"],
+// 	},
+// 	{
+// 		key: "4",
+// 		name: "Project 3",
+// 		startdate: "32-20-2004",
+// 		owner: "First Owner",
+// 		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
+// 		client: ["someone"],
+// 		tasks: ["do something"],
+// 	},
+// ];
 
 const Project = () => {
 	//Projects Table Page Component
-	// const [data, setData] = useState([]);
-	// useEffect(() => {
-	// 	axiosInstance
-	// 		.get("/owner/get-projects?page=1&limit=2")
-	// 		.then((res) => {
-	// 			console.log(res.data);
+	const [data, setData] = useState([]);
+	useEffect(() => {
+		axiosInstance
+			.get("/owner/get-projects?page=1&limit=2")
+			.then((res) => {
+				console.log(res.data);
 
-	// 			setData(
-	// 				res.data.projects.map((val, index) => {
-	// 					return {
-	// 						...val,
-	// 						key: "" + index,
-	// 						startdate: val.createdAt,
-	// 					};
-	// 				})
-	// 			);
-	// 		})
-	// 		.catch((e) => {
-	// 			console.log(e);
-	// 			message.error(e);
-	// 		});
-	// }, []);
+				setData(
+					res.data.projects.map((val, index) => {
+						return {
+							...val,
+							key: "" + index,
+							startdate: val.createdAt,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
+	}, []);
 	return (
 		<>
 			<div className="gridded">

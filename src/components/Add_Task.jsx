@@ -40,7 +40,7 @@ function Add_Task() {
 					res.data.projects.map((val) => {
 						return {
 							label: val.name,
-							value: val.id,
+							value: val._id,
 						};
 					})
 				);
@@ -57,7 +57,7 @@ function Add_Task() {
 					res.data.staffData.map((val) => {
 						return {
 							label: val.name,
-							value: val.id,
+							value: val._id,
 						};
 					})
 				);
@@ -70,7 +70,7 @@ function Add_Task() {
 
 	axios.defaults.withCredentials = true;
 	const handleSubmit = () => {
-		axios
+		axiosInstance
 			.post("/owner/create-task", values)
 			.then((res) => console.log(res.data))
 			.catch((e) => {
@@ -184,11 +184,11 @@ function Add_Task() {
 				</Form.Item>
 
 				<Form.Item
-					label="Project"
-					name="project"
+					label="Due Date"
+					name="dueDate"
 					rules={[
 						{
-							message: "Please input your Staff!",
+							message: "Please input your Due Date!",
 						},
 					]}>
 					<DatePicker

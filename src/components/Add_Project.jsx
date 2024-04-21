@@ -1,4 +1,4 @@
-import { Button, ConfigProvider, Form, Input, Select } from "antd";
+import { Button, ConfigProvider, Form, Input, Select, message } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "../env/api";
@@ -16,11 +16,29 @@ function Add_Project() {
 		tasks: [],
 	});
 	const { user } = useAuth();
+	const [staffData, setStaffData] = useState([]);
 	useEffect(() => {
 		//Set Non Visible Values To Request
 		setValues((val) => {
 			return { ...val, owner: user.name };
 		});
+		axiosInstance
+			.get("/owner/get-staff?page=1&limit=5")
+			.then((res) => {
+				console.log(res.data);
+				setStaffData(
+					res.data.staffData.map((val) => {
+						return {
+							label: val.name,
+							value: val._id,
+						};
+					})
+				);
+			})
+			.catch((e) => {
+				console.log(e);
+				message.error(e);
+			});
 		console.log(user);
 	}, []);
 
@@ -103,15 +121,18 @@ function Add_Project() {
 				<Form.Item
 					label="Staff"
 					name="staff"
-					rules={[
-						{
-							message: "Please input your Staff!",
-						},
-					]}>
+					rules={
+						[
+							// {
+							// 	message: "Please input your Staff!",
+							// },
+						]
+					}>
 					<Select
 						mode="multiple"
 						// defaultValue="lucy"
 						onChange={(e) => {
+							console.log(e);
 							setValues((val) => {
 								return { ...val, staff: [...e] };
 							});
@@ -119,25 +140,7 @@ function Add_Project() {
 						style={{
 							width: 120,
 						}}
-						options={[
-							{
-								value: "jack",
-								label: "Jack",
-							},
-							{
-								value: "lucy",
-								label: "Lucy",
-							},
-							{
-								value: "Yiminghe",
-								label: "yiminghe",
-							},
-							{
-								value: "disabled",
-								label: "Disabled",
-								disabled: true,
-							},
-						]}
+						options={staffData}
 					/>
 				</Form.Item>
 
