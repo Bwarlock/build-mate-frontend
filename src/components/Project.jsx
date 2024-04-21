@@ -141,7 +141,7 @@ const Project = () => {
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		axiosInstance
-			.get("/owner/get-projects?page=1&limit=2")
+			.get("/owner/get-projects?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 
@@ -182,8 +182,16 @@ const Project = () => {
 								// borderRadius: 10,
 							}}>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+								<span style={{ fontWeight: "bold" }}>Description : </span>
+								{pro.description}
+							</p>
+							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>STAFF : </span>
-								{pro.staff.join(", ")}
+								{pro.staff
+									.map((sta) => {
+										return sta.name;
+									})
+									.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>CLIENT : </span>
@@ -193,9 +201,16 @@ const Project = () => {
 								<span style={{ fontWeight: "bold" }}>TASKS : </span>
 								{pro.tasks.join(", ")}
 							</p>
-							<small>
-								{pro.startdate}&nbsp;&nbsp; - &nbsp;&nbsp;{pro.owner}
-							</small>
+							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+								<span style={{ fontWeight: "bold" }}>Created At : </span>
+								<small>
+									{new Date(pro.startdate).getDate() + 1}&nbsp;&nbsp;{", "}
+									{new Date(pro.startdate).getMonth() + 1}&nbsp;&nbsp;{", "}
+									{new Date(pro.startdate).getFullYear()}
+								</small>
+							</p>
+
+							<small>&nbsp;&nbsp;{pro.owner}</small>
 						</Card>
 						// <div className="card" key={index}>
 						// 	{JSON.stringify(pro)}

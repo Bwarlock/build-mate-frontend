@@ -23,7 +23,7 @@ function Add_Project() {
 			return { ...val, owner: user.name };
 		});
 		axiosInstance
-			.get("/owner/get-staff?page=1&limit=5")
+			.get("/owner/get-staff?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 				setStaffData(

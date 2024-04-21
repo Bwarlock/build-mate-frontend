@@ -32,7 +32,7 @@ function Add_Task() {
 			return { ...val, startDate: Date() };
 		});
 		axiosInstance
-			.get("/owner/get-projects?page=1&limit=5")
+			.get("/owner/get-projects?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 
@@ -50,7 +50,7 @@ function Add_Task() {
 				message.error(e);
 			});
 		axiosInstance
-			.get("/owner/get-staff?page=1&limit=5")
+			.get("/owner/get-staff?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 				setStaffData(
@@ -186,15 +186,18 @@ function Add_Task() {
 				<Form.Item
 					label="Due Date"
 					name="dueDate"
-					rules={[
-						{
-							message: "Please input your Due Date!",
-						},
-					]}>
+					rules={
+						[
+							// {
+							// 	message: "Please input your Due Date!",
+							// },
+						]
+					}>
 					<DatePicker
-						onChange={(e) => {
+						onChange={(_, e) => {
+							console.log(e);
 							setValues((val) => {
-								return { ...val, dueDate: e.target.value };
+								return { ...val, dueDate: e };
 							});
 						}}
 					/>

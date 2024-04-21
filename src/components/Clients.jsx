@@ -59,7 +59,7 @@ const columns = [
 	},
 ];
 
-const Staff = () => {
+const Clients = () => {
 	//Projects Table Page Component
 	const [data, setData] = useState([]);
 	useEffect(() => {
@@ -97,4 +97,4 @@ const Staff = () => {
 		</>
 	);
 };
-export default Staff;
+export default Clients;

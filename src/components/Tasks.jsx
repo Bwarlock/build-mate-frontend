@@ -64,20 +64,22 @@ const columns = [
 	},
 ];
 
-const Project = () => {
+const Tasks = () => {
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		axiosInstance
-			.get("/owner/get-tasks?page=1&limit=5")
+			.get("/owner/get-tasks?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 
 				setData(
-					res.data.projects.map((val, index) => {
+					res.data.tasks.map((val, index) => {
 						return {
 							...val,
 							key: "" + index,
 							startdate: val.createdAt,
+							project: val.project.name,
+							assignedTo: val.project.staff,
 						};
 					})
 				);
@@ -106,4 +108,4 @@ const Project = () => {
 	);
 };
 
-export default Project;
+export default Tasks;
