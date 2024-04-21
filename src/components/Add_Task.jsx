@@ -13,6 +13,7 @@ import { BASE_URL } from "../env/api";
 import { useAuth } from "../auth/AuthProvider";
 import Project from "./Project";
 import { axiosInstance } from "../env/axios";
+import { useNavigate } from "react-router-dom";
 
 function Add_Task() {
 	//Add Task Page Component
@@ -26,7 +27,7 @@ function Add_Task() {
 	});
 	const [projectData, setProjectData] = useState([]);
 	const [staffData, setStaffData] = useState([]);
-
+	const navigate = useNavigate();
 	useEffect(() => {
 		setValues((val) => {
 			return { ...val, startDate: Date() };
@@ -72,7 +73,10 @@ function Add_Task() {
 	const handleSubmit = () => {
 		axiosInstance
 			.post("/owner/create-task", values)
-			.then((res) => console.log(res.data))
+			.then((res) => {
+				console.log(res.data);
+				navigate("/dashboard/tasks");
+			})
 			.catch((e) => {
 				console.log(e);
 			});
@@ -152,7 +156,7 @@ function Add_Task() {
 						// defaultValue="lucy"
 						onChange={(e) => {
 							setValues((val) => {
-								return { ...val, staff: [...e] };
+								return { ...val, assignedTo: [...e] };
 							});
 						}}
 						style={{

@@ -64,7 +64,7 @@ const Clients = () => {
 	const [data, setData] = useState([]);
 	useEffect(() => {
 		axiosInstance
-			.get("/owner/get-staff?page=1&limit=10")
+			.get("/owner/get-clients?page=1&limit=10")
 			.then((res) => {
 				console.log(res.data);
 				setData(
