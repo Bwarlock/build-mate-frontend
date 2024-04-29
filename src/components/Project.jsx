@@ -1,169 +1,24 @@
-import { message, Card } from "antd";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
+import { Card } from "antd";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
-
-//Column Titles
-// const columns = [
-// 	{
-// 		title: "Name",
-// 		dataIndex: "name",
-// 		key: "name",
-// 		render: (text) => <a>{text}</a>,
-// 	},
-// 	{
-// 		title: "StartDate",
-// 		dataIndex: "startdate",
-// 		key: "startdate",
-// 	},
-// 	{
-// 		title: "Owner",
-// 		dataIndex: "owner",
-// 		key: "owner",
-// 	},
-// 	{
-// 		title: "Staff",
-// 		dataIndex: "staff",
-// 		key: "staff",
-// 		render: (_, { staff }) => {
-// 			return (
-// 				<Space
-// 					size="middle"
-// 					style={{
-// 						maxWidth: "100px",
-// 						textOverflow: "ellipsis",
-// 						overflow: "hidden",
-// 					}}>
-// 					{staff.map((worker) => {
-// 						return worker + ",";
-// 					})}
-// 				</Space>
-// 			);
-// 		},
-// 	},
-// 	{
-// 		title: "Client",
-// 		dataIndex: "client",
-// 		key: "client",
-// 		render: (_, { client }) => {
-// 			return (
-// 				<Space
-// 					size="middle"
-// 					style={{
-// 						maxWidth: "100px",
-// 						textOverflow: "ellipsis",
-// 						overflow: "hidden",
-// 					}}>
-// 					{client.map((clien) => {
-// 						return clien + ",";
-// 					})}
-// 				</Space>
-// 			);
-// 		},
-// 	},
-// 	{
-// 		title: "Tasks",
-// 		dataIndex: "tasks",
-// 		key: "tasks",
-// 		render: (_, { tasks }) => {
-// 			return (
-// 				<Space
-// 					size="middle"
-// 					style={{
-// 						maxWidth: "100px",
-// 						textOverflow: "ellipsis",
-// 						overflow: "hidden",
-// 					}}>
-// 					{tasks.map((task) => {
-// 						return task + ",";
-// 					})}
-// 				</Space>
-// 			);
-// 		},
-// 	},
-
-// 	{
-// 		title: "Action",
-// 		key: "action",
-// 		render: () => (
-// 			<Space size="middle">
-// 				<Button type="primary" danger>
-// 					Delete
-// 				</Button>
-// 			</Space>
-// 		),
-// 	},
-// ];
-
-//Dummy Data
-// const data = [
-// 	{
-// 		key: "1",
-// 		name: "Project 1",
-// 		startdate: "32-20-2004",
-// 		owner: "First Owner",
-// 		staff: [],
-// 		client: [],
-// 		tasks: [],
-// 	},
-// 	{
-// 		key: "2",
-// 		name: "Project 2",
-// 		startdate: "32-20-2004",
-// 		owner: "First Owner",
-// 		staff: ["nice", "developer"],
-// 		client: ["someone"],
-// 		tasks: ["do something"],
-// 	},
-// 	{
-// 		key: "3",
-// 		name: "Project 3",
-// 		startdate: "32-20-2004",
-// 		owner: "First Owner",
-// 		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-// 		client: ["someone"],
-// 		tasks: ["do something"],
-// 	},
-// 	{
-// 		key: "4",
-// 		name: "Project 3",
-// 		startdate: "32-20-2004",
-// 		owner: "First Owner",
-// 		staff: ["nice", "developer", "asjpdjaposd", "aisgdiua", "skajdi"],
-// 		client: ["someone"],
-// 		tasks: ["do something"],
-// 	},
-// ];
+import { useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
 
 const Project = () => {
 	//Projects Page Component
-	const [data, setData] = useState([]);
-	useEffect(() => {
-		axiosInstance
-			.get("/owner/get-projects?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
+	const { tableData: projectTableData } = useSelector((state) => state.project);
+	const { getProjects } = useGetData();
 
-				setData(
-					res.data.projects.map((val, index) => {
-						return {
-							...val,
-							key: "" + index,
-							startdate: val.createdAt,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+	useEffect(() => {
+		if (!projectTableData.length) {
+			getProjects({ page: 1, limit: 10 });
+		}
 	}, []);
 	return (
 		<>
 			<div className="gridded">
-				{data.map((pro, index) => {
+				{projectTableData.map((pro, index) => {
 					return (
 						<Card
 							hoverable
@@ -204,9 +59,9 @@ const Project = () => {
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Created At : </span>
 								<small>
-									{new Date(pro.startdate).getDate() + 1}&nbsp;&nbsp;{", "}
-									{new Date(pro.startdate).getMonth() + 1}&nbsp;&nbsp;{", "}
-									{new Date(pro.startdate).getFullYear()}
+									{new Date(pro.createdAt).getDate() + 1}&nbsp;&nbsp;{", "}
+									{new Date(pro.createdAt).getMonth() + 1}&nbsp;&nbsp;{", "}
+									{new Date(pro.createdAt).getFullYear()}
 								</small>
 							</p>
 

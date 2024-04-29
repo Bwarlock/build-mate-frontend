@@ -1,8 +1,7 @@
-import { Button, ConfigProvider, Form, Input, Select, message } from "antd";
+import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { useAuth } from "../auth/AuthProvider";
-import { axiosInstance } from "../env/axios";
-import { useNavigate } from "react-router-dom";
+import { useAddData, useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
 
 function Add_Project() {
 	//Add Project Page Component
@@ -14,84 +13,34 @@ function Add_Project() {
 		clients: [],
 		tasks: [],
 	});
-	const { user } = useAuth();
-	const [staffData, setStaffData] = useState([]);
-	const [clientData, setClientData] = useState([]);
-	const [taskData, setTaskData] = useState([]);
-	const navigate = useNavigate();
+
+	const { selectData: staffSelectData } = useSelector((state) => state.staff);
+	const { selectData: clientSelectData } = useSelector((state) => state.client);
+	const { selectData: taskSelectData } = useSelector((state) => state.task);
+	const { user } = useSelector((state) => state.global);
+	const { addProject } = useAddData();
+	const { selectStaff, selectClients, selectTasks } = useGetData();
 
 	useEffect(() => {
 		//Set Non Visible Values To Request
 		setValues((val) => {
 			return { ...val, owner: user.name };
 		});
-		axiosInstance
-			.get("/owner/get-staff?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-				setStaffData(
-					res.data.staffData.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!staffSelectData.length) {
+			selectStaff({ page: 1, limit: 10 });
+		}
 
-		axiosInstance
-			.get("/owner/get-clients?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-				setClientData(
-					res.data.clientData.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!clientSelectData.length) {
+			selectClients({ page: 1, limit: 10 });
+		}
 
-		axiosInstance
-			.get("/owner/get-tasks?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-
-				setTaskData(
-					res.data.tasks.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!taskSelectData.length) {
+			selectTasks({ page: 1, limit: 10 });
+		}
 	}, []);
 
 	const handleSubmit = () => {
-		axiosInstance
-			.post("/owner/create-project", values)
-			.then((res) => {
-				console.log(res.data);
-				navigate("/dashboard/project");
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		addProject(values);
 	};
 	return (
 		<ConfigProvider
@@ -160,7 +109,7 @@ function Add_Project() {
 						style={{
 							width: 120,
 						}}
-						options={staffData}
+						options={staffSelectData}
 					/>
 				</Form.Item>
 
@@ -182,7 +131,7 @@ function Add_Project() {
 						style={{
 							width: 120,
 						}}
-						options={clientData}
+						options={clientSelectData}
 					/>
 				</Form.Item>
 
@@ -198,7 +147,7 @@ function Add_Project() {
 						style={{
 							width: 120,
 						}}
-						options={taskData}
+						options={taskSelectData}
 					/>
 				</Form.Item>
 				<Form.Item wrapperCol={{}}>

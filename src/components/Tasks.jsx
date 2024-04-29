@@ -1,7 +1,9 @@
-import { Space, Table, Button, message } from "antd";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
+import { Space, Table, Button } from "antd";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
+
 const columns = [
 	{
 		title: "Name",
@@ -10,9 +12,9 @@ const columns = [
 		render: (text) => <a>{text}</a>,
 	},
 	{
-		title: "StartDate",
-		dataIndex: "startdate",
-		key: "startdate",
+		title: "createdAt",
+		dataIndex: "createdAt",
+		key: "createdAt",
 	},
 	{
 		title: "Description",
@@ -23,6 +25,9 @@ const columns = [
 		title: "Project",
 		dataIndex: "project",
 		key: "project",
+		render: (project) => {
+			return <p>{project.name}</p>;
+		},
 	},
 
 	{
@@ -39,7 +44,7 @@ const columns = [
 						overflow: "hidden",
 					}}>
 					{assignedTo.map((staf) => {
-						return staf + ",";
+						return staf.name + ",";
 					})}
 				</Space>
 			);
@@ -65,29 +70,13 @@ const columns = [
 ];
 
 const Tasks = () => {
-	const [data, setData] = useState([]);
-	useEffect(() => {
-		axiosInstance
-			.get("/owner/get-tasks?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
+	const { tableData: taskTableData } = useSelector((state) => state.task);
+	const { getTasks } = useGetData();
 
-				setData(
-					res.data.tasks.map((val, index) => {
-						return {
-							...val,
-							key: "" + index,
-							startdate: val.createdAt,
-							project: val.project.name,
-							assignedTo: val.project.staff,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+	useEffect(() => {
+		if (!taskTableData.length) {
+			getTasks({ page: 1, limit: 10 });
+		}
 	}, []);
 	return (
 		<>
@@ -103,7 +92,7 @@ const Tasks = () => {
 					Add
 				</Button>
 			</Link>
-			<Table columns={columns} dataSource={data} />
+			<Table columns={columns} dataSource={taskTableData} />
 		</>
 	);
 };

@@ -1,7 +1,7 @@
-import { Button, ConfigProvider, Form, Input, message, Select } from "antd";
+import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
-import { useNavigate } from "react-router-dom";
+import { useAddData, useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
 
 const Add_Client = () => {
 	//Add Client Page Component
@@ -13,42 +13,21 @@ const Add_Client = () => {
 		companyName: "",
 		project: [],
 	});
-	const [projectData, setProjectData] = useState([]);
-	const navigate = useNavigate();
+
+	const { selectData: projectSelectData } = useSelector(
+		(state) => state.project
+	);
+	const { addClient } = useAddData();
+	const { selectProjects } = useGetData();
 
 	useEffect(() => {
-		axiosInstance
-			.get("/owner/get-projects?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-
-				setProjectData(
-					res.data.projects.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!projectSelectData.length) {
+			selectProjects({ page: 1, limit: 10 });
+		}
 	}, []);
 
 	const handleSubmit = () => {
-		//Using Intercepted AxiosInstance
-		axiosInstance
-			.post("/owner/create-client", values)
-			.then((res) => {
-				console.log(res.data);
-				navigate("/dashboard/clients");
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		addClient(values);
 	};
 	return (
 		<ConfigProvider
@@ -59,12 +38,6 @@ const Add_Client = () => {
 			}}>
 			<Form
 				name="addClient"
-				// labelCol={{
-				// 	span: 8,
-				// }}
-				// wrapperCol={{
-				// 	span: 16,
-				// }}
 				style={{
 					maxWidth: 600,
 					backgroundColor: "white",
@@ -93,17 +66,7 @@ const Add_Client = () => {
 						}}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="Company Name"
-					name="companyName"
-					rules={
-						[
-							// {
-							// 	required: true,
-							// 	message: "Please input your Company!",
-							// },
-						]
-					}>
+				<Form.Item label="Company Name" name="companyName" rules={[]}>
 					<Input
 						onChange={(e) => {
 							setValues((val) => {
@@ -164,16 +127,7 @@ const Add_Client = () => {
 						}}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="Project"
-					name="project"
-					rules={
-						[
-							// {
-							// 	message: "Please input your Staff!",
-							// },
-						]
-					}>
+				<Form.Item label="Project" name="project" rules={[]}>
 					<Select
 						mode="multiple"
 						onChange={(e) => {
@@ -184,7 +138,7 @@ const Add_Client = () => {
 						style={{
 							width: 120,
 						}}
-						options={projectData}
+						options={projectSelectData}
 					/>
 				</Form.Item>
 

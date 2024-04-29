@@ -1,56 +1,28 @@
-import { Button, Checkbox, ConfigProvider, Form, Input, message } from "antd";
-import axios from "axios";
+import { Button, Checkbox, ConfigProvider, Form, Input } from "antd";
 import { useEffect, useState } from "react";
-import { BASE_URL } from "../env/api";
-import { useAuth } from "../auth/AuthProvider";
-import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
 import { TypeAnimation } from "react-type-animation";
+import { useCheckLogin, useLogin } from "../api/hooks";
 
 const Login = () => {
 	//Login Page Component
 	const [values, setValues] = useState({
 		email: "",
 		password: "",
-		domainName: "",
+		domainName: "", //Getting Domain Name For Subdomains
 	});
-	const { login, user, token } = useAuth();
-	axios.defaults.withCredentials = true;
-	const navigate = useNavigate();
-	const handleSubmit = () => {
-		//Getting Domain Name For Subdomains
-		console.log(window.location.hostname);
-		let domainName = window.location.hostname;
 
-		axios
-			.post(BASE_URL + "/auth/login", {
-				...values,
-				domainName,
-			})
-			.then((res) => {
-				console.log(res.data);
-				console.log(jwtDecode(res.data.token));
-				login(res.data.token, res.data.user);
-				setTimeout(() => {
-					navigate("/dashboard");
-				}, 1000);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+	const login = useLogin();
+	const checkLogin = useCheckLogin();
+
+	const handleSubmit = () => {
+		login(values);
 	};
 	useEffect(() => {
-		if (user && token) {
-			navigate("/dashboard");
-		}
+		checkLogin("/dashboard", null);
 	}, []);
 	return (
 		<div className="full">
 			<nav className="menuBar">
-				{/* <div className="logo">
-						<a href="">logo</a>
-					</div> */}
 				<TypeAnimation
 					sequence={[
 						"Build",

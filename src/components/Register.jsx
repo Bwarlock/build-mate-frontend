@@ -8,11 +8,8 @@ import {
 	theme,
 	ConfigProvider,
 } from "antd";
-import axios from "axios";
-import { BASE_URL } from "../env/api";
-import { useAuth } from "../auth/AuthProvider";
 import { TypeAnimation } from "react-type-animation";
-import { useNavigate } from "react-router-dom";
+import { useRegister } from "../api/hooks";
 
 const Register = () => {
 	//Register Page Component
@@ -238,6 +235,7 @@ const Register = () => {
 			),
 		},
 	];
+
 	const next = () => {
 		setCurrent(current + 1);
 	};
@@ -266,29 +264,11 @@ const Register = () => {
 		padding: "2rem 2rem 0rem",
 		boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 	};
-	const navigate = useNavigate();
-	const { login } = useAuth();
-	axios.defaults.withCredentials = true;
+
+	const register = useRegister();
 	const handleSubmit = () => {
 		if (confirmPass == values.password) {
-			axios
-				.post(BASE_URL + "/auth/register", values, {
-					// headers: {
-					// 	"Access-Control-Allow-Credentials": "*",
-					// },
-				})
-				.then((res) => {
-					console.log(res.data);
-					login(res.data.token, res.data.user);
-					message.success("Processing complete!");
-					setTimeout(() => {
-						navigate("/dashboard/project");
-					}, 1000);
-				})
-				.catch((err) => {
-					console.error(err);
-					message.error(err);
-				});
+			register(values);
 		} else {
 			message.error("Wrong Confirmation Password");
 		}
@@ -297,9 +277,6 @@ const Register = () => {
 	return (
 		<div className="full">
 			<nav className="menuBar">
-				{/* <div className="logo">
-						<a href="">logo</a>
-					</div> */}
 				<TypeAnimation
 					sequence={[
 						"Build",
@@ -349,7 +326,7 @@ const Register = () => {
 						)}
 						{current === steps.length - 1 && (
 							<Button type="primary" onClick={handleSubmit}>
-								Done
+								Register
 							</Button>
 						)}
 						{current > 0 && (

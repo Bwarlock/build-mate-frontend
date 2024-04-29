@@ -1,15 +1,7 @@
-import {
-	Button,
-	Form,
-	Input,
-	Select,
-	message,
-	DatePicker,
-	ConfigProvider,
-} from "antd";
+import { Button, Form, Input, Select, DatePicker, ConfigProvider } from "antd";
 import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
-import { useNavigate } from "react-router-dom";
+import { useAddData, useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
 
 function Add_Task() {
 	//Add Task Page Component
@@ -21,61 +13,28 @@ function Add_Task() {
 		assignedTo: [],
 		dueDate: "",
 	});
-	const [projectData, setProjectData] = useState([]);
-	const [staffData, setStaffData] = useState([]);
-	const navigate = useNavigate();
+
+	const { selectData: projectSelectData } = useSelector(
+		(state) => state.project
+	);
+	const { selectData: staffSelectData } = useSelector((state) => state.staff);
+	const { addTask } = useAddData();
+	const { selectProjects, selectStaff } = useGetData();
+
 	useEffect(() => {
 		setValues((val) => {
 			return { ...val, startDate: Date() };
 		});
-		axiosInstance
-			.get("/owner/get-projects?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-
-				setProjectData(
-					res.data.projects.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
-		axiosInstance
-			.get("/owner/get-staff?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-				setStaffData(
-					res.data.staffData.map((val) => {
-						return {
-							label: val.name,
-							value: val._id,
-						};
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!projectSelectData.length) {
+			selectProjects({ page: 1, limit: 10 });
+		}
+		if (!staffSelectData.length) {
+			selectStaff({ page: 1, limit: 10 });
+		}
 	}, []);
 
 	const handleSubmit = () => {
-		axiosInstance
-			.post("/owner/create-task", values)
-			.then((res) => {
-				console.log(res.data);
-				navigate("/dashboard/tasks");
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		addTask(values);
 	};
 	return (
 		<ConfigProvider
@@ -150,7 +109,7 @@ function Add_Task() {
 						style={{
 							width: 120,
 						}}
-						options={staffData}
+						options={staffSelectData}
 					/>
 				</Form.Item>
 				<Form.Item label="Project" name="project" rules={[]}>
@@ -163,7 +122,7 @@ function Add_Task() {
 						style={{
 							width: 120,
 						}}
-						options={projectData}
+						options={projectSelectData}
 					/>
 				</Form.Item>
 

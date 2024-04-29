@@ -1,7 +1,8 @@
-import { Space, Table, Button, message } from "antd";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
+import { Space, Table, Button } from "antd";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useGetData } from "../api/hooks";
+import { useSelector } from "react-redux";
 //Column Titles
 const columns = [
 	{
@@ -39,7 +40,7 @@ const columns = [
 						overflow: "hidden",
 					}}>
 					{projects.map((proj) => {
-						return proj + ",";
+						return proj.name + ",";
 					})}
 				</Space>
 			);
@@ -61,22 +62,13 @@ const columns = [
 
 const Staff = () => {
 	//Staff Table Page Component
-	const [data, setData] = useState([]);
+	const { tableData: staffTableData } = useSelector((state) => state.staff);
+	const { getStaff } = useGetData();
+
 	useEffect(() => {
-		axiosInstance
-			.get("/owner/get-staff?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-				setData(
-					res.data.staffData.map((val, index) => {
-						return { ...val, key: "" + index };
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!staffTableData.length) {
+			getStaff({ page: 1, limit: 10 });
+		}
 	}, []);
 	return (
 		<>
@@ -92,7 +84,7 @@ const Staff = () => {
 					Add
 				</Button>
 			</Link>
-			<Table columns={columns} dataSource={data} />
+			<Table columns={columns} dataSource={staffTableData} />
 		</>
 	);
 };

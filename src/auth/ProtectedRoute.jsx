@@ -1,14 +1,11 @@
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthProvider";
+import { Outlet } from "react-router-dom";
 import { useEffect } from "react";
+import { useCheckLogin } from "../api/hooks";
 
 function ProtectedRoute() {
-	const { user, token } = useAuth();
-	const navigate = useNavigate();
+	const checkLogin = useCheckLogin();
 	useEffect(() => {
-		if (!user && !token) {
-			navigate("/login");
-		}
+		checkLogin(null, "/login");
 	}, []);
 	return <Outlet />;
 }

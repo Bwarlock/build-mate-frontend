@@ -1,7 +1,8 @@
-import { Space, Table, Button, message } from "antd";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../env/axios";
+import { Space, Table, Button } from "antd";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useGetData } from "../api/hooks";
 //Column Titles
 const columns = [
 	{
@@ -39,7 +40,7 @@ const columns = [
 						overflow: "hidden",
 					}}>
 					{projects.map((proj) => {
-						return proj + ",";
+						return proj.name + ",";
 					})}
 				</Space>
 			);
@@ -61,22 +62,13 @@ const columns = [
 
 const Clients = () => {
 	//Clients Table Page Component
-	const [data, setData] = useState([]);
+	const { tableData: clientTableData } = useSelector((state) => state.client);
+	const { getClients } = useGetData();
+
 	useEffect(() => {
-		axiosInstance
-			.get("/owner/get-clients?page=1&limit=10")
-			.then((res) => {
-				console.log(res.data);
-				setData(
-					res.data.clientData.map((val, index) => {
-						return { ...val, key: "" + index };
-					})
-				);
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		if (!clientTableData.length) {
+			getClients({ page: 1, limit: 10 });
+		}
 	}, []);
 	return (
 		<>
@@ -92,7 +84,7 @@ const Clients = () => {
 					Add
 				</Button>
 			</Link>
-			<Table columns={columns} dataSource={data} />
+			<Table columns={columns} dataSource={clientTableData} />
 		</>
 	);
 };

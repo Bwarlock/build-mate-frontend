@@ -1,7 +1,6 @@
-import { Button, ConfigProvider, Form, Input, message } from "antd";
+import { Button, ConfigProvider, Form, Input } from "antd";
 import { useState } from "react";
-import { axiosInstance } from "../env/axios";
-import { useNavigate } from "react-router-dom";
+import { useAddData } from "../api/hooks";
 
 const Add_Staff = () => {
 	//Add Staff Page Component
@@ -11,19 +10,10 @@ const Add_Staff = () => {
 		password: "",
 		phoneNumber: "",
 	});
-	const navigate = useNavigate();
+	const { addStaff } = useAddData();
+
 	const handleSubmit = () => {
-		//Using Intercepted AxiosInstance
-		axiosInstance
-			.post("/owner/create-staff", values)
-			.then((res) => {
-				console.log(res.data);
-				navigate("/dashboard/staff");
-			})
-			.catch((e) => {
-				console.log(e);
-				message.error(e);
-			});
+		addStaff(values);
 	};
 	return (
 		<ConfigProvider
