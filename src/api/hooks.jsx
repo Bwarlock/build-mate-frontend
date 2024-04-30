@@ -41,6 +41,7 @@ export const useLogin = () => {
 		Login.v1(data)
 			.then((res) => {
 				console.log(res);
+				// TODO:check if the domain is correct
 				dispatch(storeUser(res.data.user)); // Storing User in Redux-persist LocalStorage
 				localStorage.setItem("token", res.data.token); // Storing Token Myself
 				navigate("/dashboard");
@@ -81,7 +82,7 @@ export const useCheckLogin = () => {
 };
 
 export const useRegister = () => {
-	const navigate = useNavigate();
+	// const navigate = useNavigate();
 	const dispatch = useDispatch();
 
 	function register(data) {
@@ -91,7 +92,10 @@ export const useRegister = () => {
 				message.success("User Registered!");
 				dispatch(storeUser(res.data.user)); // Storing User in Redux-persist LocalStorage
 				localStorage.setItem("token", res.data.token); // Storing Token Myself
-				navigate("/dashboard");
+				// Navigate the user to correct domain after successful registration
+				const domain = res.data.user.domainName;
+				const redirectUrl = `http://${domain}.build-mate.in/dashboard`;
+				window.location = redirectUrl;
 			})
 			.catch((e) => {
 				console.log(e);
