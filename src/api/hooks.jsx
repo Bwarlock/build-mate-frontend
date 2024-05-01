@@ -83,15 +83,15 @@ export const useCheckLogin = () => {
 
 export const useRegister = () => {
 	// const navigate = useNavigate();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
 	function register(data) {
 		Register.v1(data)
 			.then((res) => {
 				console.log(res);
-				message.success("User Registered!");
-				dispatch(storeUser(res.data.user)); // Storing User in Redux-persist LocalStorage
-				localStorage.setItem("token", res.data.token); // Storing Token Myself
+				message.success("Registration Successful! Please Login");
+				// dispatch(storeUser(res.data.user)); // Storing User in Redux-persist LocalStorage
+				// localStorage.setItem("token", res.data.token); // Storing Token Myself
 				// Navigate the user to correct domain after successful registration
 				const domain = res.data.user.domainName;
 				const redirectUrl = `http://${domain}.build-mate.in/dashboard`;
