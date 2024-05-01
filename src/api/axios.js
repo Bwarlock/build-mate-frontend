@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const BASE_URL = "http://localhost:8000/api";
-const BASE_URL = "https://api.build-mate.in/api";
+const BASE_URL = "http://localhost:8000/api";
+// const BASE_URL = "https://api.build-mate.in/api";
 
 export const BaseAxiosInstance = axios.create({
 	baseURL: BASE_URL,
@@ -9,13 +9,15 @@ export const BaseAxiosInstance = axios.create({
 
 export const LoginAxiosInstance = axios.create({
 	baseURL: BASE_URL,
-	withCredentials: true,
+	// withCredentials: true,
 });
 
 export const AuthAxiosInstance = axios.create({
 	baseURL: BASE_URL,
-	withCredentials: true,
+	// withCredentials: true,
 });
+// TODO: add interceptors for 401 and remove token from local storage
+
 
 AuthAxiosInstance.interceptors.request.use(
 	(config) => {
