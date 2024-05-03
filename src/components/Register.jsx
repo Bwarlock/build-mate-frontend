@@ -23,7 +23,24 @@ const Register = () => {
 		companyName: "",
 		domainName: "",
 	});
+	
 	const [confirmPass, setConfirmPass] = useState("");
+	// Domain Suggestions
+	const [domainSuggestions, setDomainSuggestions] = useState([]);
+	const generateDomainSuggestions = (companyName) => {
+	const splitCompanyName = companyName.split(' ');
+    const trimmedCompanyName = companyName.trim(' ').toLowerCase().replace(/\s+/g, '-');
+    const domainSuggestions = [
+		trimmedCompanyName,
+		trimmedCompanyName.replace(/\s+/g, ''),
+		trimmedCompanyName.slice(0, 2),
+		// Get first element of each word in splitCompanyName
+		splitCompanyName.map((word) => word[0]).join('').toLowerCase(),
+    ];
+	// Remove duplicates
+	const uniqueDomainSuggestions = [...new Set(domainSuggestions)];
+    setDomainSuggestions(uniqueDomainSuggestions);
+  };
 	const steps = [
 		{
 			title: "First",
@@ -73,6 +90,7 @@ const Register = () => {
 						<Input
 							onChange={(e) => {
 								setValues((val) => {
+									generateDomainSuggestions(e.target.value);
 									return { ...val, companyName: e.target.value };
 								});
 							}}
@@ -119,6 +137,7 @@ const Register = () => {
 					<Form.Item
 						label="Domain Name"
 						name="domain"
+						valuePropName="checked"
 						rules={[
 							{
 								required: true,
@@ -126,12 +145,27 @@ const Register = () => {
 							},
 						]}>
 						<Input
+							value={values.domainName}
 							onChange={(e) => {
 								setValues((val) => {
 									return { ...val, domainName: e.target.value };
 								});
 							}}
 						/>
+					</Form.Item>
+					<Form.Item
+						label="Domain Suggestions" >
+						{domainSuggestions.map((suggestion) => (
+							<Button
+								key={suggestion}
+								onClick={() => {
+									setValues((val) => {
+										return { ...val, domainName: suggestion };
+									});
+								}}>
+								{suggestion}
+							</Button>
+						))}
 					</Form.Item>
 				</Form>
 			),
