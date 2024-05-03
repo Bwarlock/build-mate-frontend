@@ -157,8 +157,7 @@ const Register = () => {
 						</span>
 					</Form.Item>
 					{/* change color to green on selection */}
-					<Form.Item
-						label="Domain Suggestions" >
+					<Form.Item>
 						{domainSuggestions.map((suggestion) => (
 							<Button
 								key={suggestion}
