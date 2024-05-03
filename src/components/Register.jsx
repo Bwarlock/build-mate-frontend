@@ -134,6 +134,7 @@ const Register = () => {
 						remember: true,
 					}}
 					autoComplete="off">
+					{/* Show .build-mate.in as fixed text in the input field */}
 					<Form.Item
 						label="Domain Name"
 						name="domain"
@@ -145,13 +146,16 @@ const Register = () => {
 							},
 						]}>
 						<Input
-							value={values.domainName}
+							value={values.domainName} 
 							onChange={(e) => {
 								setValues((val) => {
 									return { ...val, domainName: e.target.value };
 								});
 							}}
-						/>
+						/> 
+						<span>
+							.build-mate.in
+						</span>
 					</Form.Item>
 					<Form.Item
 						label="Domain Suggestions" >
