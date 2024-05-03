@@ -134,7 +134,6 @@ const Register = () => {
 						remember: true,
 					}}
 					autoComplete="off">
-					{/* Show .build-mate.in as fixed text in the input field */}
 					<Form.Item
 						label="Domain Name"
 						name="domain"
@@ -157,11 +156,13 @@ const Register = () => {
 							.build-mate.in
 						</span>
 					</Form.Item>
+					{/* change color to green on selection */}
 					<Form.Item
 						label="Domain Suggestions" >
 						{domainSuggestions.map((suggestion) => (
 							<Button
 								key={suggestion}
+								type="dashed"
 								onClick={() => {
 									setValues((val) => {
 										return { ...val, domainName: suggestion };
