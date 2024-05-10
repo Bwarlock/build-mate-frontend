@@ -9,7 +9,7 @@ export function Login(data) {
 Login.v1 = function v1(data) {
 	return LoginAxiosInstance({
 		method: "post",
-		url: "/auth/login",
+		url: "/user/login",
 		data: data,
 	});
 };
@@ -21,7 +21,7 @@ export function Register(data) {
 Register.v1 = function v1(data) {
 	return LoginAxiosInstance({
 		method: "post",
-		url: "/auth/register",
+		url: "/register/register-owner",
 		data: data,
 	});
 };
@@ -33,7 +33,7 @@ export function CreateClient(data) {
 CreateClient.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
-		url: `/owner/create-client`,
+		url: `/client/create-client`,
 		data: data,
 	});
 };
@@ -45,7 +45,7 @@ export function GetClients(params) {
 GetClients.v1 = function v1(params) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/owner/get-clients`,
+		url: `/client/get-clients`,
 		params: params,
 	});
 };
@@ -57,7 +57,7 @@ export function CreateStaff(data) {
 CreateStaff.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
-		url: `/owner/create-staff`,
+		url: `/staff/create-staff`,
 		data: data,
 	});
 };
@@ -69,7 +69,7 @@ export function GetStaff(params) {
 GetStaff.v1 = function v1(params) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/owner/get-staff`,
+		url: `/staff/get-staff`,
 		params: params,
 	});
 };
@@ -81,7 +81,7 @@ export function CreateTask(data) {
 CreateTask.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
-		url: `/owner/create-task`,
+		url: `/task/create-task`,
 		data: data,
 	});
 };
@@ -90,10 +90,11 @@ export function GetTask(params) {
 	return GetTask.v1(params);
 }
 
+// Gets all tasks: assigned to the user,as well as created by the user
 GetTask.v1 = function v1(params) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/owner/get-tasks`,
+		url: `/task/all-tasks`,
 		params: params,
 	});
 };
@@ -105,7 +106,7 @@ export function CreateProject(data) {
 CreateProject.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
-		url: `/owner/create-project`,
+		url: `/project/create-project`,
 		data: data,
 	});
 };
@@ -117,7 +118,7 @@ export function GetProject(params) {
 GetProject.v1 = function v1(params) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/owner/get-projects`,
+		url: `/project/get-projects`,
 		params: params,
 	});
 };

@@ -285,35 +285,32 @@ export const useAddData = () => {
 		CreateClient.v1(data)
 			.then((res) => {
 				console.log(res);
-				message.success("Client Created!");
+				message.success(res.data.message);
 				getClients({ page: 1, limit: 10 });
 				selectClients({ page: 1, limit: 10 });
 				navigate("/dashboard/clients");
 			})
 			.catch((e) => {
 				console.log(e);
-				message.error(e.message);
+				message.error(e.response.data.message);
 			});
 	}
 	function addStaff(data) {
 		CreateStaff.v1(data)
 			.then((res) => {
-				console.log(res);
-				message.success("Staff Created!");
+				message.success(res.data.message);
 				getStaff({ page: 1, limit: 10 });
 				selectStaff({ page: 1, limit: 10 });
 				navigate("/dashboard/staff");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.message);
 			});
 	}
 	function addTask(data) {
 		CreateTask.v1(data)
 			.then((res) => {
-				console.log(res);
-				message.success("Task Created!");
+				message.success(res.data.message);
 				getTasks({ page: 1, limit: 10 });
 				selectTasks({ page: 1, limit: 10 });
 				navigate("/dashboard/tasks");
@@ -326,8 +323,7 @@ export const useAddData = () => {
 	function addProject(data) {
 		CreateProject.v1(data)
 			.then((res) => {
-				console.log(res);
-				message.success("Task Created!");
+				message.success(res.data.message);
 				getProjects({ page: 1, limit: 10 });
 				selectProjects({ page: 1, limit: 10 });
 				navigate("/dashboard/project");
