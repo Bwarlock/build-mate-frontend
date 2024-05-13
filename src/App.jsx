@@ -13,6 +13,8 @@ import LandingPage from "./components/LandingPage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import Clients from "./components/Clients";
 import Add_Client from "./components/Add_Client";
+import Document from "./components/Documents";
+import TextEditor from "./components/TextEditor";
 
 function App() {
 	return (
@@ -34,8 +36,11 @@ function App() {
 							path="/dashboard/add_project"
 							element={<Add_Project />}></Route>
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
-						<Route path="/dashboard/add_task" element={<Add_Task />}></Route>
+						<Route path="/dashboard/add_task" element={<Add_Task />}></Route>							
 					</Route>
+					<Route path="/documents/:id" element={<TextEditor />} ></Route>
+						TODO: show a list of documents and a button to create a new document
+						<Route path="/documents" element={<Document />}></Route>
 				</Route>
 			</Routes>
 		</BrowserRouter>

@@ -122,3 +122,38 @@ GetProject.v1 = function v1(params) {
 		params: params,
 	});
 };
+
+export function CreateDocument(data) {
+	return CreateDocument.v1(data);
+}
+
+CreateDocument.v1 = function v1(data) {
+	return AuthAxiosInstance({
+		method: "post",
+		url: `/document/create`,
+		data: data,
+	});
+};
+
+export function GetDocument(id) {
+	return GetDocument.v1(id);
+}
+
+GetDocument.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/document/${id}`,
+	});
+};
+
+export function GetDocuments(id) {
+	return GetDocuments.v1(id);
+}
+
+GetDocuments.v1 = function v1(params) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/documents`,
+		params: params,
+	});
+};
