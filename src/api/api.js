@@ -150,10 +150,22 @@ export function GetDocuments(id) {
 	return GetDocuments.v1(id);
 }
 
-GetDocuments.v1 = function v1(params) {
+GetDocuments.v1 = function v1() {
 	return AuthAxiosInstance({
 		method: "get",
 		url: `/documents`,
+	});
+};
+
+// Check if a domain is active, to be used on login page, before rendering the login form
+export function CheckDomain(id) {
+	return CheckDomain.v1(id);
+}
+
+CheckDomain.v1 = function v1(params) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/domain/is-domain-active`,
 		params: params,
 	});
 };

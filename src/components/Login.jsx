@@ -1,7 +1,7 @@
 import { Button, Checkbox, ConfigProvider, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
-import { useCheckLogin, useLogin } from "../api/hooks";
+import { useCheckLogin, useLogin, useGetData } from "../api/hooks";
 
 const Login = () => {
 	//Login Page Component
@@ -13,12 +13,14 @@ const Login = () => {
 
 	const login = useLogin();
 	const checkLogin = useCheckLogin();
+	const { checkDomain } = useGetData();
 
 	const handleSubmit = () => {
 		login(values);
 	};
 	useEffect(() => {
 		checkLogin("/dashboard", null);
+		checkDomain();
 	}, []);
 	return (
 		<div className="full">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Form,
 	Input,
@@ -12,7 +12,24 @@ import { TypeAnimation } from "react-type-animation";
 import { useRegister } from "../api/hooks";
 
 const Register = () => {
-	//Register Page Component
+
+
+	useEffect(() => {
+		// Check if the url is cloud.build-mate.in, else show 404 page
+		const domain = window.location.hostname;
+		console.log(domain);
+		if (domain == "localhost" || domain == "cloud.build-mate.in") {
+			// Do nothing
+		}
+		else {
+			console.log("404");
+			set404(true);
+		}
+
+	},[]);
+
+	// is404 is used to show 404 page if the domain is not cloud.build-mate.in
+	const [is404, set404] = useState(false);
 	const { token } = theme.useToken();
 	const [current, setCurrent] = useState(0);
 	const [values, setValues] = useState({
@@ -313,6 +330,7 @@ const Register = () => {
 	};
 
 	return (
+		is404 ? <h1>404</h1> :
 		<div className="full">
 			<nav className="menuBar">
 				<TypeAnimation

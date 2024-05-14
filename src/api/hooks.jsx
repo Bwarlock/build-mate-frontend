@@ -12,7 +12,8 @@ import {
   CreateProject,
   GetDocument,
   GetDocuments,
-  CreateDocument
+  CreateDocument,
+  CheckDomain,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -277,10 +278,28 @@ export const useGetData = () => {
     GetDocuments.v1(id)
       .then((res) => {
         console.log(res);
-		// TODO: store the documents in redux
+        // TODO: store the documents in redux
       })
       .catch((e) => {
         message.error(e.response.data.message);
+      });
+  }
+
+  // This function will be used on the login page to check if the domain is active or if it exists
+  function checkDomain() {
+    CheckDomain.v1()
+      .then((res) => {
+        console.log(res);
+		// if the domain is valid then check if the domain is on hold
+		if (res.data.domain.isOnHold) message.error("Services are on hold. Please contact the admin. If you are admin please contact support.");
+      })
+      .catch((e) => {
+		// If domain is not valid then show the error and redirect to the register page after 5 seconds
+        message.error(e.response.data.message);
+		// redirect to "https://cloud.build-mate.in/register" after 5 seconds
+		setTimeout(() => {
+			window.location = "https://cloud.build-mate.in/register";
+		}, 5000);
       });
   }
 
@@ -295,6 +314,7 @@ export const useGetData = () => {
     selectProjects,
     getDocument,
     getDocuments,
+    checkDomain,
   };
 };
 
@@ -308,7 +328,7 @@ export const useAddData = () => {
     getTasks,
     selectTasks,
     getProjects,
-    selectProjects
+    selectProjects,
   } = useGetData();
 
   function addClient(data) {
@@ -364,16 +384,17 @@ export const useAddData = () => {
       });
   }
   function addDocument(data) {
-	CreateDocument.v1(data)
-	.then((res) => {
-		message.success(res.data.message);
-		const documentID = res.data.document._id;
-		// Update the list of documents
-		navigate(`/documents/${documentID}`);
-	}).catch((e) => {
-		console.log(e);
-		message.error(e.response.data.message);
-	});
+    CreateDocument.v1(data)
+      .then((res) => {
+        message.success(res.data.message);
+        const documentID = res.data.document._id;
+        // Update the list of documents
+        navigate(`/documents/${documentID}`);
+      })
+      .catch((e) => {
+        console.log(e);
+        message.error(e.response.data.message);
+      });
   }
   return { addClient, addStaff, addTask, addProject, addDocument };
 };
