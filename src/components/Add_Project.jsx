@@ -63,7 +63,7 @@ function Add_Project() {
 				}}
 				autoComplete="off">
 				<Form.Item
-					label="Name"
+					label="Project Title"
 					name="name"
 					rules={[
 						{
