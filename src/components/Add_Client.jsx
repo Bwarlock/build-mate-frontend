@@ -2,16 +2,8 @@ import { Button, ConfigProvider, Form, Input, Select } from "antd";
 import { useEffect, useState } from "react";
 import { useAddData, useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
-import { Drawer } from "antd";
 
 const Add_Client = () => {
-  const [openAddClientDrawer, setOpenAddClientDrawer] = useState(false);
-  const showAddClientDrawer = () => {
-    setOpenAddClientDrawer(true);
-  };
-  const closeAddClientDrawer = () => {
-    setOpenAddClientDrawer(false);
-  };
   //Add Client Page Component
   const [values, setValues] = useState({
     name: "",
