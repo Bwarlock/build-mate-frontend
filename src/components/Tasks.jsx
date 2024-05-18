@@ -1,39 +1,52 @@
-import { Space, Table, Button, Drawer } from "antd";
+import { Space, Table, Button, Drawer, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
 import Add_Task from "./Add_Task";
+//
 const columns = [
+// TODO: add ID column
+// Manipulate the API response in the hooks to include the ID
   {
     title: "Name",
     dataIndex: "name",
     key: "name",
+    fixed: "left",
+    with: 200,
     render: (text) => <a>{text}</a>,
   },
   {
     title: "createdAt",
     dataIndex: "createdAt",
     key: "createdAt",
+    with: 200,
+    render: (createdAt) => {
+      return new Date(createdAt).toDateString();
+    },
   },
   {
     title: "Description",
     dataIndex: "description",
     key: "description",
+    with: 200,
+    render: (description) => {
+      return <p>{description}</p>;
+    },
   },
   {
     title: "Project",
     dataIndex: "project",
     key: "project",
+    with: 200,
     render: (project) => {
-      return <p>{project.name}</p>;
+      return <p>{project?.name}</p>;
     },
   },
-
   {
-    title: "AssignedTo",
+    title: "Assigned To",
     dataIndex: "assignedTo",
     key: "assignedTo",
+    with: 200,
     render: (_, { assignedTo }) => {
       return (
         <Space
@@ -44,12 +57,55 @@ const columns = [
             overflow: "hidden",
           }}
         >
-          {assignedTo.map((staf) => {
-            return staf.name + ",";
+          {assignedTo.map((staff) => {
+            return <Tag color={"volcano"} key={staff}>
+              {staff?.name.toUpperCase()}
+            </Tag>
           })}
+          
         </Space>
       );
     },
+  },
+  {
+    title: "Created By",
+    dataIndex: "createdBy",
+    key: "createdBy",
+    with: 200,
+    render: (_, { createdBy }) => {
+      return (
+        <Space
+          size="middle"
+          style={{
+            maxWidth: "100px",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          {createdBy?.name}
+        </Space>
+      );
+    },
+  },
+  {
+    title: "DueDate",
+    dataIndex: "dueDate",
+    key: "dueDate",
+  },
+  {
+    title: "DueDate",
+    dataIndex: "dueDate",
+    key: "dueDate",
+  },
+  {
+    title: "DueDate",
+    dataIndex: "dueDate",
+    key: "dueDate",
+  },
+  {
+    title: "DueDate",
+    dataIndex: "dueDate",
+    key: "dueDate",
   },
   {
     title: "DueDate",
@@ -60,6 +116,7 @@ const columns = [
   {
     title: "Action",
     key: "action",
+    fixed: "right",
     render: () => (
       <Space size="middle">
         <Button type="primary" danger>
@@ -71,7 +128,7 @@ const columns = [
 ];
 
 const Tasks = () => {
-const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
+  const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
   const showAddTaskDrawer = () => {
     setOpenAddTaskDrawer(true);
   };
@@ -88,18 +145,18 @@ const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
   }, []);
   return (
     <>
-        <Button
-          onClick={showAddTaskDrawer}
-          style={{
+      <Button
+        onClick={showAddTaskDrawer}
+        style={{
           alignSelf: "end",
           marginBottom: "1rem",
           minWidth: "140px",
           minHeight: "40px",
         }}
-          type="primary"
-        >
-          Create New Task
-        </Button>
+        type="primary"
+      >
+        Create New Task
+      </Button>
       <Drawer
         title="Create a new Task"
         width={720}
@@ -108,7 +165,11 @@ const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
       >
         <Add_Task />
       </Drawer>
-      <Table columns={columns} dataSource={taskTableData} />
+      <Table
+        columns={columns}
+        dataSource={taskTableData}
+
+      />
     </>
   );
 };

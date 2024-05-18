@@ -9,7 +9,6 @@ function Add_Task() {
 		name: "",
 		startDate: "",
 		description: "",
-		project: "",
 		assignedTo: [],
 		dueDate: "",
 	});
