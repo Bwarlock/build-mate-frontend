@@ -220,7 +220,7 @@ const Tasks = () => {
 					onClick={() => {
 						getTasks({ page: 1, limit: 10 });
 					}}>
-					Refetch Data
+					Refresh
 				</Button>
 
 				<Button

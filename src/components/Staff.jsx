@@ -89,7 +89,7 @@ const Staff = () => {
 					onClick={() => {
 						getStaff({ page: 1, limit: 10 });
 					}}>
-					Refetch Data
+					Refresh
 				</Button>
 				<Button
 					onClick={showAddStaffDrawer}
