@@ -2,6 +2,7 @@ import { Button, Checkbox, ConfigProvider, Form, Input } from "antd";
 import { useEffect, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { useCheckLogin, useLogin, useGetData } from "../api/hooks";
+import { Link } from "react-router-dom";
 
 const Login = () => {
 	//Login Page Component
@@ -24,7 +25,7 @@ const Login = () => {
 	}, []);
 	return (
 		<div className="full">
-			<nav className="menuBar">
+			<nav className="textLogo">
 				<TypeAnimation
 					sequence={[
 						"Build",
@@ -74,8 +75,7 @@ const Login = () => {
 						}}
 						initialValues={{
 							remember: true,
-						}}
-						autoComplete="off">
+						}}>
 						<Form.Item
 							label="Email"
 							name="email"
@@ -122,10 +122,14 @@ const Login = () => {
 								type="primary"
 								htmlType="submit"
 								onClick={handleSubmit}>
-								Submit
+								Login
 							</Button>
 						</Form.Item>
 					</Form>
+
+					<Link to="/register">
+						<Button>Register ?</Button>
+					</Link>
 				</div>
 			</ConfigProvider>
 		</div>

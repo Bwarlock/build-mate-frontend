@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
 	tableData: [],
 	selectData: [],
+	loading: false,
 };
 
 const taskSlice = createSlice({
@@ -21,8 +22,12 @@ const taskSlice = createSlice({
 			state.tableData = [];
 			state.selectData = [];
 		},
+		taskLoading: (state, action) => {
+			state.loading = action.payload;
+		},
 	},
 });
 
-export const { storeTaskTable, storeTaskSelect, clearTask } = taskSlice.actions;
+export const { storeTaskTable, storeTaskSelect, clearTask, taskLoading } =
+	taskSlice.actions;
 export default taskSlice.reducer;

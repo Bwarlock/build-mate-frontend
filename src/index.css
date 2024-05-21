@@ -23,7 +23,7 @@ body {
 	flex-direction: column;
 }
 
-.menuBar {
+.textLogo {
 	width: 100%;
 	display: flex;
 	justify-content: center;
@@ -37,10 +37,13 @@ body {
 	/* height: 100vh;
 	width: calc(100vw - 256);
 	overflow: auto; */
+	width: 100%;
+	min-height: 100vh;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	padding: 1rem;
 }
 
 .about {
@@ -54,7 +57,9 @@ body {
 	/* flex-grow: 1; */
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: start;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 .full {
@@ -80,64 +85,73 @@ body {
 	min-width: calc(100vw - 360px);
 }
 
-
-
 /* Docs - Text Editor CSS */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
 	box-sizing: border-box;
-  }
-  
-  body {
-	background-color: #F3F3F3;
+}
+
+body {
+	background-color: #f3f3f3;
 	margin: 0;
-  }
-  
-  .container .ql-editor {
+}
+
+.container .ql-editor {
 	width: 8.5in;
 	min-height: 11in;
 	padding: 1in;
 	margin: 1rem;
-	box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
+	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
 	background-color: white;
-  }
-  
-  .container .ql-container.ql-snow {
+}
+
+.container .ql-container.ql-snow {
 	border: none;
 	display: flex;
 	justify-content: center;
-  }
-  
-  .container .ql-toolbar.ql-snow {
+}
+
+.container .ql-toolbar.ql-snow {
 	display: flex;
 	justify-content: center;
 	position: sticky;
 	top: 0;
 	z-index: 1;
-	background-color: #F3F3F3;
+	background-color: #f3f3f3;
 	border: none;
-	box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
-  }
-  
-  @page {
+	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+
+.ant-table-content {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+.ant-table-content::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+@page {
 	margin: 1in;
-  }
-  
-  @media print {
+}
+
+@media print {
 	body {
-	  background: none;
+		background: none;
 	}
-  
+
 	.container .ql-editor {
-	  width: 6.5in;
-	  height: 9in;
-	  padding: 0;
-	  margin: 0;
-	  box-shadow: none;
-	  align-self: flex-start;
+		width: 6.5in;
+		height: 9in;
+		padding: 0;
+		margin: 0;
+		box-shadow: none;
+		align-self: flex-start;
 	}
-  
+
 	.container .ql-toolbar.ql-snow {
-	  display: none;
+		display: none;
 	}
-  }
+}

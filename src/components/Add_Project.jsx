@@ -52,9 +52,9 @@ function Add_Project() {
 			<Form
 				name="addProject"
 				style={{
-					maxWidth: 600,
+					// maxWidth: 600,
 					backgroundColor: "white",
-					padding: "2rem 2rem 0rem",
+					padding: "1rem",
 					boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
 					borderRadius: "10px",
 				}}

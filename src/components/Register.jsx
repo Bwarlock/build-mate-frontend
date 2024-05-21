@@ -10,23 +10,20 @@ import {
 } from "antd";
 import { TypeAnimation } from "react-type-animation";
 import { useRegister } from "../api/hooks";
+import { Link } from "react-router-dom";
 
 const Register = () => {
-
-
 	useEffect(() => {
 		// Check if the url is cloud.build-mate.in, else show 404 page
 		const domain = window.location.hostname;
 		console.log(domain);
 		if (domain == "localhost" || domain == "cloud.build-mate.in") {
 			// Do nothing
-		}
-		else {
+		} else {
 			console.log("404");
 			set404(true);
 		}
-
-	},[]);
+	}, []);
 
 	// is404 is used to show 404 page if the domain is not cloud.build-mate.in
 	const [is404, set404] = useState(false);
@@ -40,30 +37,38 @@ const Register = () => {
 		companyName: "",
 		domainName: "",
 	});
-	
+	const [formValidate] = Form.useForm();
+
 	const [confirmPass, setConfirmPass] = useState("");
 	// Domain Suggestions
 	const [domainSuggestions, setDomainSuggestions] = useState([]);
 	const generateDomainSuggestions = (companyName) => {
-	const splitCompanyName = companyName.split(' ');
-    const trimmedCompanyName = companyName.trim(' ').toLowerCase().replace(/\s+/g, '-');
-    const domainSuggestions = [
-		trimmedCompanyName,
-		trimmedCompanyName.replace(/\s+/g, ''),
-		trimmedCompanyName.slice(0, 2),
-		// Get first element of each word in splitCompanyName
-		splitCompanyName.map((word) => word[0]).join('').toLowerCase(),
-    ];
-	// Remove duplicates
-	const uniqueDomainSuggestions = [...new Set(domainSuggestions)];
-    setDomainSuggestions(uniqueDomainSuggestions);
-  };
+		const splitCompanyName = companyName.split(" ");
+		const trimmedCompanyName = companyName
+			.trim(" ")
+			.toLowerCase()
+			.replace(/\s+/g, "-");
+		const domainSuggestions = [
+			trimmedCompanyName,
+			trimmedCompanyName.replace(/\s+/g, ""),
+			trimmedCompanyName.slice(0, 2),
+			// Get first element of each word in splitCompanyName
+			splitCompanyName
+				.map((word) => word[0])
+				.join("")
+				.toLowerCase(),
+		];
+		// Remove duplicates
+		const uniqueDomainSuggestions = [...new Set(domainSuggestions)];
+		setDomainSuggestions(uniqueDomainSuggestions);
+	};
 	const steps = [
 		{
-			title: "First",
+			title: "Info",
 			content: (
 				<Form
 					name="registerFirst"
+					form={formValidate}
 					labelCol={{
 						span: 8,
 					}}
@@ -75,8 +80,7 @@ const Register = () => {
 					}}
 					initialValues={{
 						remember: true,
-					}}
-					autoComplete="off">
+					}}>
 					<Form.Item
 						label="Name"
 						name="Name"
@@ -134,10 +138,11 @@ const Register = () => {
 			),
 		},
 		{
-			title: "Second",
+			title: "Domain",
 			content: (
 				<Form
 					name="registerSecond"
+					form={formValidate}
 					labelCol={{
 						span: 8,
 					}}
@@ -153,7 +158,7 @@ const Register = () => {
 					autoComplete="off">
 					<Form.Item
 						label="Domain Name"
-						name="domain"
+						name="domainName"
 						valuePropName="checked"
 						rules={[
 							{
@@ -162,40 +167,42 @@ const Register = () => {
 							},
 						]}>
 						<Input
-							value={values.domainName} 
+							value={values.domainName}
 							onChange={(e) => {
+								formValidate.setFieldsValue({ domainName: e.target.value });
+								formValidate.validateFields(["domainName"]);
 								setValues((val) => {
 									return { ...val, domainName: e.target.value };
 								});
 							}}
-						/> 
-						<span>
-							.build-mate.in
-						</span>
+						/>
 					</Form.Item>
+					<span>.build-mate.in</span>
 					{/* change color to green on selection */}
-					<Form.Item>
-						{domainSuggestions.map((suggestion) => (
-							<Button
-								key={suggestion}
-								type="dashed"
-								onClick={() => {
-									setValues((val) => {
-										return { ...val, domainName: suggestion };
-									});
-								}}>
-								{suggestion}
-							</Button>
-						))}
-					</Form.Item>
+
+					{domainSuggestions.map((suggestion) => (
+						<Button
+							key={suggestion}
+							type="dashed"
+							onClick={() => {
+								formValidate.setFieldsValue({ domainName: suggestion });
+								formValidate.validateFields(["domainName"]);
+								setValues((val) => {
+									return { ...val, domainName: suggestion };
+								});
+							}}>
+							{suggestion}
+						</Button>
+					))}
 				</Form>
 			),
 		},
 		{
-			title: "Last",
+			title: "Credentials",
 			content: (
 				<Form
 					name="registerThird"
+					form={formValidate}
 					labelCol={{
 						span: 8,
 					}}
@@ -292,7 +299,14 @@ const Register = () => {
 	];
 
 	const next = () => {
-		setCurrent(current + 1);
+		formValidate
+			.validateFields()
+			.then(() => {
+				setCurrent(current + 1);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	const prev = () => {
 		setCurrent(current - 1);
@@ -322,17 +336,25 @@ const Register = () => {
 
 	const register = useRegister();
 	const handleSubmit = () => {
-		if (confirmPass == values.password) {
-			register(values);
-		} else {
-			message.error("Wrong Confirmation Password");
-		}
+		formValidate
+			.validateFields()
+			.then(() => {
+				if (confirmPass == values.password) {
+					register(values);
+				} else {
+					message.error("Wrong Confirmation Password");
+				}
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 
-	return (
-		is404 ? <h1>404</h1> :
+	return is404 ? (
+		<h1>404</h1>
+	) : (
 		<div className="full">
-			<nav className="menuBar">
+			<nav className="textLogo">
 				<TypeAnimation
 					sequence={[
 						"Build",
@@ -373,27 +395,38 @@ const Register = () => {
 					<div style={contentStyle}>{steps[current].content}</div>
 					<div
 						style={{
+							display: "flex",
+							justifyContent: "space-between",
 							marginTop: 24,
 						}}>
-						{current < steps.length - 1 && (
-							<Button type="primary" onClick={() => next()}>
-								Next
-							</Button>
-						)}
-						{current === steps.length - 1 && (
-							<Button type="primary" onClick={handleSubmit}>
-								Register
-							</Button>
-						)}
-						{current > 0 && (
-							<Button
-								style={{
-									margin: "0 8px",
-								}}
-								onClick={() => prev()}>
-								Previous
-							</Button>
-						)}
+						<div>
+							{current < steps.length - 1 && (
+								<Button type="primary" onClick={() => next()}>
+									Next
+								</Button>
+							)}
+							{current === steps.length - 1 && (
+								<Button type="primary" onClick={handleSubmit}>
+									Register
+								</Button>
+							)}
+							{current > 0 && (
+								<Button
+									style={{
+										margin: "0 8px",
+									}}
+									onClick={() => prev()}>
+									Previous
+								</Button>
+							)}
+						</div>
+						<Link
+							style={{
+								margin: "0 8px",
+							}}
+							to="/login">
+							<Button>Login ?</Button>
+						</Link>
 					</div>
 				</div>
 			</ConfigProvider>
