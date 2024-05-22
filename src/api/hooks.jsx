@@ -20,11 +20,13 @@ import { clearGlobal, storeUser } from "../store/globalSlice";
 import { message } from "antd";
 import {
 	clearClient,
+	clientLoading,
 	storeClientSelect,
 	storeClientTable,
 } from "../store/clientSlice";
 import {
 	clearStaff,
+	staffLoading,
 	storeStaffSelect,
 	storeStaffTable,
 } from "../store/staffSlice";
@@ -119,20 +121,23 @@ export const useGetData = () => {
 	const dispatch = useDispatch();
 
 	function getClients(params) {
+		dispatch(clientLoading(true));
 		GetClients.v1(params)
 			.then((res) => {
 				console.log(res);
 				dispatch(
 					storeClientTable(
 						res.data.clientData.map((val, index) => {
-							return { ...val, key: "" + index };
+							return { ...val, key: "" + index, id: val._id };
 						})
 					)
 				);
+				dispatch(clientLoading(false));
 			})
 			.catch((e) => {
 				console.log(e);
 				message.error(e.response.data.message);
+				dispatch(clientLoading(false));
 			});
 	}
 	function selectClients(params) {
@@ -156,20 +161,23 @@ export const useGetData = () => {
 			});
 	}
 	function getStaff(params) {
+		dispatch(staffLoading(true));
 		GetStaff.v1(params)
 			.then((res) => {
 				console.log(res);
 				dispatch(
 					storeStaffTable(
 						res.data.staffData.map((val, index) => {
-							return { ...val, key: "" + index };
+							return { ...val, key: "" + index, id: val._id };
 						})
 					)
 				);
+				dispatch(staffLoading(false));
 			})
 			.catch((e) => {
 				console.log(e);
 				message.error(e.response.data.message);
+				dispatch(staffLoading(false));
 			});
 	}
 	function selectStaff(params) {
@@ -345,15 +353,23 @@ export const useAddData = () => {
 		getProjects,
 		selectProjects,
 	} = useGetData();
+	const { tableParams: taskTableParams } = useSelector((state) => state.task);
+	const { tableParams: clientTableParams } = useSelector(
+		(state) => state.client
+	);
+	const { tableParams: staffTableParams } = useSelector((state) => state.staff);
 
 	function addClient(data) {
 		CreateClient.v1(data)
 			.then((res) => {
 				console.log(res);
 				message.success(res.data.message);
-				getClients({ page: 1, limit: 10 });
+				getClients({
+					page: clientTableParams[0].pagination.current,
+					limit: clientTableParams[0].pagination.pageSize,
+				});
 				selectClients({ page: 1, limit: 10 });
-				navigate("/dashboard/clients");
+				// navigate("/dashboard/clients");
 			})
 			.catch((e) => {
 				console.log(e);
@@ -363,12 +379,17 @@ export const useAddData = () => {
 	function addStaff(data) {
 		CreateStaff.v1(data)
 			.then((res) => {
+				console.log(res);
 				message.success(res.data.message);
-				getStaff({ page: 1, limit: 10 });
+				getStaff({
+					page: staffTableParams[0].pagination.current,
+					limit: staffTableParams[0].pagination.pageSize,
+				});
 				selectStaff({ page: 1, limit: 10 });
-				navigate("/dashboard/staff");
+				// navigate("/dashboard/staff");
 			})
 			.catch((e) => {
+				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
@@ -376,9 +397,12 @@ export const useAddData = () => {
 		CreateTask.v1(data)
 			.then((res) => {
 				message.success(res.data.message);
-				getTasks({ page: 1, limit: 10 });
+				getTasks({
+					page: taskTableParams[0].pagination.current,
+					limit: taskTableParams[0].pagination.pageSize,
+				});
 				selectTasks({ page: 1, limit: 10 });
-				navigate("/dashboard/tasks");
+				// navigate("/dashboard/tasks");
 			})
 			.catch((e) => {
 				console.log(e);
@@ -391,7 +415,7 @@ export const useAddData = () => {
 				message.success(res.data.message);
 				getProjects({ page: 1, limit: 10 });
 				selectProjects({ page: 1, limit: 10 });
-				navigate("/dashboard/project");
+				// navigate("/dashboard/project");
 			})
 			.catch((e) => {
 				console.log(e);

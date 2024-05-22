@@ -20,7 +20,7 @@ const Login = () => {
 		login(values);
 	};
 	useEffect(() => {
-		checkLogin("/dashboard", null);
+		checkLogin("/dashboard/tasks", null);
 		checkDomain();
 	}, []);
 	return (

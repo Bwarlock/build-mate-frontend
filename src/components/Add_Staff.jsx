@@ -11,9 +11,17 @@ const Add_Staff = () => {
 		phoneNumber: "",
 	});
 	const { addStaff } = useAddData();
+	const [formValidate] = Form.useForm();
 
 	const handleSubmit = () => {
-		addStaff(values);
+		formValidate
+			.validateFields()
+			.then(() => {
+				addStaff(values);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	return (
 		<ConfigProvider
@@ -23,6 +31,7 @@ const Add_Staff = () => {
 				},
 			}}>
 			<Form
+				form={formValidate}
 				name="addStaff"
 				style={{
 					// maxWidth: 600,

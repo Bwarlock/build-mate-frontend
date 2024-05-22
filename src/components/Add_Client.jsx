@@ -11,7 +11,7 @@ const Add_Client = () => {
 		password: "",
 		phoneNumber: "",
 		companyName: "",
-		project: [],
+		projects: [],
 	});
 
 	const { selectData: projectSelectData } = useSelector(
@@ -19,6 +19,7 @@ const Add_Client = () => {
 	);
 	const { addClient } = useAddData();
 	const { selectProjects } = useGetData();
+	const [formValidate] = Form.useForm();
 
 	useEffect(() => {
 		if (!projectSelectData.length) {
@@ -27,7 +28,14 @@ const Add_Client = () => {
 	}, []);
 
 	const handleSubmit = () => {
-		addClient(values);
+		formValidate
+			.validateFields()
+			.then(() => {
+				addClient(values);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	return (
 		<ConfigProvider
@@ -37,6 +45,7 @@ const Add_Client = () => {
 				},
 			}}>
 			<Form
+				form={formValidate}
 				name="addClient"
 				style={{
 					// maxWidth: 600,
@@ -132,7 +141,7 @@ const Add_Client = () => {
 						mode="multiple"
 						onChange={(e) => {
 							setValues((val) => {
-								return { ...val, project: [...e] };
+								return { ...val, projects: [...e] };
 							});
 						}}
 						style={{

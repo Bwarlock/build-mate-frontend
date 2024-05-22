@@ -20,6 +20,7 @@ function Add_Project() {
 	const { user } = useSelector((state) => state.global);
 	const { addProject } = useAddData();
 	const { selectStaff, selectClients, selectTasks } = useGetData();
+	const [formValidate] = Form.useForm();
 
 	useEffect(() => {
 		//Set Non Visible Values To Request
@@ -40,7 +41,14 @@ function Add_Project() {
 	}, []);
 
 	const handleSubmit = () => {
-		addProject(values);
+		formValidate
+			.validateFields()
+			.then(() => {
+				addProject(values);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	return (
 		<ConfigProvider
@@ -50,6 +58,7 @@ function Add_Project() {
 				},
 			}}>
 			<Form
+				form={formValidate}
 				name="addProject"
 				style={{
 					// maxWidth: 600,
@@ -113,14 +122,7 @@ function Add_Project() {
 					/>
 				</Form.Item>
 
-				<Form.Item
-					label="Clients"
-					name="clients"
-					rules={[
-						{
-							message: "Please input Project Clients!",
-						},
-					]}>
+				<Form.Item label="Clients" name="clients" rules={[]}>
 					<Select
 						onChange={(e) => {
 							console.log(e);

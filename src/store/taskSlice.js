@@ -1,9 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+//Params is array , workaround to Redux-persist object being non serializable
 const initialValue = {
 	tableData: [],
 	selectData: [],
 	loading: false,
+	tableParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const taskSlice = createSlice({
@@ -25,9 +35,17 @@ const taskSlice = createSlice({
 		taskLoading: (state, action) => {
 			state.loading = action.payload;
 		},
+		setTaskTableParams: (state, action) => {
+			state.tableParams = [action.payload];
+		},
 	},
 });
 
-export const { storeTaskTable, storeTaskSelect, clearTask, taskLoading } =
-	taskSlice.actions;
+export const {
+	storeTaskTable,
+	storeTaskSelect,
+	clearTask,
+	taskLoading,
+	setTaskTableParams,
+} = taskSlice.actions;
 export default taskSlice.reducer;

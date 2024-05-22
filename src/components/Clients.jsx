@@ -1,48 +1,115 @@
-import { Space, Table, Button, Drawer } from "antd";
+import { Space, Table, Button, Drawer, Tooltip, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useGetData } from "../api/hooks";
 import Add_Client from "./Add_Client";
+import { horizontalScroll } from "../util/functions";
+import { setClientTableParams } from "../store/clientSlice";
+
 //Column Titles
 const columns = [
+	{
+		title: "ID",
+		dataIndex: "id",
+		key: "id",
+		fixed: "left",
+		width: 200,
+		ellipsis: {
+			showTitle: false,
+		},
+		render: (id) => (
+			<Tooltip placement="topLeft" title={id}>
+				{id}
+			</Tooltip>
+		),
+	},
 	{
 		title: "Name",
 		dataIndex: "name",
 		key: "name",
-		render: (text) => <a>{text}</a>,
+		fixed: "left",
+		width: 120,
+		ellipsis: {
+			showTitle: false,
+		},
+		render: (name) => (
+			<Tooltip placement="topLeft" title={name}>
+				<a>{name}</a>
+			</Tooltip>
+		),
 	},
 	{
 		title: "Company Name",
 		dataIndex: "companyName",
 		key: "companyName",
+		width: 150,
+		ellipsis: {
+			showTitle: false,
+		},
+		render: (companyName) => (
+			<Tooltip placement="topLeft" title={companyName}>
+				{companyName}
+			</Tooltip>
+		),
 	},
 	{
 		title: "Email",
 		dataIndex: "email",
 		key: "email",
+		width: 200,
+		ellipsis: {
+			showTitle: false,
+		},
+		render: (email) => (
+			<Tooltip placement="topLeft" title={email}>
+				{email}
+			</Tooltip>
+		),
 	},
 	{
 		title: "PhoneNumber",
 		dataIndex: "phoneNumber",
 		key: "phoneNumber",
+		width: 120,
+		ellipsis: {
+			showTitle: false,
+		},
+		render: (phoneNumber) => (
+			<Tooltip placement="topLeft" title={phoneNumber}>
+				{phoneNumber}
+			</Tooltip>
+		),
 	},
 	{
 		title: "Projects",
 		dataIndex: "projects",
 		key: "projects",
+		width: 400,
+		ellipsis: {
+			showTitle: false,
+		},
 		render: (_, { projects }) => {
 			return (
-				<Space
-					size="middle"
-					style={{
-						maxWidth: "100px",
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{projects.map((proj) => {
-						return proj.name + ",";
-					})}
-				</Space>
+				<Tooltip
+					placement="topLeft"
+					title={projects.reduce((accumulator, currentObject) => {
+						return accumulator + currentObject + " , ";
+					}, "")}>
+					<Space
+						size="small"
+						style={{
+							textOverflow: "ellipsis",
+							overflow: "hidden",
+						}}>
+						{projects.map((proj, index) => {
+							return (
+								<Tag color={"volcano"} key={index}>
+									{proj.toUpperCase()}
+								</Tag>
+							);
+						})}
+					</Space>
+				</Tooltip>
 			);
 		},
 	},
@@ -50,6 +117,8 @@ const columns = [
 	{
 		title: "Action",
 		key: "action",
+		fixed: "right",
+		width: 90,
 		render: () => (
 			<Space size="middle">
 				<Button type="primary" danger>
@@ -69,13 +138,39 @@ const Clients = () => {
 		setOpenAddClientDrawer(false);
 	};
 	//Clients Table Page Component
-	const { tableData: clientTableData } = useSelector((state) => state.client);
+	const {
+		tableData: clientTableData,
+		loading: clientLoading,
+		tableParams: params,
+	} = useSelector((state) => state.client);
+	const tableParams = params[0];
+	const dispatch = useDispatch();
 	const { getClients } = useGetData();
+
+	const handleTableChange = (pagination, filters, sorter) => {
+		dispatch(
+			setClientTableParams({
+				pagination,
+				filters,
+				...sorter,
+			})
+		);
+
+		getClients({
+			page: pagination.current,
+			limit: pagination.pageSize,
+		});
+	};
 
 	useEffect(() => {
 		if (!clientTableData.length) {
-			getClients({ page: 1, limit: 10 });
+			getClients({
+				page: tableParams.pagination.current,
+				limit: tableParams.pagination.pageSize,
+			});
 		}
+
+		return horizontalScroll();
 	}, []);
 	return (
 		<>
@@ -84,10 +179,14 @@ const Clients = () => {
 					display: "flex",
 					width: "100%",
 					justifyContent: "space-between",
+					alignItems: "center",
 				}}>
 				<Button
 					onClick={() => {
-						getClients({ page: 1, limit: 10 });
+						getClients({
+							page: tableParams.pagination.current,
+							limit: tableParams.pagination.pageSize,
+						});
 					}}>
 					Refresh
 				</Button>
@@ -105,12 +204,27 @@ const Clients = () => {
 			</div>
 			<Drawer
 				title="Onboard a new Client to Build Mate"
-				width={720}
+				// width={720}
 				onClose={closeAddClientDrawer}
 				open={openAddClientDrawer}>
 				<Add_Client />
 			</Drawer>
-			<Table columns={columns} dataSource={clientTableData} />
+			<div
+				style={{
+					width: "100%",
+					overflowX: "auto",
+				}}>
+				<Table
+					size="small"
+					columns={columns}
+					dataSource={clientTableData}
+					scroll={{ x: 1200 }}
+					loading={clientLoading}
+					pagination={tableParams.pagination}
+					onChange={handleTableChange}
+					bordered={true}
+				/>
+			</div>
 		</>
 	);
 };

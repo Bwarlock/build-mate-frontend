@@ -1,8 +1,10 @@
 import { Space, Table, Button, Drawer, Tag, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { useGetData } from "../api/hooks";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Add_Task from "./Add_Task";
+import { setTaskTableParams } from "../store/taskSlice";
+import { horizontalScroll } from "../util/functions";
 
 const columns = [
 	// TODO: add ID column
@@ -85,7 +87,9 @@ const columns = [
 		dataIndex: "assignedTo",
 		key: "assignedTo",
 		width: 300,
-		ellipsis: true,
+		ellipsis: {
+			showTitle: false,
+		},
 		render: (_, { assignedTo }) => {
 			return (
 				<Tooltip
@@ -99,9 +103,9 @@ const columns = [
 							textOverflow: "ellipsis",
 							overflow: "hidden",
 						}}>
-						{assignedTo.map((staff) => {
+						{assignedTo.map((staff, index) => {
 							return (
-								<Tag color={"volcano"} key={staff}>
+								<Tag color={"volcano"} key={index}>
 									{staff?.name.toUpperCase()}
 								</Tag>
 							);
@@ -120,8 +124,8 @@ const columns = [
 			showTitle: false,
 		},
 		render: (createdBy) => (
-			<Tooltip placement="topLeft" title={createdBy}>
-				{createdBy}
+			<Tooltip placement="topLeft" title={createdBy?.name}>
+				{createdBy?.name}
 			</Tooltip>
 		),
 	},
@@ -173,13 +177,6 @@ const columns = [
 
 const Tasks = () => {
 	const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
-	const [tableParams, setTableParams] = useState({
-		pagination: {
-			current: 1,
-			pageSize: 10,
-			total: 200,
-		},
-	});
 
 	const showAddTaskDrawer = () => {
 		setOpenAddTaskDrawer(true);
@@ -187,17 +184,27 @@ const Tasks = () => {
 	const closeAddTaskDrawer = () => {
 		setOpenAddTaskDrawer(false);
 	};
-	const { tableData: taskTableData, loading: taskLoading } = useSelector(
-		(state) => state.task
-	);
+	const {
+		tableData: taskTableData,
+		loading: taskLoading,
+		tableParams: params,
+	} = useSelector((state) => state.task);
+
+	// workaround to Redux-persist object being non serializable
+	console.log(params);
+	const tableParams = params[0];
+	const dispatch = useDispatch();
 	const { getTasks } = useGetData();
 
 	const handleTableChange = (pagination, filters, sorter) => {
-		setTableParams({
-			pagination,
-			filters,
-			...sorter,
-		});
+		dispatch(
+			setTaskTableParams({
+				pagination,
+				filters,
+				...sorter,
+			})
+		);
+
 		getTasks({
 			page: pagination.current,
 			limit: pagination.pageSize,
@@ -211,26 +218,7 @@ const Tasks = () => {
 				limit: tableParams.pagination.pageSize,
 			});
 		}
-
-		//Horizontal Scroll , both axis cause horizontal scrolling
-		const tableElement =
-			document.getElementsByClassName("ant-table-content")[0];
-		const handleWheel = (event) => {
-			if (tableElement) {
-				event.preventDefault();
-				if (event.deltaY !== 0) {
-					tableElement.scrollLeft += event.deltaY;
-				} else if (event.deltaX !== 0) {
-					tableElement.scrollLeft += event.deltaX;
-				}
-			}
-		};
-		if (tableElement) {
-			tableElement.addEventListener("wheel", handleWheel);
-			return () => {
-				tableElement.removeEventListener("wheel", handleWheel);
-			};
-		}
+		return horizontalScroll();
 	}, []);
 	return (
 		<>

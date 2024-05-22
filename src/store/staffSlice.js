@@ -3,6 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
 	tableData: [],
 	selectData: [],
+	loading: false,
+	tableParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const staffSlice = createSlice({
@@ -21,9 +31,20 @@ const staffSlice = createSlice({
 			state.tableData = [];
 			state.selectData = [];
 		},
+		staffLoading: (state, action) => {
+			state.loading = action.payload;
+		},
+		setStaffTableParams: (state, action) => {
+			state.tableParams = [action.payload];
+		},
 	},
 });
 
-export const { storeStaffTable, storeStaffSelect, clearStaff } =
-	staffSlice.actions;
+export const {
+	storeStaffTable,
+	storeStaffSelect,
+	clearStaff,
+	staffLoading,
+	setStaffTableParams,
+} = staffSlice.actions;
 export default staffSlice.reducer;
