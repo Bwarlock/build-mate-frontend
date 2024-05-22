@@ -19,6 +19,7 @@ function Add_Task() {
 	const { selectData: staffSelectData } = useSelector((state) => state.staff);
 	const { addTask } = useAddData();
 	const { selectProjects, selectStaff } = useGetData();
+	const [formValidate] = Form.useForm();
 
 	useEffect(() => {
 		setValues((val) => {
@@ -33,7 +34,14 @@ function Add_Task() {
 	}, []);
 
 	const handleSubmit = () => {
-		addTask(values);
+		formValidate
+			.validateFields()
+			.then(() => {
+				addTask(values);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	return (
 		<ConfigProvider
@@ -43,6 +51,7 @@ function Add_Task() {
 				},
 			}}>
 			<Form
+				form={formValidate}
 				name="addproject"
 				style={{
 					// maxWidth: 600,
@@ -89,15 +98,7 @@ function Add_Task() {
 						}}
 					/>
 				</Form.Item>
-				<Form.Item
-					label="AssignedTo"
-					name="assignedTo"
-					rules={[
-						{
-							required: true,
-							message: "Please input Task Staff!",
-						},
-					]}>
+				<Form.Item label="AssignedTo" name="assignedTo" rules={[]}>
 					<Select
 						mode="multiple"
 						onChange={(e) => {

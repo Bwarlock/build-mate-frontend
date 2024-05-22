@@ -15,7 +15,7 @@ const columns = [
 		fixed: "left",
 		width: 200,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (id) => (
 			<Tooltip placement="topLeft" title={id}>
@@ -30,7 +30,7 @@ const columns = [
 		fixed: "left",
 		width: 100,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (name) => (
 			<Tooltip placement="topLeft" title={name}>
@@ -44,7 +44,7 @@ const columns = [
 		key: "createdAt",
 		width: 140,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (createdAt) => (
 			<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
@@ -58,7 +58,7 @@ const columns = [
 		key: "description",
 		width: 200,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (description) => (
 			<Tooltip placement="topLeft" title={description}>
@@ -72,11 +72,11 @@ const columns = [
 		key: "project",
 		width: 150,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (project) => (
 			<Tooltip placement="topLeft" title={project?.name}>
-				<p>{project?.name}</p>
+				{project?.name}
 			</Tooltip>
 		),
 	},
@@ -84,23 +84,30 @@ const columns = [
 		title: "Assigned To",
 		dataIndex: "assignedTo",
 		key: "assignedTo",
-		width: 200,
+		width: 300,
+		ellipsis: true,
 		render: (_, { assignedTo }) => {
 			return (
-				<Space
-					size="middle"
-					style={{
-						textOverflow: "ellipsis",
-						overflow: "hidden",
-					}}>
-					{assignedTo.map((staff) => {
-						return (
-							<Tag color={"volcano"} key={staff}>
-								{staff?.name.toUpperCase()}
-							</Tag>
-						);
-					})}
-				</Space>
+				<Tooltip
+					placement="topLeft"
+					title={assignedTo.reduce((accumulator, currentObject) => {
+						return accumulator + currentObject.name + " , ";
+					}, "")}>
+					<Space
+						size="small"
+						style={{
+							textOverflow: "ellipsis",
+							overflow: "hidden",
+						}}>
+						{assignedTo.map((staff) => {
+							return (
+								<Tag color={"volcano"} key={staff}>
+									{staff?.name.toUpperCase()}
+								</Tag>
+							);
+						})}
+					</Space>
+				</Tooltip>
 			);
 		},
 	},
@@ -110,7 +117,7 @@ const columns = [
 		key: "createdBy",
 		width: 200,
 		ellipsis: {
-			showTitle: true,
+			showTitle: false,
 		},
 		render: (createdBy) => (
 			<Tooltip placement="topLeft" title={createdBy}>
@@ -153,7 +160,7 @@ const columns = [
 		title: "Action",
 		key: "action",
 		fixed: "right",
-		width: 100,
+		width: 90,
 		render: () => (
 			<Space size="middle">
 				<Button type="primary" danger>
@@ -205,12 +212,17 @@ const Tasks = () => {
 			});
 		}
 
+		//Horizontal Scroll , both axis cause horizontal scrolling
 		const tableElement =
 			document.getElementsByClassName("ant-table-content")[0];
 		const handleWheel = (event) => {
 			if (tableElement) {
 				event.preventDefault();
-				tableElement.scrollLeft += event.deltaY;
+				if (event.deltaY !== 0) {
+					tableElement.scrollLeft += event.deltaY;
+				} else if (event.deltaX !== 0) {
+					tableElement.scrollLeft += event.deltaX;
+				}
 			}
 		};
 		if (tableElement) {
@@ -224,7 +236,6 @@ const Tasks = () => {
 		<>
 			<div
 				style={{
-					padding: "1rem",
 					display: "flex",
 					width: "100%",
 					justifyContent: "space-between",
@@ -254,7 +265,7 @@ const Tasks = () => {
 			</div>
 			<Drawer
 				title="Create a new Task"
-				width={720}
+				// width={720}
 				onClose={closeAddTaskDrawer}
 				open={openAddTaskDrawer}>
 				<Add_Task />
@@ -272,6 +283,7 @@ const Tasks = () => {
 					loading={taskLoading}
 					pagination={tableParams.pagination}
 					onChange={handleTableChange}
+					bordered={true}
 				/>
 			</div>
 		</>

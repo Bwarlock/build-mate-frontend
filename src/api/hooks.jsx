@@ -200,7 +200,11 @@ export const useGetData = () => {
 				dispatch(
 					storeTaskTable(
 						res.data.tasks.map((val, index) => {
-							return { ...val, key: "" + index, id: val._id };
+							return {
+								...val,
+								key: "" + index,
+								id: val._id,
+							};
 						})
 					)
 				);
