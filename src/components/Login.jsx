@@ -15,9 +15,17 @@ const Login = () => {
 	const login = useLogin();
 	const checkLogin = useCheckLogin();
 	const { checkDomain } = useGetData();
+	const [formValidate] = Form.useForm();
 
 	const handleSubmit = () => {
-		login(values);
+		formValidate
+			.validateFields()
+			.then(() => {
+				login(values);
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
 	};
 	useEffect(() => {
 		checkLogin("/dashboard/tasks", null);
@@ -63,6 +71,7 @@ const Login = () => {
 				}}>
 				<div className="centered">
 					<Form
+						form={formValidate}
 						name="login"
 						labelCol={{}}
 						wrapperCol={{}}

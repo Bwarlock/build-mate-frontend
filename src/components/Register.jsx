@@ -237,10 +237,19 @@ const Register = () => {
 					<Form.Item
 						label="Password"
 						name="password"
+						style={{
+							maxWidth: 450,
+						}}
 						rules={[
 							{
 								required: true,
 								message: "Please input your Password!",
+							},
+							{
+								pattern:
+									/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+								message:
+									"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
 							},
 						]}>
 						<Input.Password
