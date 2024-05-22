@@ -237,7 +237,7 @@ const Tasks = () => {
 							limit: tableParams.pagination.pageSize,
 						});
 					}}>
-					Refetch Data
+					Refresh
 				</Button>
 
 				<Button
