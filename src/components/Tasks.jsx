@@ -1,9 +1,9 @@
 import { Space, Table, Button, Drawer, Tag, Tooltip } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
 import Add_Task from "./Add_Task";
-//
+
 const columns = [
 	// TODO: add ID column
 	// Manipulate the API response in the hooks to include the ID
@@ -14,7 +14,14 @@ const columns = [
 		key: "id",
 		fixed: "left",
 		width: 200,
-		// render: (text) => <a>{text}</a>,
+		ellipsis: {
+			showTitle: true,
+		},
+		render: (id) => (
+			<Tooltip placement="topLeft" title={id}>
+				{id}
+			</Tooltip>
+		),
 	},
 	{
 		title: "Name",
@@ -22,16 +29,28 @@ const columns = [
 		key: "name",
 		fixed: "left",
 		width: 100,
-		render: (text) => <a>{text}</a>,
+		ellipsis: {
+			showTitle: true,
+		},
+		render: (name) => (
+			<Tooltip placement="topLeft" title={name}>
+				<a>{name}</a>
+			</Tooltip>
+		),
 	},
 	{
 		title: "createdAt",
 		dataIndex: "createdAt",
 		key: "createdAt",
 		width: 140,
-		render: (createdAt) => {
-			return new Date(createdAt).toDateString();
+		ellipsis: {
+			showTitle: true,
 		},
+		render: (createdAt) => (
+			<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
+				{new Date(createdAt).toDateString()}
+			</Tooltip>
+		),
 	},
 	{
 		title: "Description",
@@ -46,18 +65,20 @@ const columns = [
 				{description}
 			</Tooltip>
 		),
-		// render: (description) => {
-		// 	return <p>{description}</p>;
-		// },
 	},
 	{
 		title: "Project",
 		dataIndex: "project",
 		key: "project",
 		width: 150,
-		render: (project) => {
-			return <p>{project?.name}</p>;
+		ellipsis: {
+			showTitle: true,
 		},
+		render: (project) => (
+			<Tooltip placement="topLeft" title={project?.name}>
+				<p>{project?.name}</p>
+			</Tooltip>
+		),
 	},
 	{
 		title: "Assigned To",
@@ -69,7 +90,6 @@ const columns = [
 				<Space
 					size="middle"
 					style={{
-						maxWidth: "100px",
 						textOverflow: "ellipsis",
 						overflow: "hidden",
 					}}>
@@ -89,20 +109,14 @@ const columns = [
 		dataIndex: "createdBy",
 		key: "createdBy",
 		width: 200,
-		ellipsis: true,
-		// render: (_, { createdBy }) => {
-		// 	return (
-		// 		<Space
-		// 			size="middle"
-		// 			style={{
-		// 				maxWidth: "100px",
-		// 				textOverflow: "ellipsis",
-		// 				overflow: "hidden",
-		// 			}}>
-		// 			{createdBy?.name}
-		// 		</Space>
-		// 	);
-		// },
+		ellipsis: {
+			showTitle: true,
+		},
+		render: (createdBy) => (
+			<Tooltip placement="topLeft" title={createdBy}>
+				{createdBy}
+			</Tooltip>
+		),
 	},
 	{
 		title: "DueDate",
@@ -218,7 +232,10 @@ const Tasks = () => {
 				}}>
 				<Button
 					onClick={() => {
-						getTasks({ page: 1, limit: 10 });
+						getTasks({
+							page: tableParams.pagination.current,
+							limit: tableParams.pagination.pageSize,
+						});
 					}}>
 					Refetch Data
 				</Button>
@@ -248,7 +265,7 @@ const Tasks = () => {
 					overflowX: "auto",
 				}}>
 				<Table
-					size="medium"
+					size="small"
 					columns={columns}
 					dataSource={taskTableData}
 					scroll={{ x: 1200 }}
