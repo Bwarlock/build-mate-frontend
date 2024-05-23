@@ -135,9 +135,9 @@ export const useGetData = () => {
 				dispatch(clientLoading(false));
 			})
 			.catch((e) => {
-				console.log(e);
-				message.error(e.response.data.message);
 				dispatch(clientLoading(false));
+				console.log(e);
+				message.error(e.message);
 			});
 	}
 	function selectClients(params) {
@@ -157,7 +157,7 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				console.log(e);
-				message.error(e.response.data.message);
+				message.error(e.message);
 			});
 	}
 	function getStaff(params) {
@@ -175,9 +175,9 @@ export const useGetData = () => {
 				dispatch(staffLoading(false));
 			})
 			.catch((e) => {
-				console.log(e);
-				message.error(e.response.data.message);
 				dispatch(staffLoading(false));
+				console.log(e);
+				message.error(e.message);
 			});
 	}
 	function selectStaff(params) {
@@ -197,7 +197,7 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				console.log(e);
-				message.error(e.response.data.message);
+				message.error(e.message);
 			});
 	}
 	function getTasks(params) {
@@ -219,9 +219,9 @@ export const useGetData = () => {
 				dispatch(taskLoading(false));
 			})
 			.catch((e) => {
-				console.log(e);
-				message.error(e.response.data.message);
 				dispatch(taskLoading(false));
+				console.log(e);
+				message.error(e.message);
 			});
 	}
 	function selectTasks(params) {
@@ -240,8 +240,8 @@ export const useGetData = () => {
 				);
 			})
 			.catch((e) => {
+				message.error(e.message);
 				console.log(e);
-				message.error(e.response.data.message);
 			});
 	}
 	function getProjects(params) {
@@ -257,8 +257,8 @@ export const useGetData = () => {
 				);
 			})
 			.catch((e) => {
+				message.error(e.message);
 				console.log(e);
-				message.error(e.response.data.message);
 			});
 	}
 	function selectProjects(params) {
@@ -277,8 +277,8 @@ export const useGetData = () => {
 				);
 			})
 			.catch((e) => {
+				message.error(e.message);
 				console.log(e);
-				message.error(e.response.data.message);
 			});
 	}
 
@@ -290,7 +290,7 @@ export const useGetData = () => {
 			.catch((e) => {
 				// Navigate to documents page if the document is not found
 				navigate("/documents");
-				message.error(e.response.data.message);
+				message.error(e.message);
 			});
 	}
 
@@ -301,7 +301,7 @@ export const useGetData = () => {
 				// TODO: store the documents in redux
 			})
 			.catch((e) => {
-				message.error(e.response.data.message);
+				message.error(e.message);
 			});
 	}
 
@@ -318,7 +318,7 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				// If domain is not valid then show the error and redirect to the register page after 5 seconds
-				message.error(e.response.data.message);
+				message.error(e.message);
 				// redirect to "https://cloud.build-mate.in/register" after 5 seconds
 				setTimeout(() => {
 					window.location = "https://cloud.build-mate.in/register";

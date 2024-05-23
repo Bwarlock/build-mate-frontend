@@ -1,7 +1,17 @@
-import { Button, ConfigProvider, Form, Input, Select } from "antd";
+import {
+	Button,
+	ConfigProvider,
+	Form,
+	Input,
+	Select,
+	Space,
+	message,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useAddData, useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
+import { InboxOutlined } from "@ant-design/icons";
+import Dragger from "antd/es/upload/Dragger";
 
 const Add_Client = () => {
 	//Add Client Page Component
@@ -13,6 +23,7 @@ const Add_Client = () => {
 		companyName: "",
 		projects: [],
 	});
+	const [fileInputs, setFileInputs] = useState([]);
 
 	const { selectData: projectSelectData } = useSelector(
 		(state) => state.project
@@ -28,15 +39,75 @@ const Add_Client = () => {
 	}, []);
 
 	const handleSubmit = () => {
+		console.log(fileInputs);
 		formValidate
 			.validateFields()
 			.then(() => {
-				addClient(values);
+				const formdata = new FormData();
+				Object.keys(values).forEach((key) => {
+					formdata.append(key, values[key]);
+				});
+				const fileMeta = {};
+				fileInputs.forEach((inp) => {
+					fileMeta[inp.fileName] = inp.key;
+					formdata.append(inp.key, inp.file);
+				});
+				formdata.append("fileMeta", JSON.stringify(fileMeta));
+				addClient(formdata);
 			})
 			.catch((info) => {
 				console.log("Validate Failed:", info);
 			});
 	};
+	const handleAdd = () => {
+		setFileInputs((inputs) => {
+			return [
+				...inputs,
+				{ key: Date.now().toString(), file: null, fileName: "a" },
+			];
+		});
+	};
+	const handleRemove = (key) => {
+		setFileInputs((inputs) => {
+			return inputs.filter((inp) => inp.key !== key);
+		});
+	};
+	const handleFileChange = (key, file) => {
+		setFileInputs((inputs) => {
+			return inputs.map((inp) => {
+				if (inp.key === key) {
+					return { ...inp, fileName: file.name, file: file };
+				}
+				return inp;
+			});
+		});
+		formValidate.setFieldsValue({ [`fileName${key}`]: file.name });
+		formValidate.validateFields([`fileName${key}`]);
+		console.log(fileInputs);
+	};
+
+	const handleFileNameChange = (key, event) => {
+		formValidate.setFieldsValue({ [`fileName${key}`]: event.target.value });
+		formValidate.validateFields([`fileName${key}`]);
+		setFileInputs((inputs) => {
+			return inputs.map((inp) => {
+				if (inp.key === key) {
+					return { ...inp, fileName: event.target.value };
+				}
+				return inp;
+			});
+		});
+	};
+
+	// const handleCustom = ({ file, onSuccess, onError }) => {
+	// 	console.log(file);
+	// 	formD.append("file", file);
+	// 	setTimeout(() => {
+	// 		// Simulating success
+	// 		onSuccess("ok");
+	// 		message.success(`${file.name} file uploaded successfully`);
+	// 	}, 1000);
+	// };
 	return (
 		<ConfigProvider
 			theme={{
@@ -130,6 +201,7 @@ const Add_Client = () => {
 					]}>
 					<Input
 						onChange={(e) => {
+							console.log(formValidate);
 							setValues((val) => {
 								return { ...val, phoneNumber: e.target.value };
 							});
@@ -149,6 +221,70 @@ const Add_Client = () => {
 						}}
 						options={projectSelectData}
 					/>
+				</Form.Item>
+				{fileInputs.map((input) => (
+					<Space
+						key={input.key}
+						style={{
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							backgroundColor: "#EDEDED",
+							padding: "4px",
+							display: "flex",
+							marginBottom: 8,
+							borderRadius: 10,
+						}}
+						align="start"
+						wrap="true"
+						size="small">
+						<Form.Item
+							style={{ margin: "none" }}
+							name={`file${input.key}`}
+							key="file"
+							rules={[
+								{
+									required: true,
+									message: "Please Upload File",
+								},
+							]}>
+							<Dragger
+								style={{ width: "fit-content", backgroundColor: "lightgray" }}
+								beforeUpload={() => false}
+								onChange={({ file }) => handleFileChange(input.key, file)}
+								maxCount={1}
+								file={input.file}>
+								<p>
+									<InboxOutlined />
+								</p>
+								<p>Click or drag file to this area to upload</p>
+							</Dragger>
+						</Form.Item>
+
+						<Form.Item
+							name={`fileName${input.key}`}
+							key="fileNameForm"
+							valuePropName="checked"
+							rules={[
+								{
+									required: true,
+									message: "Please Write a FileName",
+								},
+							]}>
+							<input
+								placeholder="File Name"
+								value={input.fileName}
+								onChange={(event) => {
+									handleFileNameChange(input.key, event);
+								}}
+							/>
+						</Form.Item>
+						<Button onClick={() => handleRemove(input.key)}>Remove</Button>
+					</Space>
+				))}
+				<Form.Item>
+					<Button type="dashed" onClick={handleAdd} style={{}}>
+						+ Add File
+					</Button>
 				</Form.Item>
 
 				<Form.Item wrapperCol={{}}>

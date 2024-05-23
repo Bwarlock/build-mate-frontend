@@ -204,7 +204,7 @@ const Clients = () => {
 			</div>
 			<Drawer
 				title="Onboard a new Client to Build Mate"
-				// width={720}
+				// width={378}
 				onClose={closeAddClientDrawer}
 				open={openAddClientDrawer}>
 				<Add_Client />

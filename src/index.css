@@ -12,7 +12,7 @@ body {
 	display: flex;
 }
 
-#inside {
+/* #inside {
 	width: calc(100vw - 256px);
 	height: 100vh;
 	overflow: auto;
@@ -21,7 +21,7 @@ body {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-}
+} */
 
 .textLogo {
 	width: 100%;

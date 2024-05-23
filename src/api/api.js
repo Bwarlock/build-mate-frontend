@@ -33,6 +33,7 @@ export function CreateClient(data) {
 CreateClient.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
+		// url: `/test/file-upload`,
 		url: `/client/create-client`,
 		data: data,
 	});
