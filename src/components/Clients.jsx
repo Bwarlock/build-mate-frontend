@@ -93,7 +93,7 @@ const columns = [
 				<Tooltip
 					placement="topLeft"
 					title={projects.reduce((accumulator, currentObject) => {
-						return accumulator + currentObject + " , ";
+						return accumulator + currentObject.project_id;
 					}, "")}>
 					<Space
 						size="small"
@@ -104,7 +104,7 @@ const columns = [
 						{projects.map((proj, index) => {
 							return (
 								<Tag color={"volcano"} key={index}>
-									{proj.toUpperCase()}
+									{proj.name}
 								</Tag>
 							);
 						})}

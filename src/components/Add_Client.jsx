@@ -47,12 +47,18 @@ const Add_Client = () => {
 				Object.keys(values).forEach((key) => {
 					formdata.append(key, values[key]);
 				});
-				const fileMeta = {};
+				const filesMeta = [];
 				fileInputs.forEach((inp) => {
-					fileMeta[inp.fileName] = inp.key;
+					let data = {};
+					data.title = inp.fileName;
+					// TODO: make description dynamic (input field)
+					data.description = "Here goes the description";
+					data.fileKey = inp.key;
+					filesMeta.push(data);
+					// add the file to the form data
 					formdata.append(inp.key, inp.file);
 				});
-				formdata.append("fileMeta", JSON.stringify(fileMeta));
+				formdata.append("filesMeta", JSON.stringify(filesMeta));
 				addClient(formdata);
 			})
 			.catch((info) => {
