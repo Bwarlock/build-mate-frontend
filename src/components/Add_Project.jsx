@@ -110,7 +110,6 @@ function Add_Project() {
 					<Select
 						mode="multiple"
 						onChange={(e) => {
-							console.log(e);
 							setValues((val) => {
 								return { ...val, staff: [...e] };
 							});
@@ -125,7 +124,6 @@ function Add_Project() {
 				<Form.Item label="Clients" name="clients" rules={[]}>
 					<Select
 						onChange={(e) => {
-							console.log(e);
 							setValues((val) => {
 								return { ...val, clients: [e] };
 							});
@@ -140,7 +138,6 @@ function Add_Project() {
 				<Form.Item label="Tasks" name="tasks" rules={[]}>
 					<Select
 						onChange={(e) => {
-							console.log(e);
 							setValues((val) => {
 								return { ...val, tasks: [...e] };
 							});

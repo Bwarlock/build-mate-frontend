@@ -20,11 +20,9 @@ const clientSlice = createSlice({
 	initialState: initialValue,
 	reducers: {
 		storeClientTable: (state, action) => {
-			console.log(action.payload);
 			state.tableData = action.payload;
 		},
 		storeClientSelect: (state, action) => {
-			console.log(action.payload);
 			state.selectData = action.payload;
 		},
 		clearClient: (state) => {

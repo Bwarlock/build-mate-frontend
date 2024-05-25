@@ -20,11 +20,9 @@ const staffSlice = createSlice({
 	initialState: initialValue,
 	reducers: {
 		storeStaffTable: (state, action) => {
-			console.log(action.payload);
 			state.tableData = action.payload;
 		},
 		storeStaffSelect: (state, action) => {
-			console.log(action.payload);
 			state.selectData = action.payload;
 		},
 		clearStaff: (state) => {

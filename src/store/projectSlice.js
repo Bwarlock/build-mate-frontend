@@ -10,11 +10,9 @@ const projectSlice = createSlice({
 	initialState: initialValue,
 	reducers: {
 		storeProjectTable: (state, action) => {
-			console.log(action.payload);
 			state.tableData = action.payload;
 		},
 		storeProjectSelect: (state, action) => {
-			console.log(action.payload);
 			state.selectData = action.payload;
 		},
 		clearProject: (state) => {

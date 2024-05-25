@@ -51,14 +51,12 @@ export const useLogin = () => {
 	function login(data) {
 		Login.v1(data)
 			.then((res) => {
-				console.log(res);
 				// TODO:check if the domain is correct
 				dispatch(storeUser(res.data.user)); // Storing User in Redux-persist LocalStorage
 				localStorage.setItem("token", res.data.token); // Storing Token Myself
 				navigate("/dashboard");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
@@ -124,39 +122,40 @@ export const useGetData = () => {
 		dispatch(clientLoading(true));
 		GetClients.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeClientTable(
-						res.data.clientData.map((val, index) => {
-							return { ...val, key: "" + index, id: val._id };
-						})
-					)
-				);
+				if (res?.data?.clientData?.length ?? null) {
+					dispatch(
+						storeClientTable(
+							res.data.clientData.map((val, index) => {
+								return { ...val, key: "" + index, id: val._id };
+							})
+						)
+					);
+				}
 				dispatch(clientLoading(false));
 			})
 			.catch((e) => {
 				dispatch(clientLoading(false));
-				console.log(e);
+
 				message.error(e.message);
 			});
 	}
 	function selectClients(params) {
 		GetClients.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeClientSelect(
-						res.data.clientData.map((val) => {
-							return {
-								label: val.name,
-								value: val._id,
-							};
-						})
-					)
-				);
+				if (res?.data?.clientData?.length ?? null) {
+					dispatch(
+						storeClientSelect(
+							res.data.clientData.map((val) => {
+								return {
+									label: val.name,
+									value: val._id,
+								};
+							})
+						)
+					);
+				}
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.message);
 			});
 	}
@@ -164,39 +163,40 @@ export const useGetData = () => {
 		dispatch(staffLoading(true));
 		GetStaff.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeStaffTable(
-						res.data.staffData.map((val, index) => {
-							return { ...val, key: "" + index, id: val._id };
-						})
-					)
-				);
+				if (res?.data?.staffData?.length ?? null) {
+					dispatch(
+						storeStaffTable(
+							res.data.staffData.map((val, index) => {
+								return { ...val, key: "" + index, id: val._id };
+							})
+						)
+					);
+				}
 				dispatch(staffLoading(false));
 			})
 			.catch((e) => {
 				dispatch(staffLoading(false));
-				console.log(e);
+
 				message.error(e.message);
 			});
 	}
 	function selectStaff(params) {
 		GetStaff.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeStaffSelect(
-						res.data.staffData.map((val) => {
-							return {
-								label: val.name,
-								value: val._id,
-							};
-						})
-					)
-				);
+				if (res?.data?.staffData?.length ?? null) {
+					dispatch(
+						storeStaffSelect(
+							res.data.staffData.map((val) => {
+								return {
+									label: val.name,
+									value: val._id,
+								};
+							})
+						)
+					);
+				}
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.message);
 			});
 	}
@@ -204,81 +204,82 @@ export const useGetData = () => {
 		dispatch(taskLoading(true));
 		GetTask.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeTaskTable(
-						res.data.tasks.map((val, index) => {
-							return {
-								...val,
-								key: "" + index,
-								id: val._id,
-							};
-						})
-					)
-				);
+				if (res?.data?.tasks?.length ?? null) {
+					dispatch(
+						storeTaskTable(
+							res.data.tasks.map((val, index) => {
+								return {
+									...val,
+									key: "" + index,
+									id: val._id,
+								};
+							})
+						)
+					);
+				}
 				dispatch(taskLoading(false));
 			})
 			.catch((e) => {
 				dispatch(taskLoading(false));
-				console.log(e);
+
 				message.error(e.message);
 			});
 	}
 	function selectTasks(params) {
 		GetTask.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeTaskSelect(
-						res.data.tasks.map((val) => {
-							return {
-								label: val.name,
-								value: val._id,
-							};
-						})
-					)
-				);
+				if (res?.data?.tasks?.length ?? null) {
+					dispatch(
+						storeTaskSelect(
+							res.data.tasks.map((val) => {
+								return {
+									label: val.name,
+									value: val._id,
+								};
+							})
+						)
+					);
+				}
 			})
 			.catch((e) => {
 				message.error(e.message);
-				console.log(e);
 			});
 	}
 	function getProjects(params) {
 		GetProject.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeProjectTable(
-						res.data.projects.map((val, index) => {
-							return { ...val, key: "" + index };
-						})
-					)
-				);
+				if (res?.data?.projects?.length ?? null) {
+					dispatch(
+						storeProjectTable(
+							res.data.projects.map((val, index) => {
+								return { ...val, key: "" + index };
+							})
+						)
+					);
+				}
 			})
 			.catch((e) => {
 				message.error(e.message);
-				console.log(e);
 			});
 	}
 	function selectProjects(params) {
 		GetProject.v1(params)
 			.then((res) => {
-				console.log(res);
-				dispatch(
-					storeProjectSelect(
-						res.data.projects.map((val) => {
-							return {
-								label: val.name,
-								value: val._id,
-							};
-						})
-					)
-				);
+				if (res?.data?.projects?.length ?? null) {
+					dispatch(
+						storeProjectSelect(
+							res.data.projects.map((val) => {
+								return {
+									label: val.name,
+									value: val._id,
+								};
+							})
+						)
+					);
+				}
 			})
 			.catch((e) => {
 				message.error(e.message);
-				console.log(e);
 			});
 	}
 
@@ -362,7 +363,6 @@ export const useAddData = () => {
 	function addClient(data) {
 		CreateClient.v1(data)
 			.then((res) => {
-				console.log(res);
 				message.success(res.data.message);
 				getClients({
 					page: clientTableParams[0].pagination.current,
@@ -372,14 +372,12 @@ export const useAddData = () => {
 				// navigate("/dashboard/clients");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
 	function addStaff(data) {
 		CreateStaff.v1(data)
 			.then((res) => {
-				console.log(res);
 				message.success(res.data.message);
 				getStaff({
 					page: staffTableParams[0].pagination.current,
@@ -389,7 +387,6 @@ export const useAddData = () => {
 				// navigate("/dashboard/staff");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
@@ -405,7 +402,6 @@ export const useAddData = () => {
 				// navigate("/dashboard/tasks");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
@@ -418,7 +414,6 @@ export const useAddData = () => {
 				// navigate("/dashboard/project");
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}
@@ -431,7 +426,6 @@ export const useAddData = () => {
 				navigate(`/documents/${documentID}`);
 			})
 			.catch((e) => {
-				console.log(e);
 				message.error(e.response.data.message);
 			});
 	}

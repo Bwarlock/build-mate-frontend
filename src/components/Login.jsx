@@ -1,5 +1,5 @@
 import { Button, Checkbox, ConfigProvider, Form, Input } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { useCheckLogin, useLogin, useGetData } from "../api/hooks";
 import { Link } from "react-router-dom";
@@ -11,6 +11,7 @@ const Login = () => {
 		password: "",
 		domainName: "", //Getting Domain Name For Subdomains
 	});
+	const emailField = useRef();
 
 	const login = useLogin();
 	const checkLogin = useCheckLogin();
@@ -30,6 +31,9 @@ const Login = () => {
 	useEffect(() => {
 		checkLogin("/dashboard/tasks", null);
 		checkDomain();
+		if (emailField) {
+			emailField.current.focus();
+		}
 	}, []);
 	return (
 		<div className="full">
@@ -95,6 +99,7 @@ const Login = () => {
 								},
 							]}>
 							<Input
+								ref={emailField}
 								onChange={(e) => {
 									setValues((val) => {
 										return { ...val, email: e.target.value };

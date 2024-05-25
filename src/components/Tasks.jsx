@@ -191,7 +191,6 @@ const Tasks = () => {
 	} = useSelector((state) => state.task);
 
 	// workaround to Redux-persist object being non serializable
-	console.log(params);
 	const tableParams = params[0];
 	const dispatch = useDispatch();
 	const { getTasks } = useGetData();

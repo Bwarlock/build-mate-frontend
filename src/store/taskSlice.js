@@ -21,11 +21,9 @@ const taskSlice = createSlice({
 	initialState: initialValue,
 	reducers: {
 		storeTaskTable: (state, action) => {
-			console.log(action.payload);
 			state.tableData = action.payload;
 		},
 		storeTaskSelect: (state, action) => {
-			console.log(action.payload);
 			state.selectData = action.payload;
 		},
 		clearTask: (state) => {

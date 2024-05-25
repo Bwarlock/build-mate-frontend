@@ -129,7 +129,6 @@ function Add_Task() {
 				<Form.Item label="Due Date" name="dueDate" rules={[]}>
 					<DatePicker
 						onChange={(_, e) => {
-							console.log(e);
 							setValues((val) => {
 								return { ...val, dueDate: e };
 							});

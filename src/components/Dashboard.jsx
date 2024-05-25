@@ -4,10 +4,24 @@ import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
 import { useLogout } from "../api/hooks";
 import { useSelector } from "react-redux";
+import {
+	CaretLeftFilled,
+	CaretRightFilled,
+	LogoutOutlined,
+	OrderedListOutlined,
+	ProfileFilled,
+	ProfileOutlined,
+	ProjectFilled,
+	ProjectOutlined,
+	TeamOutlined,
+	UserOutlined,
+	UserSwitchOutlined,
+} from "@ant-design/icons";
 
 const Dashboard = () => {
 	//Dashboard Route Component
 	const [collapsed, setCollapsed] = useState(true);
+	const [vanished, setVanished] = useState(false);
 	const logout = useLogout();
 	const navigate = useNavigate();
 	const { user } = useSelector((state) => state.global);
@@ -17,8 +31,11 @@ const Dashboard = () => {
 	};
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
+		setVanished(false);
 	};
-
+	const toggleVanished = () => {
+		setVanished(!vanished);
+	};
 	useEffect(() => {
 		const checkIfMobile = () => {
 			if (window.innerWidth <= 640) {
@@ -39,13 +56,11 @@ const Dashboard = () => {
 	}, []);
 	return (
 		<div id="main">
-			{collapsed ? (
-				" "
-			) : (
+			{!vanished && (
 				<Menu
 					style={{
 						maxWidth: 256,
-						// height: "100vh",
+						height: "100vh",
 						display: "flex",
 						flexDirection: "column",
 					}}
@@ -62,60 +77,70 @@ const Dashboard = () => {
 						/>
 					</div>
 
-					<Menu.Item style={{ fontWeight: "bold" }} key="project">
+					<Menu.Item
+						icon={<ProjectFilled />}
+						style={{ fontWeight: "bold" }}
+						key="project">
 						<Link to="/dashboard/project">Project</Link>
 					</Menu.Item>
 
-					<Menu.Item key="staff">
+					<Menu.Item icon={<TeamOutlined />} key="staff">
 						<Link style={{ fontWeight: "bold" }} to="/dashboard/staff">
 							Staff
 						</Link>
 					</Menu.Item>
 
-					<Menu.Item style={{ fontWeight: "bold" }} key="tasks">
+					<Menu.Item
+						icon={<OrderedListOutlined />}
+						style={{ fontWeight: "bold" }}
+						key="tasks">
 						<Link to="/dashboard/tasks">Tasks</Link>
 					</Menu.Item>
 
-					<Menu.Item style={{ fontWeight: "bold" }} key="clients">
+					<Menu.Item
+						icon={<UserSwitchOutlined />}
+						style={{ fontWeight: "bold" }}
+						key="clients">
 						<Link to="/dashboard/clients">Clients</Link>
 					</Menu.Item>
 
-					<Menu.ItemGroup
+					<Menu.Item
+						icon={<UserOutlined />}
 						style={{
-							position: "absolute",
-							bottom: 0,
-							zIndex: 1,
-							width: "248px",
-						}}>
-						<Menu.Item
-							style={{
-								fontWeight: "bold",
-								width: "100%",
-							}}
-							key="user">
-							{user.name || user.email}
-						</Menu.Item>
-						<Menu.Item
-							style={{
-								fontWeight: "bold",
-								width: "100%",
-							}}
-							key="logout"
-							onClick={handleLogout}>
-							Log Out
-						</Menu.Item>
-					</Menu.ItemGroup>
+							marginTop: "auto",
+							fontWeight: "bold",
+							// width: "100%",
+						}}
+						key="user">
+						{user.name || user.email}
+					</Menu.Item>
+					<Menu.Item
+						icon={<LogoutOutlined />}
+						style={{
+							fontWeight: "bold",
+							// width: "100%",
+						}}
+						key="logout"
+						onClick={handleLogout}>
+						Log Out
+					</Menu.Item>
 				</Menu>
 			)}
+
 			<Button
-				onClick={toggleCollapsed}
+				onClick={() => {
+					vanished
+						? toggleCollapsed()
+						: collapsed
+						? toggleVanished()
+						: toggleCollapsed();
+				}}
 				style={{
-					marginBottom: 16,
 					position: "absolute",
-					left: collapsed ? 0 : 256,
-				}}>
-				{collapsed ? <span>&gt;</span> : <span>&lt;</span>}
-			</Button>
+					left: vanished ? 0 : collapsed ? 80 : 256,
+				}}
+				icon={vanished ? <CaretRightFilled /> : <CaretLeftFilled />}></Button>
+
 			<div
 				id="inside"
 				style={{
@@ -132,6 +157,7 @@ const Dashboard = () => {
 					<Outlet />
 				</div>
 			</div>
+			{/* </Layout> */}
 		</div>
 	);
 };

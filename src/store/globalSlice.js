@@ -9,7 +9,6 @@ const globalSlice = createSlice({
 	initialState: initialValue,
 	reducers: {
 		storeUser: (state, action) => {
-			console.log(action.payload);
 			state.user = action.payload;
 		},
 		clearGlobal: (state) => {
