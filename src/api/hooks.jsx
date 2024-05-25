@@ -319,7 +319,7 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				// If domain is not valid then show the error and redirect to the register page after 5 seconds
-				message.error(e.message);
+				message.error(e.response.data.message);
 				// redirect to "https://cloud.build-mate.in/register" after 5 seconds
 				setTimeout(() => {
 					window.location = "https://cloud.build-mate.in/register";
