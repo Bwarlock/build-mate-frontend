@@ -15,7 +15,7 @@ const columns = [
 		dataIndex: "id",
 		key: "id",
 		fixed: "left",
-		width: 200,
+		width: 150,
 		ellipsis: {
 			showTitle: false,
 		},

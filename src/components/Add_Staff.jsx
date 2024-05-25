@@ -1,6 +1,7 @@
-import { Button, ConfigProvider, Form, Input } from "antd";
+import { Button, ConfigProvider, Form, Input, Tooltip } from "antd";
 import { useState } from "react";
 import { useAddData } from "../api/hooks";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 const Add_Staff = () => {
 	//Add Staff Page Component
@@ -62,6 +63,7 @@ const Add_Staff = () => {
 					/>
 				</Form.Item>
 				<Form.Item
+					validateTrigger="onBlur"
 					label="Email"
 					name="email"
 					rules={[
@@ -69,8 +71,20 @@ const Add_Staff = () => {
 							required: true,
 							message: "Please input Staff Email!",
 						},
+						{
+							type: "email",
+							message: "The input is not a valid email!",
+						},
 					]}>
 					<Input
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "email",
+									errors: [],
+								},
+							]);
+						}}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, email: e.target.value };
@@ -80,6 +94,7 @@ const Add_Staff = () => {
 				</Form.Item>
 
 				<Form.Item
+					validateTrigger="onBlur"
 					label="Password"
 					name="password"
 					rules={[
@@ -87,8 +102,28 @@ const Add_Staff = () => {
 							required: true,
 							message: "Please input Staff password!",
 						},
+						{
+							pattern:
+								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							message:
+								"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+						},
 					]}>
 					<Input.Password
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "password",
+									errors: [],
+								},
+							]);
+						}}
+						// showCount={true}
+						addonAfter={
+							<Tooltip title="Password must contain at least 8 characters including a lowercase letter, an uppercase letter,a number and a special character">
+								<InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+							</Tooltip>
+						}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, password: e.target.value };
@@ -97,6 +132,7 @@ const Add_Staff = () => {
 					/>
 				</Form.Item>
 				<Form.Item
+					validateTrigger="onBlur"
 					label="PhoneNumber"
 					name="phoneNumber"
 					rules={[
@@ -104,8 +140,20 @@ const Add_Staff = () => {
 							required: true,
 							message: "Please input Staff PhoneNumber!",
 						},
+						{
+							pattern: /^(?:\+\d{1,3})?\d{10}$/,
+							message: "The input is not a valid phoneNumber",
+						},
 					]}>
 					<Input
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "phoneNumber",
+									errors: [],
+								},
+							]);
+						}}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, phoneNumber: e.target.value };

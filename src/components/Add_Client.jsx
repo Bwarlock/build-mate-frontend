@@ -5,12 +5,12 @@ import {
 	Input,
 	Select,
 	Space,
-	message,
+	Tooltip,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useAddData, useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
-import { InboxOutlined } from "@ant-design/icons";
+import { InboxOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import Dragger from "antd/es/upload/Dragger";
 import TextArea from "antd/es/input/TextArea";
 
@@ -168,6 +168,7 @@ const Add_Client = () => {
 					/>
 				</Form.Item>
 				<Form.Item
+					validateTrigger="onBlur"
 					label="Email"
 					name="email"
 					rules={[
@@ -175,8 +176,20 @@ const Add_Client = () => {
 							required: true,
 							message: "Please input Client Email!",
 						},
+						{
+							type: "email",
+							message: "The input is not a valid email!",
+						},
 					]}>
 					<Input
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "email",
+									errors: [],
+								},
+							]);
+						}}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, email: e.target.value };
@@ -186,6 +199,7 @@ const Add_Client = () => {
 				</Form.Item>
 
 				<Form.Item
+					validateTrigger="onBlur"
 					label="Password"
 					name="password"
 					rules={[
@@ -193,8 +207,28 @@ const Add_Client = () => {
 							required: true,
 							message: "Please input Client password!",
 						},
+						{
+							pattern:
+								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							message:
+								"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+						},
 					]}>
 					<Input.Password
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "password",
+									errors: [],
+								},
+							]);
+						}}
+						// showCount={true}
+						addonAfter={
+							<Tooltip title="Password must contain at least 8 characters including a lowercase letter, an uppercase letter,a number and a special character">
+								<InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+							</Tooltip>
+						}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, password: e.target.value };
@@ -203,6 +237,7 @@ const Add_Client = () => {
 					/>
 				</Form.Item>
 				<Form.Item
+					validateTrigger="onBlur"
 					label="PhoneNumber"
 					name="phoneNumber"
 					rules={[
@@ -210,8 +245,20 @@ const Add_Client = () => {
 							required: true,
 							message: "Please input Client PhoneNumber!",
 						},
+						{
+							pattern: /^(?:\+\d{1,3})?\d{10}$/,
+							message: "The input is not a valid phoneNumber",
+						},
 					]}>
 					<Input
+						onFocus={() => {
+							formValidate.setFields([
+								{
+									name: "phoneNumber",
+									errors: [],
+								},
+							]);
+						}}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, phoneNumber: e.target.value };

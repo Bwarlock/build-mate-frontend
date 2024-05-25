@@ -7,10 +7,12 @@ import {
 	Steps,
 	theme,
 	ConfigProvider,
+	Tooltip,
 } from "antd";
 import { TypeAnimation } from "react-type-animation";
 import { useRegister } from "../api/hooks";
 import { Link } from "react-router-dom";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 const Register = () => {
 	useEffect(() => {
@@ -32,7 +34,7 @@ const Register = () => {
 	const [values, setValues] = useState({
 		name: "",
 		email: "",
-		phoneNumber: 0,
+		phoneNumber: "0",
 		password: "",
 		companyName: "",
 		domainName: "",
@@ -118,6 +120,7 @@ const Register = () => {
 						/>
 					</Form.Item>
 					<Form.Item
+						validateTrigger="onBlur"
 						label="Phone Number"
 						name="phoneNumber"
 						rules={[
@@ -125,11 +128,23 @@ const Register = () => {
 								required: true,
 								message: "Please input your Phone Number!",
 							},
+							{
+								pattern: /^(?:\+\d{1,3})?\d{10}$/,
+								message: "The input is not a valid phoneNumber",
+							},
 						]}>
 						<Input
+							onFocus={() => {
+								formValidate.setFields([
+									{
+										name: "phoneNumber",
+										errors: [],
+									},
+								]);
+							}}
 							onChange={(e) => {
 								setValues((val) => {
-									return { ...val, phoneNumber: parseInt(e.target.value) };
+									return { ...val, phoneNumber: e.target.value };
 								});
 							}}
 						/>
@@ -217,6 +232,7 @@ const Register = () => {
 					}}
 					autoComplete="off">
 					<Form.Item
+						validateTrigger="onBlur"
 						label="Email"
 						name="email"
 						rules={[
@@ -224,8 +240,20 @@ const Register = () => {
 								required: true,
 								message: "Please input your Email!",
 							},
+							{
+								type: "email",
+								message: "The input is not a valid email!",
+							},
 						]}>
 						<Input
+							onFocus={() => {
+								formValidate.setFields([
+									{
+										name: "email",
+										errors: [],
+									},
+								]);
+							}}
 							onChange={(e) => {
 								setValues((val) => {
 									return { ...val, email: e.target.value };
@@ -235,10 +263,11 @@ const Register = () => {
 					</Form.Item>
 
 					<Form.Item
+						validateTrigger="onBlur"
 						label="Password"
 						name="password"
 						style={{
-							maxWidth: 450,
+							maxWidth: 515,
 						}}
 						rules={[
 							{
@@ -253,6 +282,20 @@ const Register = () => {
 							},
 						]}>
 						<Input.Password
+							onFocus={() => {
+								formValidate.setFields([
+									{
+										name: "password",
+										errors: [],
+									},
+								]);
+							}}
+							// showCount={true}
+							addonAfter={
+								<Tooltip title="Password must contain at least 8 characters including a lowercase letter, an uppercase letter,a number and a special character">
+									<InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
+								</Tooltip>
+							}
 							onChange={(e) => {
 								setValues((val) => {
 									return { ...val, password: e.target.value };

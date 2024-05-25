@@ -156,3 +156,8 @@ body {
 		display: none;
 	}
 }
+
+/* Miscrosoft Edge Password reveal Icon */
+::-ms-reveal {
+	display: none;
+}
