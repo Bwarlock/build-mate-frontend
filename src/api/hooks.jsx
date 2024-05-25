@@ -221,8 +221,7 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				dispatch(taskLoading(false));
-
-				message.error(e.message);
+				message.error(e.response.data.message || "There was an error while fetching the tasks. Please try again or contact support.");
 			});
 	}
 	function selectTasks(params) {
@@ -242,7 +241,7 @@ export const useGetData = () => {
 				}
 			})
 			.catch((e) => {
-				message.error(e.message);
+				message.error(e.response.data.message || "There was an error while processing the request.");
 			});
 	}
 	function getProjects(params) {
