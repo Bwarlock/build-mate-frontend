@@ -100,6 +100,17 @@ GetTask.v1 = function v1(params) {
 	});
 };
 
+export function DeleteTask(id) {
+	return DeleteTask.v1(id);
+}
+
+DeleteTask.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "delete",
+		url: `/task/delete-task/${id}`,
+	});
+};
+
 export function CreateProject(data) {
 	return CreateProject.v1(data);
 }

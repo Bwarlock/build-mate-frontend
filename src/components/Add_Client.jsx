@@ -237,7 +237,7 @@ const Add_Client = () => {
 					/>
 				</Form.Item>
 				<Form.Item
-					validateTrigger="onBlur"
+					// validateTrigger="onBlur"
 					label="PhoneNumber"
 					name="phoneNumber"
 					rules={[
@@ -245,20 +245,20 @@ const Add_Client = () => {
 							required: true,
 							message: "Please input Client PhoneNumber!",
 						},
-						{
-							pattern: /^(?:\+\d{1,3})?\d{10}$/,
-							message: "The input is not a valid phoneNumber",
-						},
+						// {
+						// 	pattern: /^(?:\+\d{1,3})?\d{10}$/,
+						// 	message: "The input is not a valid phoneNumber",
+						// },
 					]}>
 					<Input
-						onFocus={() => {
-							formValidate.setFields([
-								{
-									name: "phoneNumber",
-									errors: [],
-								},
-							]);
-						}}
+						// onFocus={() => {
+						// 	formValidate.setFields([
+						// 		{
+						// 			name: "phoneNumber",
+						// 			errors: [],
+						// 		},
+						// 	]);
+						// }}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, phoneNumber: e.target.value };

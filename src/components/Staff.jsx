@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Add_Staff from "./Add_Staff";
 import { setStaffTableParams } from "../store/staffSlice";
 import { horizontalScroll } from "../util/functions";
+import { DeleteFilled } from "@ant-design/icons";
 
 //Column Titles
 const columns = [
@@ -118,12 +119,16 @@ const columns = [
 		title: "Action",
 		key: "action",
 		fixed: "right",
-		width: 90,
+		width: 80,
 		render: () => (
-			<Space size="middle">
-				<Button type="primary" danger>
-					Delete
-				</Button>
+			<Space
+				size="small"
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "center",
+				}}>
+				<Button type="primary" icon={<DeleteFilled />} danger></Button>
 			</Space>
 		),
 	},

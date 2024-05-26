@@ -5,6 +5,7 @@ import { useGetData } from "../api/hooks";
 import Add_Client from "./Add_Client";
 import { horizontalScroll } from "../util/functions";
 import { setClientTableParams } from "../store/clientSlice";
+import { DeleteFilled } from "@ant-design/icons";
 
 //Column Titles
 const columns = [
@@ -113,17 +114,20 @@ const columns = [
 			);
 		},
 	},
-
 	{
 		title: "Action",
 		key: "action",
 		fixed: "right",
-		width: 90,
+		width: 80,
 		render: () => (
-			<Space size="middle">
-				<Button type="primary" danger>
-					Delete
-				</Button>
+			<Space
+				size="small"
+				style={{
+					width: "100%",
+					display: "flex",
+					justifyContent: "center",
+				}}>
+				<Button type="primary" icon={<DeleteFilled />} danger></Button>
 			</Space>
 		),
 	},

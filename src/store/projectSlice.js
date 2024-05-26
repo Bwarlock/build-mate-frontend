@@ -3,6 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
 	tableData: [],
 	selectData: [],
+	loading: false,
+	tableParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const projectSlice = createSlice({
@@ -19,9 +29,20 @@ const projectSlice = createSlice({
 			state.tableData = [];
 			state.selectData = [];
 		},
+		projectLoading: (state, action) => {
+			state.loading = action.payload;
+		},
+		setProjectTableParams: (state, action) => {
+			state.tableParams = [action.payload];
+		},
 	},
 });
 
-export const { storeProjectTable, storeProjectSelect, clearProject } =
-	projectSlice.actions;
+export const {
+	storeProjectTable,
+	storeProjectSelect,
+	clearProject,
+	projectLoading,
+	setProjectTableParams,
+} = projectSlice.actions;
 export default projectSlice.reducer;

@@ -1,13 +1,15 @@
-import { Space, Table, Button, Drawer, Tag, Tooltip } from "antd";
+import { Button, Table, Drawer, Tooltip, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { useDeleteData, useGetData } from "../api/hooks";
+import { useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import Add_Task from "./Add_Task";
-import { setTaskTableParams } from "../store/taskSlice";
+import Add_Project from "./Add_Project";
+import { setProjectTableParams } from "../store/projectSlice";
 import { horizontalScroll } from "../util/functions";
 import { DeleteFilled } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
-const Tasks = () => {
+function Project_Table() {
+	//Projects Page Component
 	const columns = [
 		// TODO: add ID column
 		// Manipulate the API response in the hooks to include the ID
@@ -70,33 +72,20 @@ const Tasks = () => {
 				</Tooltip>
 			),
 		},
+
 		{
-			title: "Project",
-			dataIndex: "project",
-			key: "project",
-			width: 150,
+			title: "Client",
+			dataIndex: "client",
+			key: "client",
+			width: 200,
 			ellipsis: {
 				showTitle: false,
 			},
-			render: (project) => (
-				<Tooltip placement="topLeft" title={project?.name}>
-					{project?.name}
-				</Tooltip>
-			),
-		},
-		{
-			title: "Assigned To",
-			dataIndex: "assignedTo",
-			key: "assignedTo",
-			width: 300,
-			ellipsis: {
-				showTitle: false,
-			},
-			render: (_, { assignedTo }) => {
+			render: (_, { client }) => {
 				return (
 					<Tooltip
 						placement="topLeft"
-						title={assignedTo.reduce((accumulator, currentObject) => {
+						title={client.reduce((accumulator, currentObject) => {
 							return accumulator + currentObject.name + " , ";
 						}, "")}>
 						<Space
@@ -105,10 +94,10 @@ const Tasks = () => {
 								textOverflow: "ellipsis",
 								overflow: "hidden",
 							}}>
-							{assignedTo.map((staff, index) => {
+							{client.map((clien, index) => {
 								return (
-									<Tag color={"volcano"} key={index}>
-										{staff?.name.toUpperCase()}
+									<Tag color={"lightblue"} key={index}>
+										{clien?.name.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -118,30 +107,82 @@ const Tasks = () => {
 			},
 		},
 		{
-			title: "Created By",
-			dataIndex: "createdBy",
-			key: "createdBy",
+			title: "Staff",
+			dataIndex: "staff",
+			key: "staff",
+			width: 300,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (_, { staff }) => {
+				return (
+					<Tooltip
+						placement="topLeft"
+						title={staff.reduce((accumulator, currentObject) => {
+							return accumulator + currentObject.name + " , ";
+						}, "")}>
+						<Space
+							size="small"
+							style={{
+								textOverflow: "ellipsis",
+								overflow: "hidden",
+							}}>
+							{staff.map((staf, index) => {
+								return (
+									<Tag color={"volcano"} key={index}>
+										{staf?.name.toUpperCase()}
+									</Tag>
+								);
+							})}
+						</Space>
+					</Tooltip>
+				);
+			},
+		},
+		{
+			title: "Tasks",
+			dataIndex: "tasks",
+			key: "tasks",
+			width: 300,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (_, { tasks }) => {
+				return (
+					<Tooltip
+						placement="topLeft"
+						title={tasks.reduce((accumulator, currentObject) => {
+							return accumulator + currentObject.name + " , ";
+						}, "")}>
+						<Space
+							size="small"
+							style={{
+								textOverflow: "ellipsis",
+								overflow: "hidden",
+							}}>
+							{tasks.map((task, index) => {
+								return (
+									<Link color={"volcano"} key={index}>
+										{task?.name.toUpperCase()}
+									</Link>
+								);
+							})}
+						</Space>
+					</Tooltip>
+				);
+			},
+		},
+		{
+			title: "Owner",
+			dataIndex: "owner",
+			key: "owner",
 			width: 200,
 			ellipsis: {
 				showTitle: false,
 			},
-			render: (createdBy) => (
-				<Tooltip placement="topLeft" title={createdBy?.name}>
-					{createdBy?.name}
-				</Tooltip>
-			),
-		},
-		{
-			title: "DueDate",
-			dataIndex: "dueDate",
-			key: "dueDate",
-			width: 140,
-			ellipsis: {
-				showTitle: false,
-			},
-			render: (dueDate) => (
-				<Tooltip placement="topLeft" title={new Date(dueDate).toDateString()}>
-					{new Date(dueDate).toDateString()}
+			render: (owner) => (
+				<Tooltip placement="topLeft" title={owner}>
+					{owner}
 				</Tooltip>
 			),
 		},
@@ -159,64 +200,58 @@ const Tasks = () => {
 						display: "flex",
 						justifyContent: "center",
 					}}>
-					<Button
-						type="primary"
-						icon={<DeleteFilled />}
-						danger
-						onClick={() => handleDeleteTask(record?._id)}></Button>
+					<Button type="primary" icon={<DeleteFilled />} danger></Button>
 				</Space>
 			),
 		},
 	];
-	const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
 
-	const showAddTaskDrawer = () => {
-		setOpenAddTaskDrawer(true);
+	const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
+
+	const showAddProjectDrawer = () => {
+		setOpenAddProjectDrawer(true);
 	};
-	const closeAddTaskDrawer = () => {
-		setOpenAddTaskDrawer(false);
+
+	const closeAddProjectDrawer = () => {
+		setOpenAddProjectDrawer(false);
 	};
 	const {
-		tableData: taskTableData,
-		loading: taskLoading,
+		tableData: projectTableData,
+		loading: projectLoading,
 		tableParams: params,
-	} = useSelector((state) => state.task);
+	} = useSelector((state) => state.project);
 
 	// workaround to Redux-persist object being non serializable
 	const tableParams = params[0];
 	const dispatch = useDispatch();
-	const { getTasks } = useGetData();
-	const { deleteTask } = useDeleteData();
-
-	const handleDeleteTask = (id) => {
-		console.log(id);
-		deleteTask(id);
-	};
+	const { getProjects } = useGetData();
 
 	const handleTableChange = (pagination, filters, sorter) => {
 		dispatch(
-			setTaskTableParams({
+			setProjectTableParams({
 				pagination,
 				filters,
 				...sorter,
 			})
 		);
 
-		getTasks({
+		getProjects({
 			page: pagination.current,
 			limit: pagination.pageSize,
 		});
 	};
 
 	useEffect(() => {
-		if (!taskTableData.length) {
-			getTasks({
+		if (!projectTableData.length) {
+			getProjects({
 				page: tableParams.pagination.current,
 				limit: tableParams.pagination.pageSize,
 			});
 		}
+
 		return horizontalScroll();
 	}, []);
+
 	return (
 		<>
 			<div
@@ -228,7 +263,7 @@ const Tasks = () => {
 				}}>
 				<Button
 					onClick={() => {
-						getTasks({
+						getProjects({
 							page: tableParams.pagination.current,
 							limit: tableParams.pagination.pageSize,
 						});
@@ -237,7 +272,7 @@ const Tasks = () => {
 				</Button>
 
 				<Button
-					onClick={showAddTaskDrawer}
+					onClick={showAddProjectDrawer}
 					style={{
 						alignSelf: "end",
 						marginBottom: "1rem",
@@ -245,15 +280,14 @@ const Tasks = () => {
 						minHeight: "40px",
 					}}
 					type="primary">
-					Create New Task
+					Create New Project
 				</Button>
 			</div>
 			<Drawer
-				title="Create a new Task"
-				// width={720}
-				onClose={closeAddTaskDrawer}
-				open={openAddTaskDrawer}>
-				<Add_Task />
+				title="Create New Project"
+				onClose={closeAddProjectDrawer}
+				open={openAddProjectDrawer}>
+				<Add_Project />
 			</Drawer>
 			<div
 				style={{
@@ -263,9 +297,9 @@ const Tasks = () => {
 				<Table
 					size="small"
 					columns={columns}
-					dataSource={taskTableData}
+					dataSource={projectTableData}
 					scroll={{ x: 1200 }}
-					loading={taskLoading}
+					loading={projectLoading}
 					pagination={tableParams.pagination}
 					onChange={handleTableChange}
 					bordered={true}
@@ -273,6 +307,6 @@ const Tasks = () => {
 			</div>
 		</>
 	);
-};
+}
 
-export default Tasks;
+export default Project_Table;

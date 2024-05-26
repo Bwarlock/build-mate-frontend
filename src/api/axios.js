@@ -42,8 +42,8 @@ AuthAxiosInstance.interceptors.response.use(
 		// Incase 401 Unauthorized , move the user to /login , clear localstorage
 		if (error.response && error.response.status === 401) {
 			message.error(error.message);
-			localStorage.clear();
 			window.location = "/login";
+			localStorage.clear();
 		}
 		console.log(error);
 		return Promise.reject(error);

@@ -120,7 +120,7 @@ const Register = () => {
 						/>
 					</Form.Item>
 					<Form.Item
-						validateTrigger="onBlur"
+						// validateTrigger="onBlur"
 						label="Phone Number"
 						name="phoneNumber"
 						rules={[
@@ -128,20 +128,20 @@ const Register = () => {
 								required: true,
 								message: "Please input your Phone Number!",
 							},
-							{
-								pattern: /^(?:\+\d{1,3})?\d{10}$/,
-								message: "The input is not a valid phoneNumber",
-							},
+							// {
+							// 	pattern: /^(?:\+\d{1,3})?\d{10}$/,
+							// 	message: "The input is not a valid phoneNumber",
+							// },
 						]}>
 						<Input
-							onFocus={() => {
-								formValidate.setFields([
-									{
-										name: "phoneNumber",
-										errors: [],
-									},
-								]);
-							}}
+							// onFocus={() => {
+							// 	formValidate.setFields([
+							// 		{
+							// 			name: "phoneNumber",
+							// 			errors: [],
+							// 		},
+							// 	]);
+							// }}
 							onChange={(e) => {
 								setValues((val) => {
 									return { ...val, phoneNumber: e.target.value };
@@ -263,7 +263,7 @@ const Register = () => {
 					</Form.Item>
 
 					<Form.Item
-						validateTrigger="onBlur"
+						// validateTrigger="onBlur"
 						label="Password"
 						name="password"
 						style={{
@@ -274,23 +274,22 @@ const Register = () => {
 								required: true,
 								message: "Please input your Password!",
 							},
-							{
-								pattern:
-									/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-								message:
-									"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
-							},
+							// {
+							// 	pattern:
+							// 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							// 	message:
+							// 		"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+							// },
 						]}>
 						<Input.Password
-							onFocus={() => {
-								formValidate.setFields([
-									{
-										name: "password",
-										errors: [],
-									},
-								]);
-							}}
-							// showCount={true}
+							// onFocus={() => {
+							// 	formValidate.setFields([
+							// 		{
+							// 			name: "password",
+							// 			errors: [],
+							// 		},
+							// 	]);
+							// }}
 							addonAfter={
 								<Tooltip title="Password must contain at least 8 characters including a lowercase letter, an uppercase letter,a number and a special character">
 									<InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />

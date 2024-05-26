@@ -1,5 +1,5 @@
 import { Button, Menu } from "antd";
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useEffect, useState } from "react";
 import { useLogout } from "../api/hooks";
@@ -20,10 +20,12 @@ import {
 
 const Dashboard = () => {
 	//Dashboard Route Component
-	const [collapsed, setCollapsed] = useState(true);
+	const [collapsed, setCollapsed] = useState(false);
 	const [vanished, setVanished] = useState(false);
 	const logout = useLogout();
 	const navigate = useNavigate();
+	const location = useLocation();
+
 	const { user } = useSelector((state) => state.global);
 	const handleLogout = () => {
 		logout();
@@ -40,16 +42,16 @@ const Dashboard = () => {
 		const checkIfMobile = () => {
 			if (window.innerWidth <= 640) {
 				setCollapsed(true);
-			} else {
-				setCollapsed(false);
+				setVanished(true);
 			}
 		};
 		checkIfMobile();
 
+		if (location.pathname === "/dashboard") {
+			navigate("/dashboard/tasks");
+		}
+
 		window.addEventListener("resize", checkIfMobile);
-
-		navigate("/dashboard/tasks");
-
 		return () => {
 			window.removeEventListener("resize", checkIfMobile);
 		};
@@ -65,10 +67,17 @@ const Dashboard = () => {
 						flexDirection: "column",
 					}}
 					inlineCollapsed={collapsed}
-					defaultSelectedKeys={["tasks"]}
+					selectedKeys={[location.pathname.split("/")[2]]}
 					mode="inline">
 					<div
-						style={{ maxWidth: 256, maxHeight: 256, textAlign: "center" }}
+						style={{
+							maxWidth: 256,
+							maxHeight: 256,
+							textAlign: "center",
+							// borderRadius: 10,
+							// backgroundColor: "#e6f4ff",
+							// margin: "4px 4px 0px 4px",
+						}}
 						to="/">
 						<img
 							style={{ maxWidth: "70%", height: "auto" }}
@@ -144,7 +153,11 @@ const Dashboard = () => {
 			<div
 				id="inside"
 				style={{
-					width: collapsed ? "100%" : "calc(100vw - 256px)",
+					width: vanished
+						? "100vw"
+						: collapsed
+						? "calc(100vw - 80px)"
+						: "calc(100vw - 256px)",
 					height: "100vh",
 					overflow: "auto",
 					margin: 0,

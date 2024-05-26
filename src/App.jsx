@@ -15,6 +15,7 @@ import Clients from "./components/Clients";
 import Add_Client from "./components/Add_Client";
 import Document from "./components/Documents";
 import TextEditor from "./components/TextEditor";
+import Project_Table from "./components/Project_Table";
 
 function App() {
 	return (
@@ -25,7 +26,9 @@ function App() {
 				<Route path="/register" element={<Register />}></Route>
 				<Route element={<ProtectedRoute />}>
 					<Route path="/dashboard" element={<Dashboard />}>
-						<Route path="/dashboard/project" element={<Project />}></Route>
+						<Route
+							path="/dashboard/project"
+							element={<Project_Table />}></Route>
 						<Route path="/dashboard/staff" element={<Staff />}></Route>
 						<Route path="/dashboard/tasks" element={<Tasks />}></Route>
 						<Route path="/dashboard/clients" element={<Clients />}></Route>
@@ -36,11 +39,12 @@ function App() {
 							path="/dashboard/add_project"
 							element={<Add_Project />}></Route>
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
-						<Route path="/dashboard/add_task" element={<Add_Task />}></Route>							
+						<Route path="/dashboard/add_task" element={<Add_Task />}></Route>
 					</Route>
-					<Route path="/documents/:id" element={<TextEditor />} ></Route>
-						TODO: show a list of documents and a button to create a new document
-						<Route path="/documents" element={<Document />}></Route>
+					<Route path="/documents/:id" element={<TextEditor />}></Route>
+					TODO: show a list of documents and a button to create a new document
+					<Route path="/documents" element={<Document />}></Route>
+					<Route path="*" element={<div>404 Page Not Found</div>} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

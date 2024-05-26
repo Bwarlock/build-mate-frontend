@@ -14,6 +14,7 @@ import {
 	GetDocuments,
 	CreateDocument,
 	CheckDomain,
+	DeleteTask,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -79,12 +80,17 @@ export const useLogout = () => {
 export const useCheckLogin = () => {
 	const navigate = useNavigate();
 	const { user } = useSelector((state) => state.global);
+	const logout = useLogout();
+	const token = localStorage.getItem("token") || "";
 
 	function checkLogin(TrueRedirect, FalseRedirect) {
-		if (Object.keys(user).length && TrueRedirect) {
+		if (Object.keys(user).length && token && TrueRedirect) {
 			navigate(TrueRedirect);
-		} else if (!Object.keys(user).length && FalseRedirect) {
+		} else if ((!Object.keys(user).length || !token) && FalseRedirect) {
 			navigate(FalseRedirect);
+		} else if (!token) {
+			logout();
+			navigate("/login");
 		}
 	}
 	return checkLogin;
@@ -130,13 +136,18 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeClientTable([]));
 				}
 				dispatch(clientLoading(false));
 			})
 			.catch((e) => {
 				dispatch(clientLoading(false));
 
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the client data. Please try again or contact support."
+				);
 			});
 	}
 	function selectClients(params) {
@@ -153,10 +164,15 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeClientSelect([]));
 				}
 			})
 			.catch((e) => {
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the data."
+				);
 			});
 	}
 	function getStaff(params) {
@@ -171,13 +187,18 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeStaffTable([]));
 				}
 				dispatch(staffLoading(false));
 			})
 			.catch((e) => {
 				dispatch(staffLoading(false));
 
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the staff data. Please try again or contact support."
+				);
 			});
 	}
 	function selectStaff(params) {
@@ -194,10 +215,15 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeStaffSelect([]));
 				}
 			})
 			.catch((e) => {
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the data."
+				);
 			});
 	}
 	function getTasks(params) {
@@ -216,12 +242,17 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeTaskTable([]));
 				}
 				dispatch(taskLoading(false));
 			})
 			.catch((e) => {
 				dispatch(taskLoading(false));
-				message.error(e.response.data.message || "There was an error while fetching the tasks. Please try again or contact support.");
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the tasks. Please try again or contact support."
+				);
 			});
 	}
 	function selectTasks(params) {
@@ -238,12 +269,18 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeTaskSelect([]));
 				}
 			})
 			.catch((e) => {
-				message.error(e.response.data.message || "There was an error while processing the request.");
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the data."
+				);
 			});
 	}
+
 	function getProjects(params) {
 		GetProject.v1(params)
 			.then((res) => {
@@ -251,14 +288,19 @@ export const useGetData = () => {
 					dispatch(
 						storeProjectTable(
 							res.data.projects.map((val, index) => {
-								return { ...val, key: "" + index };
+								return { ...val, key: "" + index, id: val.project_id };
 							})
 						)
 					);
+				} else {
+					dispatch(storeProjectTable([]));
 				}
 			})
 			.catch((e) => {
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the projects. Please try again or contact support."
+				);
 			});
 	}
 	function selectProjects(params) {
@@ -275,10 +317,15 @@ export const useGetData = () => {
 							})
 						)
 					);
+				} else {
+					dispatch(storeProjectSelect([]));
 				}
 			})
 			.catch((e) => {
-				message.error(e.message);
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the data."
+				);
 			});
 	}
 
@@ -358,16 +405,19 @@ export const useAddData = () => {
 		(state) => state.client
 	);
 	const { tableParams: staffTableParams } = useSelector((state) => state.staff);
+	const { tableParams: projectTableParams } = useSelector(
+		(state) => state.project
+	);
 
 	function addClient(data) {
 		CreateClient.v1(data)
 			.then((res) => {
-				message.success(res.data.message);
 				getClients({
 					page: clientTableParams[0].pagination.current,
 					limit: clientTableParams[0].pagination.pageSize,
 				});
 				selectClients({ page: 1, limit: 10 });
+				message.success(res.data.message);
 				// navigate("/dashboard/clients");
 			})
 			.catch((e) => {
@@ -377,12 +427,12 @@ export const useAddData = () => {
 	function addStaff(data) {
 		CreateStaff.v1(data)
 			.then((res) => {
-				message.success(res.data.message);
 				getStaff({
 					page: staffTableParams[0].pagination.current,
 					limit: staffTableParams[0].pagination.pageSize,
 				});
 				selectStaff({ page: 1, limit: 10 });
+				message.success(res.data.message);
 				// navigate("/dashboard/staff");
 			})
 			.catch((e) => {
@@ -392,24 +442,28 @@ export const useAddData = () => {
 	function addTask(data) {
 		CreateTask.v1(data)
 			.then((res) => {
-				message.success(res.data.message);
 				getTasks({
 					page: taskTableParams[0].pagination.current,
 					limit: taskTableParams[0].pagination.pageSize,
 				});
 				selectTasks({ page: 1, limit: 10 });
+				message.success(res.data.message);
 				// navigate("/dashboard/tasks");
 			})
 			.catch((e) => {
 				message.error(e.response.data.message);
 			});
 	}
+
 	function addProject(data) {
 		CreateProject.v1(data)
 			.then((res) => {
-				message.success(res.data.message);
-				getProjects({ page: 1, limit: 10 });
+				getProjects({
+					page: projectTableParams[0].pagination.current,
+					limit: projectTableParams[0].pagination.pageSize,
+				});
 				selectProjects({ page: 1, limit: 10 });
+				message.success(res.data.message);
 				// navigate("/dashboard/project");
 			})
 			.catch((e) => {
@@ -429,4 +483,37 @@ export const useAddData = () => {
 			});
 	}
 	return { addClient, addStaff, addTask, addProject, addDocument };
+};
+
+export const useDeleteData = () => {
+	const {
+		getClients,
+		selectClients,
+		getStaff,
+		selectStaff,
+		getTasks,
+		selectTasks,
+		getProjects,
+		selectProjects,
+	} = useGetData();
+	const { tableParams: taskTableParams } = useSelector((state) => state.task);
+
+	function deleteTask(id) {
+		DeleteTask.v1(id)
+			.then((res) => {
+				getTasks({
+					page: taskTableParams[0].pagination.current,
+					limit: taskTableParams[0].pagination.pageSize,
+				});
+				selectTasks({ page: 1, limit: 10 });
+				message.success(res?.data?.message ?? "Task Deleted ?");
+			})
+			.catch((e) => {
+				message.error(
+					e.response.data.message ||
+						"There was an error while Deleting the Task"
+				);
+			});
+	}
+	return { deleteTask };
 };
