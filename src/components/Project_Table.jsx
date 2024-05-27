@@ -1,14 +1,14 @@
-import { Button, Table, Drawer, Tooltip, Space, Tag } from "antd";
-import { useEffect, useState } from "react";
+import { Button, Table, Tooltip, Space, Tag } from "antd";
+import { useEffect } from "react";
 import { useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
-import Add_Project from "./Add_Project";
 import { setProjectTableParams } from "../store/projectSlice";
 import { horizontalScroll } from "../util/functions";
 import { DeleteFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-function Project_Table() {
+function Project_Table({ showAddProjectDrawer }) {
 	//Projects Page Component
 	const columns = [
 		// TODO: add ID column
@@ -206,15 +206,6 @@ function Project_Table() {
 		},
 	];
 
-	const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
-
-	const showAddProjectDrawer = () => {
-		setOpenAddProjectDrawer(true);
-	};
-
-	const closeAddProjectDrawer = () => {
-		setOpenAddProjectDrawer(false);
-	};
 	const {
 		tableData: projectTableData,
 		loading: projectLoading,
@@ -253,7 +244,16 @@ function Project_Table() {
 	}, []);
 
 	return (
-		<>
+		<div
+			style={{
+				width: "100%",
+				minHeight: "100vh",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				flexDirection: "column",
+				padding: "1rem",
+			}}>
 			<div
 				style={{
 					display: "flex",
@@ -275,20 +275,16 @@ function Project_Table() {
 					onClick={showAddProjectDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: "1rem",
+						marginBottom: 4,
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
+					size="small"
 					type="primary">
 					Create New Project
 				</Button>
 			</div>
-			<Drawer
-				title="Create New Project"
-				onClose={closeAddProjectDrawer}
-				open={openAddProjectDrawer}>
-				<Add_Project />
-			</Drawer>
+
 			<div
 				style={{
 					width: "100%",
@@ -305,8 +301,10 @@ function Project_Table() {
 					bordered={true}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }
-
+Project_Table.propTypes = {
+	showAddProjectDrawer: PropTypes.func.isRequired,
+};
 export default Project_Table;

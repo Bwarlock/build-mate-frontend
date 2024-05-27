@@ -39,6 +39,7 @@ import {
 } from "../store/taskSlice";
 import {
 	clearProject,
+	projectLoading,
 	storeProjectSelect,
 	storeProjectTable,
 } from "../store/projectSlice";
@@ -282,6 +283,7 @@ export const useGetData = () => {
 	}
 
 	function getProjects(params) {
+		dispatch(projectLoading(true));
 		GetProject.v1(params)
 			.then((res) => {
 				if (res?.data?.projects?.length ?? null) {
@@ -295,8 +297,10 @@ export const useGetData = () => {
 				} else {
 					dispatch(storeProjectTable([]));
 				}
+				dispatch(projectLoading(false));
 			})
 			.catch((e) => {
+				dispatch(projectLoading(false));
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the projects. Please try again or contact support."

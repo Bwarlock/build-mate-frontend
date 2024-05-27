@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialValue = {
+	view: "table",
 	tableData: [],
 	selectData: [],
 	loading: false,
@@ -35,6 +36,9 @@ const projectSlice = createSlice({
 		setProjectTableParams: (state, action) => {
 			state.tableParams = [action.payload];
 		},
+		setProjectView: (state, action) => {
+			state.view = action.payload;
+		},
 	},
 });
 
@@ -44,5 +48,6 @@ export const {
 	clearProject,
 	projectLoading,
 	setProjectTableParams,
+	setProjectView,
 } = projectSlice.actions;
 export default projectSlice.reducer;

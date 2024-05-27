@@ -1,117 +1,63 @@
-import { Card } from "antd";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
-import { Drawer } from "antd";
-import { useGetData } from "../api/hooks";
-import { useSelector } from "react-redux";
+import { Drawer, Radio } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import Add_Project from "./Add_Project";
+import { setProjectView } from "../store/projectSlice";
+import { TableOutlined } from "@ant-design/icons";
+import RefIcon from "@ant-design/icons/lib/icons/AppstoreAddOutlined";
+import { useState } from "react";
+import Project_Table from "./Project_Table";
+import Project_Card from "./Project_Card";
 
-const Project = () => {
-  const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
+function Project() {
+	const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
+	const dispatch = useDispatch();
+	const { view: projectView } = useSelector((state) => state.project);
 
-  const showAddProjectDrawer = () => {
-    setOpenAddProjectDrawer(true);
-  };
+	const showAddProjectDrawer = () => {
+		setOpenAddProjectDrawer(true);
+	};
 
-  const closeAddProjectDrawer = () => {
-    setOpenAddProjectDrawer(false);
-  };
-  //Projects Page Component
-  const { tableData: projectTableData } = useSelector((state) => state.project);
-  const { getProjects } = useGetData();
+	const closeAddProjectDrawer = () => {
+		setOpenAddProjectDrawer(false);
+	};
 
-  useEffect(() => {
-    if (!projectTableData.length) {
-      getProjects({ page: 1, limit: 10 });
-    }
-  }, []);
-  return (
-    <>
-      <div className="gridded">
-        {projectTableData.map((pro, index) => {
-          return (
-            <Card
-              hoverable
-              className="card"
-              key={index}
-              title={pro.name}
-              extra={
-                <Link to={"/dashboard/project/" + pro._id ? pro._id : ""}>
-                  More
-                </Link>
-              }
-              style={{
-                width: 300,
-                height: "fit-content",
-                textWrap: "nowrap",
-                // borderRadius: 10,
-              }}
-            >
-              <p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                <span style={{ fontWeight: "bold" }}>Description : </span>
-                {pro.description}
-              </p>
-              <p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                <span style={{ fontWeight: "bold" }}>Staff : </span>
-                {pro.staff
-                  .map((sta) => {
-                    return sta.name;
-                  })
-                  .join(", ")}
-              </p>
-              <p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                <span style={{ fontWeight: "bold" }}>Client : </span>
-                {pro.client.join(", ")}
-              </p>
-              <p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                <span style={{ fontWeight: "bold" }}>Tasks : </span>
-                {pro.tasks.join(", ")}
-              </p>
-              <p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-                <span style={{ fontWeight: "bold" }}>Created At : </span>
-                <small>
-                  {new Date(pro.createdAt).getDate() + 1}&nbsp;&nbsp;{", "}
-                  {new Date(pro.createdAt).getMonth() + 1}&nbsp;&nbsp;{", "}
-                  {new Date(pro.createdAt).getFullYear()}
-                </small>
-              </p>
+	const handleViewChange = (e) => {
+		dispatch(setProjectView(e.target.value));
+	};
 
-              <small>&nbsp;&nbsp;{pro.owner}</small>
-            </Card>
-            // <div className="card" key={index}>
-            // 	{JSON.stringify(pro)}
-            // </div>
-          );
-        })}
-        {/* Open drawer on Add project button click */}
-        <Card
-          className="card"
-          key="Add"
-          hoverable
-          onClick={showAddProjectDrawer}
-          style={{
-            width: 180,
-            height: 180,
-            // margin: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            // borderRadius: 10,
-          }}
-        >
-          <PlusOutlined style={{ fontSize: 24 }} />
-        </Card>
-        <Drawer
-          title="Create New Project"
-          onClose={closeAddProjectDrawer}
-          open={openAddProjectDrawer}
-        >
-          <Add_Project />
-        </Drawer>
-      </div>
-      {/* <Table columns={columns} dataSource={data} />; */}
-    </>
-  );
-};
+	return (
+		<>
+			<Radio.Group
+				style={{
+					position: "absolute",
+					top: 0,
+					right: 16,
+					zIndex: 1,
+				}}
+				onChange={handleViewChange}
+				defaultValue={projectView}
+				buttonStyle="solid">
+				<Radio.Button value="table">
+					<TableOutlined />
+				</Radio.Button>
+				<Radio.Button value="card">
+					<RefIcon />
+				</Radio.Button>
+			</Radio.Group>
+			<Drawer
+				title="Create New Project"
+				onClose={closeAddProjectDrawer}
+				open={openAddProjectDrawer}>
+				<Add_Project />
+			</Drawer>
+			{projectView === "table" && (
+				<Project_Table showAddProjectDrawer={showAddProjectDrawer} />
+			)}
+			{projectView === "card" && (
+				<Project_Card showAddProjectDrawer={showAddProjectDrawer} />
+			)}
+		</>
+	);
+}
+
 export default Project;

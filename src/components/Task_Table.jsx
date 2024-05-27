@@ -6,8 +6,9 @@ import Add_Task from "./Add_Task";
 import { setTaskTableParams } from "../store/taskSlice";
 import { horizontalScroll } from "../util/functions";
 import { DeleteFilled } from "@ant-design/icons";
+import { Link } from "react-router-dom";
 
-const Tasks = () => {
+const Task_Table = () => {
 	const columns = [
 		// TODO: add ID column
 		// Manipulate the API response in the hooks to include the ID
@@ -36,9 +37,9 @@ const Tasks = () => {
 			ellipsis: {
 				showTitle: false,
 			},
-			render: (name) => (
-				<Tooltip placement="topLeft" title={name}>
-					<a>{name}</a>
+			render: (text, record) => (
+				<Tooltip placement="topLeft" title={text}>
+					<Link to={`/task_detail/${record._id}`}>{text}</Link>
 				</Tooltip>
 			),
 		},
@@ -218,7 +219,16 @@ const Tasks = () => {
 		return horizontalScroll();
 	}, []);
 	return (
-		<>
+		<div
+			style={{
+				width: "100%",
+				minHeight: "100vh",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				flexDirection: "column",
+				padding: "1rem",
+			}}>
 			<div
 				style={{
 					display: "flex",
@@ -271,8 +281,8 @@ const Tasks = () => {
 					bordered={true}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 
-export default Tasks;
+export default Task_Table;

@@ -33,10 +33,7 @@ body {
 	margin-bottom: 4rem;
 }
 
-.outlet {
-	/* height: 100vh;
-	width: calc(100vw - 256);
-	overflow: auto; */
+/* .outlet {
 	width: 100%;
 	min-height: 100vh;
 	display: flex;
@@ -44,7 +41,7 @@ body {
 	align-items: center;
 	flex-direction: column;
 	padding: 1rem;
-}
+} */
 
 .about {
 	color: inherit;
@@ -71,13 +68,13 @@ body {
 	align-items: center;
 }
 
-.gridded {
+/* .gridded {
 	display: grid;
 	gap: 2rem;
 	padding: 4rem;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-template-columns: repeat(3, 1fr);
 	grid-row-end: auto;
-}
+} */
 .gridded .card {
 	/* max-width: 256px; */
 }
@@ -160,4 +157,23 @@ body {
 /* Miscrosoft Edge Password reveal Icon */
 ::-ms-reveal {
 	display: none;
+}
+
+.ant-collapse-expand-icon {
+	margin-top: 6px;
+}
+
+.ant-collapse-content-box {
+	padding: 16px !important;
+}
+
+.goback-button {
+	position: absolute;
+	top: 8;
+	left: 8;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+.goback-button:hover {
+	opacity: 1;
 }

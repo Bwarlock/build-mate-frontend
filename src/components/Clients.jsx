@@ -177,7 +177,16 @@ const Clients = () => {
 		return horizontalScroll();
 	}, []);
 	return (
-		<>
+		<div
+			style={{
+				width: "100%",
+				minHeight: "100vh",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				flexDirection: "column",
+				padding: "1rem",
+			}}>
 			<div
 				style={{
 					display: "flex",
@@ -229,7 +238,7 @@ const Clients = () => {
 					bordered={true}
 				/>
 			</div>
-		</>
+		</div>
 	);
 };
 export default Clients;
