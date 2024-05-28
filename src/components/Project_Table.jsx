@@ -181,8 +181,8 @@ function Project_Table({ showAddProjectDrawer }) {
 				showTitle: false,
 			},
 			render: (owner) => (
-				<Tooltip placement="topLeft" title={owner}>
-					{owner}
+				<Tooltip placement="topLeft" title={owner.name}>
+					{owner.name}
 				</Tooltip>
 			),
 		},

@@ -174,7 +174,7 @@ const Register = () => {
 					<Form.Item
 						label="Domain Name"
 						name="domainName"
-						valuePropName="checked"
+						// valuePropName="checked"
 						rules={[
 							{
 								required: true,
@@ -191,8 +191,8 @@ const Register = () => {
 								});
 							}}
 						/>
+						<div>.build-mate.in</div>
 					</Form.Item>
-					<span>.build-mate.in</span>
 					{/* change color to green on selection */}
 
 					{domainSuggestions.map((suggestion) => (

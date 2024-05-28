@@ -1,8 +1,10 @@
 import {
 	Button,
 	ConfigProvider,
+	Divider,
 	Form,
 	Input,
+	Pagination,
 	Select,
 	Space,
 	Tooltip,
@@ -26,16 +28,18 @@ const Add_Client = () => {
 	});
 	const [fileInputs, setFileInputs] = useState([]);
 
-	const { selectData: projectSelectData } = useSelector(
-		(state) => state.project
-	);
+	const {
+		selectData: projectSelectData,
+		selectParams: projectSelectParams,
+		loading: projectLoading,
+	} = useSelector((state) => state.project);
 	const { addClient } = useAddData();
 	const { selectProjects } = useGetData();
 	const [formValidate] = Form.useForm();
 
 	useEffect(() => {
 		if (!projectSelectData.length) {
-			selectProjects({ page: 1, limit: 10 });
+			selectProjects();
 		}
 	}, []);
 
@@ -268,6 +272,7 @@ const Add_Client = () => {
 				</Form.Item>
 				<Form.Item label="Project" name="project" rules={[]}>
 					<Select
+						loading={projectLoading}
 						mode="multiple"
 						onChange={(e) => {
 							setValues((val) => {
@@ -275,9 +280,33 @@ const Add_Client = () => {
 							});
 						}}
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={projectSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									// showSizeChanger={false}
+									size="small"
+									pageSizeOptions={[10, 20]}
+									// simple={true}
+									pageSize={projectSelectParams[0].pagination.pageSize}
+									total={projectSelectParams[0].pagination.total}
+									current={projectSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectProjects({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 				{fileInputs.map((input) => (
@@ -344,7 +373,7 @@ const Add_Client = () => {
 							style={{ marginBottom: 0 }}
 							name={`fileName${input.key}`}
 							key="fileName"
-							valuePropName="checked"
+							// valuePropName="checked"
 							rules={[
 								{
 									required: true,

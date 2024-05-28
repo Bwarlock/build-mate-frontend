@@ -1,4 +1,12 @@
-import { Button, ConfigProvider, Form, Input, Select } from "antd";
+import {
+	Button,
+	ConfigProvider,
+	Divider,
+	Form,
+	Input,
+	Pagination,
+	Select,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useAddData, useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
@@ -14,9 +22,21 @@ function Add_Project() {
 		tasks: [],
 	});
 
-	const { selectData: staffSelectData } = useSelector((state) => state.staff);
-	const { selectData: clientSelectData } = useSelector((state) => state.client);
-	const { selectData: taskSelectData } = useSelector((state) => state.task);
+	const {
+		selectData: staffSelectData,
+		selectParams: staffSelectParams,
+		loading: staffLoading,
+	} = useSelector((state) => state.staff);
+	const {
+		selectData: clientSelectData,
+		selectParams: clientSelectParams,
+		loading: clientLoading,
+	} = useSelector((state) => state.client);
+	const {
+		selectData: taskSelectData,
+		selectParams: taskSelectParams,
+		loading: taskLoading,
+	} = useSelector((state) => state.task);
 	const { user } = useSelector((state) => state.global);
 	const { addProject } = useAddData();
 	const { selectStaff, selectClients, selectTasks } = useGetData();
@@ -28,15 +48,15 @@ function Add_Project() {
 			return { ...val, owner: user.name };
 		});
 		if (!staffSelectData.length) {
-			selectStaff({ page: 1, limit: 10 });
+			selectStaff();
 		}
 
 		if (!clientSelectData.length) {
-			selectClients({ page: 1, limit: 10 });
+			selectClients();
 		}
 
 		if (!taskSelectData.length) {
-			selectTasks({ page: 1, limit: 10 });
+			selectTasks();
 		}
 	}, []);
 
@@ -108,6 +128,7 @@ function Add_Project() {
 
 				<Form.Item label="Staff" name="staff" rules={[]}>
 					<Select
+						loading={staffLoading}
 						mode="multiple"
 						onChange={(e) => {
 							setValues((val) => {
@@ -115,28 +136,78 @@ function Add_Project() {
 							});
 						}}
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={staffSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									showSizeChanger={false}
+									size="small"
+									// pageSizeOptions={[10, 20]}
+									simple={true}
+									pageSize={staffSelectParams[0].pagination.pageSize}
+									total={staffSelectParams[0].pagination.total}
+									current={staffSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectStaff({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 
 				<Form.Item label="Clients" name="clients" rules={[]}>
 					<Select
+						loading={clientLoading}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, clients: [e] };
 							});
 						}}
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={clientSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									showSizeChanger={false}
+									size="small"
+									// pageSizeOptions={[10, 20]}
+									simple={true}
+									pageSize={clientSelectParams[0].pagination.pageSize}
+									total={clientSelectParams[0].pagination.total}
+									current={clientSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectClients({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 
 				<Form.Item label="Tasks" name="tasks" rules={[]}>
 					<Select
+						loading={taskLoading}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, tasks: [...e] };
@@ -144,9 +215,33 @@ function Add_Project() {
 						}}
 						mode="multiple"
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={taskSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									showSizeChanger={false}
+									size="small"
+									// pageSizeOptions={[10, 20]}
+									simple={true}
+									pageSize={taskSelectParams[0].pagination.pageSize}
+									total={taskSelectParams[0].pagination.total}
+									current={taskSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectTasks({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 				<Form.Item wrapperCol={{}}>

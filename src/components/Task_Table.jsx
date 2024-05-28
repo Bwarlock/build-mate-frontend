@@ -141,9 +141,17 @@ const Task_Table = () => {
 				showTitle: false,
 			},
 			render: (dueDate) => (
-				<Tooltip placement="topLeft" title={new Date(dueDate).toDateString()}>
-					{new Date(dueDate).toDateString()}
-				</Tooltip>
+				<>
+					{dueDate ? (
+						<Tooltip
+							placement="topLeft"
+							title={new Date(dueDate).toDateString()}>
+							{new Date(dueDate).toDateString()}
+						</Tooltip>
+					) : (
+						"-"
+					)}
+				</>
 			),
 		},
 

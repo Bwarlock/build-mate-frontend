@@ -13,6 +13,15 @@ const initialValue = {
 			},
 		},
 	],
+	selectParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const clientSlice = createSlice({
@@ -35,6 +44,9 @@ const clientSlice = createSlice({
 		setClientTableParams: (state, action) => {
 			state.tableParams = [action.payload];
 		},
+		setClientSelectParams: (state, action) => {
+			state.selectParams = [action.payload];
+		},
 	},
 });
 
@@ -44,5 +56,6 @@ export const {
 	clearClient,
 	clientLoading,
 	setClientTableParams,
+	setClientSelectParams,
 } = clientSlice.actions;
 export default clientSlice.reducer;

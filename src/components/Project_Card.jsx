@@ -99,13 +99,16 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Created At : </span>
 								<small>
-									{new Date(pro.createdAt).getDate() + 1}&nbsp;&nbsp;{", "}
+									{new Date(pro.createdAt).toDateString()}
+									{/* {new Date(pro.createdAt).getDate() + 1}&nbsp;&nbsp;{", "}
 									{new Date(pro.createdAt).getMonth() + 1}&nbsp;&nbsp;{", "}
-									{new Date(pro.createdAt).getFullYear()}
+									{new Date(pro.createdAt).getFullYear()} */}
 								</small>
 							</p>
-
-							<small>&nbsp;&nbsp;{pro.owner}</small>
+							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+								<span style={{ fontWeight: "bold" }}>Owner : </span>
+								{pro.owner.name}
+							</p>
 						</Card>
 					);
 				})}

@@ -22,17 +22,20 @@ import { message } from "antd";
 import {
 	clearClient,
 	clientLoading,
+	setClientSelectParams,
 	storeClientSelect,
 	storeClientTable,
 } from "../store/clientSlice";
 import {
 	clearStaff,
+	setStaffSelectParams,
 	staffLoading,
 	storeStaffSelect,
 	storeStaffTable,
 } from "../store/staffSlice";
 import {
 	clearTask,
+	setTaskSelectParams,
 	storeTaskSelect,
 	storeTaskTable,
 	taskLoading,
@@ -40,6 +43,7 @@ import {
 import {
 	clearProject,
 	projectLoading,
+	setProjectSelectParams,
 	storeProjectSelect,
 	storeProjectTable,
 } from "../store/projectSlice";
@@ -124,6 +128,16 @@ export const useRegister = () => {
 export const useGetData = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { selectParams: projectSelectParams } = useSelector(
+		(state) => state.project
+	);
+	const { selectParams: staffSelectParams } = useSelector(
+		(state) => state.staff
+	);
+	const { selectParams: clientSelectParams } = useSelector(
+		(state) => state.client
+	);
+	const { selectParams: taskSelectParams } = useSelector((state) => state.task);
 
 	function getClients(params) {
 		dispatch(clientLoading(true));
@@ -152,6 +166,24 @@ export const useGetData = () => {
 			});
 	}
 	function selectClients(params) {
+		dispatch(clientLoading(true));
+		if (params) {
+			dispatch(
+				setClientSelectParams({
+					...clientSelectParams[0],
+					pagination: {
+						...clientSelectParams[0].pagination,
+						current: params.page,
+						pageSize: params.limit,
+					},
+				})
+			);
+		} else {
+			params = {
+				page: clientSelectParams[0].pagination.current,
+				limit: clientSelectParams[0].pagination.pageSize,
+			};
+		}
 		GetClients.v1(params)
 			.then((res) => {
 				if (res?.data?.clientData?.length ?? null) {
@@ -168,8 +200,10 @@ export const useGetData = () => {
 				} else {
 					dispatch(storeClientSelect([]));
 				}
+				dispatch(clientLoading(false));
 			})
 			.catch((e) => {
+				dispatch(clientLoading(false));
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the data."
@@ -203,6 +237,24 @@ export const useGetData = () => {
 			});
 	}
 	function selectStaff(params) {
+		dispatch(staffLoading(true));
+		if (params) {
+			dispatch(
+				setStaffSelectParams({
+					...staffSelectParams[0],
+					pagination: {
+						...staffSelectParams[0].pagination,
+						current: params.page,
+						pageSize: params.limit,
+					},
+				})
+			);
+		} else {
+			params = {
+				page: staffSelectParams[0].pagination.current,
+				limit: staffSelectParams[0].pagination.pageSize,
+			};
+		}
 		GetStaff.v1(params)
 			.then((res) => {
 				if (res?.data?.staffData?.length ?? null) {
@@ -219,8 +271,10 @@ export const useGetData = () => {
 				} else {
 					dispatch(storeStaffSelect([]));
 				}
+				dispatch(staffLoading(false));
 			})
 			.catch((e) => {
+				dispatch(staffLoading(false));
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the data."
@@ -257,6 +311,24 @@ export const useGetData = () => {
 			});
 	}
 	function selectTasks(params) {
+		dispatch(taskLoading(true));
+		if (params) {
+			dispatch(
+				setTaskSelectParams({
+					...taskSelectParams[0],
+					pagination: {
+						...taskSelectParams[0].pagination,
+						current: params.page,
+						pageSize: params.limit,
+					},
+				})
+			);
+		} else {
+			params = {
+				page: taskSelectParams[0].pagination.current,
+				limit: taskSelectParams[0].pagination.pageSize,
+			};
+		}
 		GetTask.v1(params)
 			.then((res) => {
 				if (res?.data?.tasks?.length ?? null) {
@@ -273,8 +345,10 @@ export const useGetData = () => {
 				} else {
 					dispatch(storeTaskSelect([]));
 				}
+				dispatch(taskLoading(false));
 			})
 			.catch((e) => {
+				dispatch(taskLoading(false));
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the data."
@@ -308,6 +382,24 @@ export const useGetData = () => {
 			});
 	}
 	function selectProjects(params) {
+		dispatch(projectLoading(true));
+		if (params) {
+			dispatch(
+				setProjectSelectParams({
+					...projectSelectParams[0],
+					pagination: {
+						...projectSelectParams[0].pagination,
+						current: params.page,
+						pageSize: params.limit,
+					},
+				})
+			);
+		} else {
+			params = {
+				page: projectSelectParams[0].pagination.current,
+				limit: projectSelectParams[0].pagination.pageSize,
+			};
+		}
 		GetProject.v1(params)
 			.then((res) => {
 				if (res?.data?.projects?.length ?? null) {
@@ -324,8 +416,10 @@ export const useGetData = () => {
 				} else {
 					dispatch(storeProjectSelect([]));
 				}
+				dispatch(projectLoading(false));
 			})
 			.catch((e) => {
+				dispatch(projectLoading(false));
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the data."

@@ -13,6 +13,15 @@ const initialValue = {
 			},
 		},
 	],
+	selectParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const staffSlice = createSlice({
@@ -35,6 +44,9 @@ const staffSlice = createSlice({
 		setStaffTableParams: (state, action) => {
 			state.tableParams = [action.payload];
 		},
+		setStaffSelectParams: (state, action) => {
+			state.selectParams = [action.payload];
+		},
 	},
 });
 
@@ -44,5 +56,6 @@ export const {
 	clearStaff,
 	staffLoading,
 	setStaffTableParams,
+	setStaffSelectParams,
 } = staffSlice.actions;
 export default staffSlice.reducer;

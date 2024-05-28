@@ -65,10 +65,12 @@ const Dashboard = () => {
 					height: "100vh",
 					display: "flex",
 					flexDirection: "column",
-					transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
+					// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 				}}
 				inlineCollapsed={collapsed}
-				selectedKeys={[location.pathname.split("/")[2]]}
+				selectedKeys={[
+					location.pathname?.split("/")[2]?.split("?")[0] ?? "tasks",
+				]}
 				mode="inline">
 				<div
 					style={{
@@ -81,8 +83,8 @@ const Dashboard = () => {
 					}}
 					to="/">
 					<Image
-						width={collapsed ? "auto" : 200}
-						height={collapsed ? "auto" : 200}
+						width="70%"
+						height="auto"
 						// style={{ maxWidth: "70%", height: "auto" }}
 						src={logo}
 						alt="Build-Mate Logo"
@@ -151,7 +153,7 @@ const Dashboard = () => {
 				style={{
 					position: "absolute",
 					left: vanished ? 0 : collapsed ? 80 : 256,
-					transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
+					// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 				}}
 				icon={vanished ? <CaretRightFilled /> : <CaretLeftFilled />}></Button>
 

@@ -1,4 +1,13 @@
-import { Button, Form, Input, Select, DatePicker, ConfigProvider } from "antd";
+import {
+	Button,
+	Form,
+	Input,
+	Select,
+	DatePicker,
+	ConfigProvider,
+	Divider,
+	Pagination,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useAddData, useGetData } from "../api/hooks";
 import { useSelector } from "react-redux";
@@ -13,10 +22,17 @@ function Add_Task() {
 		dueDate: "",
 	});
 
-	const { selectData: projectSelectData } = useSelector(
-		(state) => state.project
-	);
-	const { selectData: staffSelectData } = useSelector((state) => state.staff);
+	const {
+		selectData: projectSelectData,
+		selectParams: projectSelectParams,
+		loading: projectLoading,
+	} = useSelector((state) => state.project);
+	const {
+		selectData: staffSelectData,
+		selectParams: staffSelectParams,
+		loading: staffLoading,
+	} = useSelector((state) => state.staff);
+
 	const { addTask } = useAddData();
 	const { selectProjects, selectStaff } = useGetData();
 	const [formValidate] = Form.useForm();
@@ -26,10 +42,10 @@ function Add_Task() {
 			return { ...val, startDate: Date() };
 		});
 		if (!projectSelectData.length) {
-			selectProjects({ page: 1, limit: 10 });
+			selectProjects();
 		}
 		if (!staffSelectData.length) {
-			selectStaff({ page: 1, limit: 10 });
+			selectStaff();
 		}
 	}, []);
 
@@ -52,7 +68,7 @@ function Add_Task() {
 			}}>
 			<Form
 				form={formValidate}
-				name="addproject"
+				name="addTask"
 				style={{
 					// maxWidth: 600,
 					backgroundColor: "white",
@@ -100,6 +116,7 @@ function Add_Task() {
 				</Form.Item>
 				<Form.Item label="AssignedTo" name="assignedTo" rules={[]}>
 					<Select
+						loading={staffLoading}
 						mode="multiple"
 						onChange={(e) => {
 							setValues((val) => {
@@ -107,22 +124,71 @@ function Add_Task() {
 							});
 						}}
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={staffSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									showSizeChanger={false}
+									size="small"
+									pageSizeOptions={[10, 20]}
+									simple={true}
+									pageSize={staffSelectParams[0].pagination.pageSize}
+									total={staffSelectParams[0].pagination.total}
+									current={staffSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectStaff({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 				<Form.Item label="Project" name="project" rules={[]}>
 					<Select
+						loading={projectLoading}
 						onChange={(e) => {
 							setValues((val) => {
 								return { ...val, project: e };
 							});
 						}}
 						style={{
-							width: 120,
+							width: 200,
 						}}
 						options={projectSelectData}
+						dropdownRender={(menu) => (
+							<>
+								{menu}
+								<Divider style={{ margin: "8px 0" }} />
+								<Pagination
+									style={{
+										margin: 8,
+									}}
+									showSizeChanger={false}
+									size="small"
+									pageSizeOptions={[10, 20]}
+									simple={true}
+									pageSize={projectSelectParams[0].pagination.pageSize}
+									total={projectSelectParams[0].pagination.total}
+									current={projectSelectParams[0].pagination.current}
+									onChange={(page, pageSize) => {
+										selectProjects({
+											page: page,
+											limit: pageSize,
+										});
+									}}
+								/>
+							</>
+						)}
 					/>
 				</Form.Item>
 

@@ -14,6 +14,15 @@ const initialValue = {
 			},
 		},
 	],
+	selectParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const projectSlice = createSlice({
@@ -36,6 +45,9 @@ const projectSlice = createSlice({
 		setProjectTableParams: (state, action) => {
 			state.tableParams = [action.payload];
 		},
+		setProjectSelectParams: (state, action) => {
+			state.selectParams = [action.payload];
+		},
 		setProjectView: (state, action) => {
 			state.view = action.payload;
 		},
@@ -48,6 +60,7 @@ export const {
 	clearProject,
 	projectLoading,
 	setProjectTableParams,
+	setProjectSelectParams,
 	setProjectView,
 } = projectSlice.actions;
 export default projectSlice.reducer;

@@ -9,9 +9,17 @@ import {
 	Descriptions,
 	Divider,
 	Typography,
+	Spin,
+	Flex,
+	Segmented,
+	Form,
+	Select,
+	DatePicker,
+	Tabs,
+	Pagination,
 } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
 	ArrowLeftOutlined,
@@ -21,17 +29,36 @@ import {
 	DownOutlined,
 	EditOutlined,
 	FileOutlined,
+	OrderedListOutlined,
 	SubnodeOutlined,
 	WarningOutlined,
 } from "@ant-design/icons";
 import TextEditorQuill from "./TextEditorQuill";
+import { useGetData } from "../api/hooks";
+import dayjs from "dayjs";
 
 const Task_Detail = () => {
 	//Tasks Route Component
+	const location = useLocation();
+	const selectedTask =
+		location.pathname?.split("/")[2]?.split("?")[0] ?? undefined;
+	const [loading, setLoading] = useState(true);
 	const { tableData: taskTableData } = useSelector((state) => state.task);
+	const {
+		selectData: projectSelectData,
+		selectParams: projectSelectParams,
+		loading: projectLoading,
+	} = useSelector((state) => state.project);
+	const {
+		selectData: staffSelectData,
+		selectParams: staffSelectParams,
+		loading: staffLoading,
+	} = useSelector((state) => state.staff);
+	const { selectProjects, selectStaff } = useGetData();
+
 	const projectDropdown = [
 		{
-			label: <a href="">1st menu item</a>,
+			label: <a href="#">1st menu item</a>,
 			key: "0",
 		},
 		{
@@ -46,162 +73,391 @@ const Task_Detail = () => {
 			key: "3",
 		},
 	];
+	const statusDropdown = [
+		{
+			label: <Badge status="success" text="Success" />,
+			key: "success",
+			value: "success",
+		},
+		{
+			label: <Badge status="error" text="Error" />,
+			key: "error",
+			value: "error",
+		},
+		{
+			label: <Badge status="default" text="Default" />,
+			key: "default",
+			value: "default",
+		},
+		{
+			label: <Badge status="processing" text="Processing" />,
+			key: "processing",
+			value: "processing",
+		},
+		{
+			label: <Badge status="warning" text="Warning" />,
+			key: "warning",
+			value: "warning",
+		},
+		{
+			label: <Badge color="red" status="processing" text="Todo" />,
+			key: "todo",
+			value: "todo",
+		},
+	];
+	const statusBadge = {
+		success: <Badge status="success" />,
+
+		error: <Badge status="error" />,
+
+		default: <Badge status="default" />,
+
+		processing: <Badge status="processing" />,
+
+		warning: <Badge status="warning" />,
+
+		todo: <Badge color="red" status="processing" />,
+	};
+
 	const [values, setValues] = useState({
-		name: "Task 1",
+		name: "Task",
 		startDate: "",
-		description:
-			"asd asdasdwqh dhqwoidhoiwh doiahs doihawodihaoidha sidhaois diahsoidhaosidh oiashd oiahsdoih aosidh oiahsdoihasdi asiod oaishd oihasoidh aoisdh oiashdhasoid oaishd oaishddas dias diaos dioash doihas dasd jasj diasj doijaoidj aoidjasdas dad qw wadaw owihd oahdo iahsdo iashd oiasoidioashdoihasoidhoahsoidhoiwdoihwod oa wiawh dohw9d wh9dihwaoidawoid awoidoi awhdohwa",
+		description: "Description",
 		assignedTo: [],
-		dueDate: "",
+		dueDate: "2024-05-31T00:00:00.000Z",
+		updatedAt: "2024-05-28T08:55:09.948Z",
+		createdAt: "2024-05-28T08:55:09.948Z",
+		createdBy: { _id: "1", name: "Someone", email: "Someone@email.com" },
+		status: "todo",
+		task_id: "Task-1",
+		project: { _id: "Project-1", name: "Project" },
+		domainName: "Domain",
+		isTrash: false,
 	});
-	// const [addMargin, setAddMargin] = useState(0);
+	console.log(values);
+
 	const taskInformation = [
 		{
 			key: "1",
-			label: "Product",
-			children: "Cloud Database",
+			label: "Task Name",
+			children: <span>{values.name}</span>,
+			span: 2,
+		},
+		{
+			key: "8",
+			label: "Created By",
+			children: <span>{values.createdBy.name}</span>,
+			span: 1,
 		},
 		{
 			key: "2",
-			label: "Billing Mode",
-			children: "Prepaid",
+			label: "Task ID",
+			children: <span>{values.task_id}</span>,
+			span: 1,
 		},
 		{
-			key: "3",
-			label: "Automatic Renewal",
-			children: "YES",
-		},
-		{
-			key: "4",
-			label: "Order time",
-			children: "2018-04-24 18:00:00",
-		},
-		{
-			key: "5",
-			label: "Usage Time",
-			children: "2019-04-24 18:00:00",
-			span: 2,
+			key: "7",
+			label: "Deleted",
+			children: (
+				<Select
+					value={[values.isTrash ? values.isTrash : "false"]}
+					onChange={(e) => {
+						setEditing(true);
+						setValues((val) => {
+							return { ...val, isTrash: e };
+						});
+					}}
+					style={{
+						width: 120,
+					}}
+					options={[
+						{ label: "False", value: false },
+						{ label: "True", value: true },
+					]}
+				/>
+			),
+			span: 1,
 		},
 		{
 			key: "6",
 			label: "Status",
-			children: <Badge status="processing" text="Running" />,
+			children: (
+				<span>
+					{values.status ? statusBadge[values.status] : ""}
+					<span style={{ marginLeft: 8 }}>
+						{values.status
+							? values.status.charAt(0).toUpperCase() + values.status.slice(1)
+							: ""}
+					</span>
+				</span>
+			),
+			span: 1,
+		},
+
+		{
+			key: "45",
+			label: "Created On",
+			children: (
+				<span>
+					{values.createdAt ? new Date(values.createdAt).toDateString() : ""}
+				</span>
+			),
+			span: 1,
+		},
+		{
+			key: "45",
+			label: "Last Updated",
+			children: (
+				<span>
+					{values.updatedAt ? new Date(values.updatedAt).toDateString() : ""}
+				</span>
+			),
+			span: 2,
+		},
+		{
+			key: "4",
+			label: "Due Date",
+			children: (
+				<>
+					<span
+						style={{
+							marginRight: 16,
+						}}>
+						{values.dueDate ? new Date(values.dueDate).toDateString() : ""}
+					</span>
+					<DatePicker
+						value={[values.dueDate ? dayjs(values.dueDate) : undefined]}
+						showTime={true}
+						showNow={true}
+						allowClear={false}
+						placement="topLeft"
+						style={{
+							width: 180,
+						}}
+						onChange={(_, e) => {
+							setEditing(true);
+							setValues((val) => {
+								return { ...val, dueDate: e };
+							});
+						}}
+					/>
+				</>
+			),
 			span: 3,
 		},
 		{
-			key: "7",
-			label: "Negotiated Amount",
-			children: "$80.00",
+			key: "3",
+			label: "Project",
+			children: (
+				// <Form.Item name="project" rules={[]}>
+				<Select
+					loading={projectLoading}
+					allowClear={true}
+					value={[values.project ? values.project._id : undefined]}
+					onChange={(e) => {
+						setEditing(true);
+						setValues((val) => {
+							return { ...val, project: { ...val.project, _id: e } };
+						});
+					}}
+					style={{
+						width: "100%",
+						maxWidth: 360,
+					}}
+					options={projectSelectData}
+					placeholder="Project"
+					dropdownRender={(menu) => (
+						<>
+							{menu}
+							<Divider style={{ margin: "8px 0" }} />
+							<Pagination
+								style={{
+									margin: 8,
+								}}
+								// showSizeChanger={false}
+								size="small"
+								pageSizeOptions={[10, 20]}
+								// simple={true}
+								pageSize={projectSelectParams[0].pagination.pageSize}
+								total={projectSelectParams[0].pagination.total}
+								current={projectSelectParams[0].pagination.current}
+								onChange={(page, pageSize) => {
+									selectProjects({
+										page: page,
+										limit: pageSize,
+									});
+								}}
+							/>
+						</>
+					)}
+				/>
+				// </Form.Item>
+			),
+			span: 2,
 		},
+
 		{
-			key: "8",
-			label: "Discount",
-			children: "$20.00",
-		},
-		{
-			key: "9",
-			label: "Official Receipts",
-			children: "$60.00",
+			key: "5",
+			label: "Domain Name",
+			children: <span>{values.domainName}</span>,
+			span: 1,
 		},
 		{
 			key: "10",
-			label: "Config Info",
+			label: "Assigned To",
 			children: (
-				<>
-					Data disk type: MongoDB
-					<br />
-					Database version: 3.4
-					<br />
-					Package: dds.mongo.mid
-					<br />
-					Storage space: 10 GB
-					<br />
-					Replication factor: 3
-					<br />
-					Region: East China 1
-					<br />
-				</>
+				<Select
+					loading={staffLoading}
+					allowClear={true}
+					value={
+						values.assignedTo
+							? values.assignedTo.map((staff) => staff._id)
+							: undefined
+					}
+					mode="multiple"
+					onChange={(e) => {
+						console.log(e, staffSelectData);
+						setEditing(true);
+						setValues((val) => {
+							return {
+								...val,
+								assignedTo: e.map((staffId) => {
+									return { _id: staffId };
+								}),
+							};
+						});
+					}}
+					style={{
+						width: "100%",
+					}}
+					placeholder="Staff"
+					options={staffSelectData}
+					dropdownRender={(menu) => (
+						<>
+							{menu}
+							<Divider style={{ margin: "8px 0" }} />
+							<Pagination
+								style={{
+									margin: 8,
+								}}
+								// showSizeChanger={false}
+								size="small"
+								pageSizeOptions={[10, 20]}
+								// simple={true}
+								pageSize={staffSelectParams[0].pagination.pageSize}
+								total={staffSelectParams[0].pagination.total}
+								current={staffSelectParams[0].pagination.current}
+								onChange={(page, pageSize) => {
+									selectStaff({
+										page: page,
+										limit: pageSize,
+									});
+								}}
+							/>
+						</>
+					)}
+				/>
 			),
+			span: 3,
 		},
 	];
-	const [selectedMenuItem, setSelectedMenuItem] = useState("comment");
+
+	const [editing, setEditing] = useState(false);
+	const [saving, setSaving] = useState(false);
 	const [commentEditorHtml, setCommentEditorHtml] = useState("");
-	const taskMenus = [
+	const taskTabs = [
 		{
 			label: "Comments",
 			key: "comment",
 			icon: <CommentOutlined />,
+			children: (
+				<TextEditorQuill
+					value={commentEditorHtml}
+					setValue={setCommentEditorHtml}
+				/>
+			),
 		},
 		{
 			label: "Sub Tasks",
 			key: "subtask",
 			icon: <SubnodeOutlined />,
 			disabled: true,
+			children: <div>subtask</div>,
 		},
 		{
 			label: "Documents",
 			key: "document",
 			icon: <FileOutlined />,
+			children: <div>document</div>,
 		},
 		{
 			label: "Issues",
 			key: "issue",
 			icon: <WarningOutlined />,
+			children: <div>Issue</div>,
 		},
 	];
-	let tabContent = <></>;
-	switch (selectedMenuItem) {
-		case "comment":
-			tabContent = (
-				<TextEditorQuill
-					value={commentEditorHtml}
-					setValue={setCommentEditorHtml}
-				/>
-			);
-			break;
-		case "subtask":
-			tabContent = <div>subtask</div>;
-			break;
-		case "document":
-			tabContent = <div>document</div>;
-			break;
-		case "issue":
-			tabContent = <div>Issue</div>;
-			break;
-		default:
-			tabContent = <></>;
-			break;
-	}
+
 	const [collapsed, setCollapsed] = useState(false);
 	const navigate = useNavigate();
-	const location = useLocation();
 
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
 	};
+	const handleTaskValue = useCallback(() => {
+		setLoading(true);
+		const taskValues = taskTableData.filter(
+			(task) => task._id === selectedTask
+		);
+		if (taskValues.length) {
+			setValues(taskValues[0]);
+		} else {
+			navigate("/page-not-found");
+		}
+		setEditing(false);
+		setTimeout(() => {
+			setLoading(false);
+		}, 0);
+	}, [navigate, setValues, selectedTask, taskTableData]);
+
+	const handleSave = () => {
+		setSaving(true);
+		console.log(new Date());
+		setValues((val) => {
+			return { ...val, updatedAt: new Date() };
+		});
+		//Demonstrating Api Call
+		setTimeout(() => {
+			setSaving(false);
+		}, 2000);
+	};
+
 	useEffect(() => {
 		const checkIfMobile = () => {
-			if (window.innerWidth <= 640) {
+			if (window.innerWidth <= 830) {
 				setCollapsed(true);
 			}
 		};
-		checkIfMobile();
-
-		// if (location.pathname === "/dashboard") {
-		// 	navigate("/dashboard/tasks");
-		// }
-		if (
-			!taskTableData.some(
-				(task) => task._id === location.pathname.split("/")[2]
-			)
-		) {
-			navigate("/page-not-found");
+		if (!projectSelectData.length) {
+			selectProjects();
 		}
+		if (!staffSelectData.length) {
+			selectStaff();
+		}
+
+		checkIfMobile();
+		handleTaskValue();
+
 		window.addEventListener("resize", checkIfMobile);
 		return () => {
 			window.removeEventListener("resize", checkIfMobile);
 		};
 	}, []);
+	useEffect(() => {
+		console.log(location);
+		handleTaskValue();
+	}, [location, handleTaskValue]);
+
 	return (
 		<div
 			id="main"
@@ -209,10 +465,12 @@ const Task_Detail = () => {
 				padding: 12,
 				backgroundColor: "gray",
 			}}>
+			<Spin spinning={loading} fullscreen={true} />
 			<Button
 				className="goback-button"
 				icon={<ArrowLeftOutlined />}
 				type="text"
+				size="large"
 				onClick={() => {
 					navigate(-1);
 				}}></Button>
@@ -226,7 +484,7 @@ const Task_Detail = () => {
 					marginRight: 8,
 				}}
 				inlineCollapsed={collapsed}
-				selectedKeys={[location.pathname.split("/")[2]]}
+				selectedKeys={[selectedTask]}
 				mode="inline">
 				<Space
 					size="middle"
@@ -238,14 +496,14 @@ const Task_Detail = () => {
 					{!collapsed && (
 						<Dropdown
 							menu={{
-								projectDropdown,
+								items: projectDropdown,
 								selectable: true,
-								defaultSelectedKeys: ["3"],
+								defaultSelectedKeys: ["1"],
 							}}
 							trigger={["click"]}
 							// placement="bottomRight"
 						>
-							<a onClick={(e) => e.preventDefault()}>
+							<a href="#" onClick={(e) => e.preventDefault()}>
 								<Space
 									style={{
 										margin: "12px 16px",
@@ -266,14 +524,21 @@ const Task_Detail = () => {
 							collapsed ? <CaretRightFilled /> : <CaretLeftFilled />
 						}></Button>
 				</Space>
-				{taskTableData.map((task) => {
+				{taskTableData.map((task, index) => {
 					return (
-						<Menu.Item style={{ fontWeight: "bold" }} key={`${task._id}`}>
-							{!collapsed && (
-								<Link replace={true} to={`/task_detail/${task._id}`}>
-									{task.name}
-								</Link>
-							)}
+						<Menu.Item
+							icon={
+								<>
+									<OrderedListOutlined />
+									{index + 1}
+								</>
+							}
+							style={{ fontWeight: "bold" }}
+							// key={`${task._id}`}
+							key={task.name}>
+							<Link replace={true} to={`/task_detail/${task._id}`}>
+								{task.name}
+							</Link>
 						</Menu.Item>
 					);
 				})}
@@ -313,15 +578,17 @@ const Task_Detail = () => {
 								level={2}
 								style={{
 									margin: 0,
-									gap: 50,
+									// gap: 50,
 									width: "70%",
 								}}
 								editable={{
-									maxLength: 23,
 									onChange: (txt) => {
-										setValues((val) => {
-											return { ...val, name: txt };
-										});
+										setEditing(true);
+										if (txt.length >= 1) {
+											setValues((val) => {
+												return { ...val, name: txt };
+											});
+										}
 									},
 									icon: (
 										<EditOutlined
@@ -334,12 +601,26 @@ const Task_Detail = () => {
 								copyable={true}>
 								{values.name}
 							</Typography.Title>
-							<Typography.Text
+							<Flex
 								style={{
-									marginLeft: 12,
+									justifyContent: "space-between",
 								}}>
-								By Someone , On 2 Feb 2099
-							</Typography.Text>
+								<Typography.Text
+									style={{
+										marginLeft: 12,
+									}}>
+									By {values.createdBy.name} , On{" "}
+									{new Date(values.createdAt).toDateString()}
+								</Typography.Text>
+								<Typography.Text
+									style={{
+										marginLeft: 12,
+										opacity: saving ? 0.5 : 1,
+										transition: "transform 0.2s ease, opacity 0.2s ease",
+									}}>
+									Last Updated on {new Date(values.updatedAt).toDateString()}
+								</Typography.Text>
+							</Flex>
 						</Space>
 						<Divider
 							style={{
@@ -349,8 +630,7 @@ const Task_Detail = () => {
 						/>
 
 						<Collapse
-							// collapsible="icon"
-							// bordered={false}
+							collapsible="icon"
 							expandIcon={() => {
 								return (
 									<ConfigProvider
@@ -359,15 +639,8 @@ const Task_Detail = () => {
 												Badge: { statusSize: 12 },
 											},
 										}}>
-										<Badge status="success" />
+										{statusBadge[values.status]}
 									</ConfigProvider>
-
-									// <div>
-									// 	<svg width={12} height={12} viewBox="0 0 100 100">
-									// 		<circle r="50" cx="50" cy="50" fill="green" />
-									// 		Sorry, your browser does not support inline SVG.
-									// 	</svg>
-									// </div>
 								);
 							}}
 							size="large"
@@ -380,7 +653,25 @@ const Task_Detail = () => {
 												style={{
 													fontSize: "24px",
 												}}>
-												Status
+												{values.status.charAt(0).toUpperCase() +
+													values.status.slice(1)}
+												<Dropdown
+													menu={{
+														items: statusDropdown,
+														selectable: true,
+														selectedKeys: [values.status],
+														onSelect: ({ key }) => {
+															setEditing(true);
+															setValues((val) => {
+																return { ...val, status: key };
+															});
+														},
+													}}
+													trigger={["click"]}>
+													<DownOutlined
+														style={{ fontSize: 20, marginLeft: 4 }}
+													/>
+												</Dropdown>
 											</div>
 											<div
 												style={{
@@ -390,43 +681,31 @@ const Task_Detail = () => {
 													textOverflow: "ellipsis",
 													overflow: "hidden",
 												}}>
-												In Case No Description askldnmalksndlkdas. da.s .da.s
-												d.a.s .da.s .da.sd .as.d
+												Current Status
 											</div>
 										</div>
 									),
 									children: (
-										<Typography.Paragraph
-											copyable={true}
-											editable={{
-												maxLength: 23,
-												onChange: (txt) => {
-													setValues((val) => {
-														return { ...val, description: txt };
-													});
-												},
-												icon: (
-													<EditOutlined
-														style={{
-															marginLeft: 8,
-														}}
-													/>
-												),
-											}}
+										<Segmented
 											style={{
-												// marginLeft: 40,
-												marginBottom: 0,
-											}}>
-											{values.description}
-										</Typography.Paragraph>
+												// marginLeft: 30,
+												flexWrap: "wrap",
+												textWrap: "wrap",
+											}}
+											value={values.status}
+											options={statusDropdown}
+											onChange={(value) => {
+												setEditing(true);
+												setValues((val) => {
+													return { ...val, status: value };
+												});
+											}}></Segmented>
 									),
-									// showArrow: false,
 								},
 							]}></Collapse>
 
 						<Collapse
 							// collapsible="icon"
-							// bordered={false}
 							size="large"
 							items={[
 								{
@@ -447,8 +726,7 @@ const Task_Detail = () => {
 													textOverflow: "ellipsis",
 													overflow: "hidden",
 												}}>
-												In Case No Description askldnmalksndlkdas. da.s .da.s
-												d.a.s .da.s .da.sd .as.d
+												{values.description}
 											</div>
 										</div>
 									),
@@ -456,11 +734,13 @@ const Task_Detail = () => {
 										<Typography.Paragraph
 											copyable={true}
 											editable={{
-												maxLength: 23,
 												onChange: (txt) => {
-													setValues((val) => {
-														return { ...val, description: txt };
-													});
+													setEditing(true);
+													if (txt.length >= 1) {
+														setValues((val) => {
+															return { ...val, description: txt };
+														});
+													}
 												},
 												icon: (
 													<EditOutlined
@@ -471,7 +751,7 @@ const Task_Detail = () => {
 												),
 											}}
 											style={{
-												marginLeft: 40,
+												marginLeft: 30,
 												marginBottom: 0,
 											}}>
 											{values.description}
@@ -481,7 +761,6 @@ const Task_Detail = () => {
 							]}></Collapse>
 						<Collapse
 							// collapsible="icon"
-							// bordered={false}
 							defaultActiveKey={["1"]}
 							contentPadding={2}
 							size="large"
@@ -498,6 +777,7 @@ const Task_Detail = () => {
 									),
 									children: (
 										<Descriptions
+											responsive={true}
 											style={{}}
 											// title="User Info"
 											bordered={true}
@@ -506,26 +786,14 @@ const Task_Detail = () => {
 									),
 								},
 							]}></Collapse>
-						<Menu
-							items={taskMenus}
-							style={{
-								width: "100%",
-							}}
-							selectedKeys={[selectedMenuItem]}
-							onClick={(e) => {
-								setSelectedMenuItem(e.key);
-							}}
-							mode="horizontal"></Menu>
-						<div
-							style={{
-								minWidth: "100%",
-								minHeight: "240px",
-								borderRadius: 10,
-								padding: "1rem",
-								// backgroundColor: "red",
-							}}>
-							{tabContent}
-						</div>
+
+						<Tabs
+							defaultActiveKey="comment"
+							tabPosition="top"
+							style={{ minHeight: 240, padding: "0px 16px" }}
+							items={taskTabs}
+						/>
+
 						<div
 							style={{
 								position: "absolute",
@@ -534,15 +802,23 @@ const Task_Detail = () => {
 								display: "flex",
 								gap: 8,
 							}}>
-							<Button size="large" type="primary">
+							<Button
+								onClick={handleSave}
+								size="large"
+								type="primary"
+								disabled={!editing}>
 								Save
 							</Button>
-							<Button size="large">Cancel</Button>
+							<Button
+								onClick={handleTaskValue}
+								size="large"
+								disabled={!editing}>
+								Cancel
+							</Button>
 						</div>
 					</Space>
 				</div>
 			</div>
-			{/* </Layout> */}
 		</div>
 	);
 };

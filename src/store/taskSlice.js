@@ -14,6 +14,15 @@ const initialValue = {
 			},
 		},
 	],
+	selectParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
 };
 
 const taskSlice = createSlice({
@@ -36,6 +45,9 @@ const taskSlice = createSlice({
 		setTaskTableParams: (state, action) => {
 			state.tableParams = [action.payload];
 		},
+		setTaskSelectParams: (state, action) => {
+			state.selectParams = [action.payload];
+		},
 	},
 });
 
@@ -45,5 +57,6 @@ export const {
 	clearTask,
 	taskLoading,
 	setTaskTableParams,
+	setTaskSelectParams,
 } = taskSlice.actions;
 export default taskSlice.reducer;

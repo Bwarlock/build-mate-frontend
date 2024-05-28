@@ -177,3 +177,7 @@ body {
 .goback-button:hover {
 	opacity: 1;
 }
+
+.ant-segmented-group {
+	flex-wrap: wrap;
+}

@@ -10,10 +10,6 @@ const TextEditorQuill = ({ value, setValue }) => {
 
 	return (
 		<ReactQuill
-			style={{
-				minHeight: "200px",
-				height: "fit-content",
-			}}
 			theme="snow" // Specify theme ('snow' or 'bubble')
 			value={value} // Set editor content
 			onChange={handleEditorChange} // Handle changes in editor content
