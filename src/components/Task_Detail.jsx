@@ -154,7 +154,7 @@ const Task_Detail = () => {
 			label: "Deleted",
 			children: (
 				<Select
-					value={[values.isTrash ? values.isTrash : "false"]}
+					value={[values.isTrash]}
 					onChange={(e) => {
 						setEditing(true);
 						setValues((val) => {
@@ -435,7 +435,7 @@ const Task_Detail = () => {
 		setEditing(false);
 		setTimeout(() => {
 			setLoading(false);
-		}, 0);
+		}, 200);
 	}, [navigate, setValues, selectedTask, taskTableData]);
 
 	const handleSave = () => {
@@ -457,6 +457,7 @@ const Task_Detail = () => {
 						name: values.project.label,
 				  }
 				: {},
+			updatedAt: new Date().toISOString(),
 		});
 	};
 
@@ -838,7 +839,16 @@ const Task_Detail = () => {
 							<Button
 								onClick={handleTaskValue}
 								size="large"
-								disabled={!editing}>
+								disabled={!editing}
+								type="primary"
+								danger>
+								Reset
+							</Button>
+							<Button
+								onClick={() => {
+									navigate(-1);
+								}}
+								size="large">
 								Cancel
 							</Button>
 						</div>

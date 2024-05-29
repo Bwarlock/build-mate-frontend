@@ -260,6 +260,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					width: "100%",
 					justifyContent: "space-between",
 					alignItems: "center",
+					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
 				}}>
 				<Button
 					onClick={() => {
@@ -275,7 +276,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					onClick={showAddProjectDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: 4,
+						marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
@@ -289,6 +290,7 @@ function Project_Table({ showAddProjectDrawer }) {
 				style={{
 					width: "100%",
 					overflowX: "auto",
+					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
 				}}>
 				<Table
 					size="small"
