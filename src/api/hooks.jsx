@@ -15,6 +15,7 @@ import {
 	CreateDocument,
 	CheckDomain,
 	DeleteTask,
+	UpdateTask,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -35,10 +36,12 @@ import {
 } from "../store/staffSlice";
 import {
 	clearTask,
+	deleteTaskStore,
 	setTaskSelectParams,
 	storeTaskSelect,
 	storeTaskTable,
 	taskLoading,
+	updateTaskStore,
 } from "../store/taskSlice";
 import {
 	clearProject,
@@ -160,7 +163,7 @@ export const useGetData = () => {
 				dispatch(clientLoading(false));
 
 				message.error(
-					e.response.data.message ||
+					e.response?.data?.message ||
 						"There was an error while fetching the client data. Please try again or contact support."
 				);
 			});
@@ -421,7 +424,7 @@ export const useGetData = () => {
 			.catch((e) => {
 				dispatch(projectLoading(false));
 				message.error(
-					e.response.data.message ||
+					e.response?.data?.message ||
 						"There was an error while fetching the data."
 				);
 			});
@@ -584,6 +587,7 @@ export const useAddData = () => {
 };
 
 export const useDeleteData = () => {
+	const dispatch = useDispatch();
 	const {
 		getClients,
 		selectClients,
@@ -599,11 +603,7 @@ export const useDeleteData = () => {
 	function deleteTask(id) {
 		DeleteTask.v1(id)
 			.then((res) => {
-				getTasks({
-					page: taskTableParams[0].pagination.current,
-					limit: taskTableParams[0].pagination.pageSize,
-				});
-				selectTasks({ page: 1, limit: 10 });
+				dispatch(deleteTaskStore(id));
 				message.success(res?.data?.message ?? "Task Deleted ?");
 			})
 			.catch((e) => {
@@ -614,4 +614,35 @@ export const useDeleteData = () => {
 			});
 	}
 	return { deleteTask };
+};
+
+export const useUpdateData = () => {
+	const dispatch = useDispatch();
+	const {
+		getClients,
+		selectClients,
+		getStaff,
+		selectStaff,
+		getTasks,
+		selectTasks,
+		getProjects,
+		selectProjects,
+	} = useGetData();
+	const { tableParams: taskTableParams } = useSelector((state) => state.task);
+
+	function updateTask(id, data) {
+		UpdateTask.v1(id, data)
+			.then((res) => {
+				console.log(res.data);
+				dispatch(updateTaskStore(data));
+				message.success(res?.data?.message ?? "Task Updated Successfully ?");
+			})
+			.catch((e) => {
+				message.error(
+					e.response.data.message ||
+						"There was an error while Updating the Task"
+				);
+			});
+	}
+	return { updateTask };
 };

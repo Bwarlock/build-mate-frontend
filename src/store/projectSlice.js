@@ -35,9 +35,8 @@ const projectSlice = createSlice({
 		storeProjectSelect: (state, action) => {
 			state.selectData = action.payload;
 		},
-		clearProject: (state) => {
-			state.tableData = [];
-			state.selectData = [];
+		clearProject: () => {
+			return { ...initialValue };
 		},
 		projectLoading: (state, action) => {
 			state.loading = action.payload;

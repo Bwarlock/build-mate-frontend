@@ -17,7 +17,7 @@ const initialValue = {
 		{
 			pagination: {
 				current: 1,
-				pageSize: 10,
+				pageSize: 20,
 				total: 200,
 			},
 		},
@@ -34,9 +34,8 @@ const staffSlice = createSlice({
 		storeStaffSelect: (state, action) => {
 			state.selectData = action.payload;
 		},
-		clearStaff: (state) => {
-			state.tableData = [];
-			state.selectData = [];
+		clearStaff: () => {
+			return { ...initialValue };
 		},
 		staffLoading: (state, action) => {
 			state.loading = action.payload;

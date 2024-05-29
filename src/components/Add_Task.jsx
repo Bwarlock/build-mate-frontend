@@ -114,6 +114,17 @@ function Add_Task() {
 						}}
 					/>
 				</Form.Item>
+				<Form.Item label="Due Date" name="dueDate" rules={[]}>
+					<DatePicker
+						showTime={true}
+						showNow={true}
+						onChange={(_, e) => {
+							setValues((val) => {
+								return { ...val, dueDate: e };
+							});
+						}}
+					/>
+				</Form.Item>
 				<Form.Item label="AssignedTo" name="assignedTo" rules={[]}>
 					<Select
 						loading={staffLoading}
@@ -192,15 +203,6 @@ function Add_Task() {
 					/>
 				</Form.Item>
 
-				<Form.Item label="Due Date" name="dueDate" rules={[]}>
-					<DatePicker
-						onChange={(_, e) => {
-							setValues((val) => {
-								return { ...val, dueDate: e };
-							});
-						}}
-					/>
-				</Form.Item>
 				<Form.Item wrapperCol={{}}>
 					<Button type="primary" htmlType="submit" onClick={handleSubmit}>
 						Submit

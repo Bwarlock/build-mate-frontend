@@ -35,9 +35,8 @@ const taskSlice = createSlice({
 		storeTaskSelect: (state, action) => {
 			state.selectData = action.payload;
 		},
-		clearTask: (state) => {
-			state.tableData = [];
-			state.selectData = [];
+		clearTask: () => {
+			return { ...initialValue };
 		},
 		taskLoading: (state, action) => {
 			state.loading = action.payload;
@@ -47,6 +46,29 @@ const taskSlice = createSlice({
 		},
 		setTaskSelectParams: (state, action) => {
 			state.selectParams = [action.payload];
+		},
+		updateTaskStore: (state, action) => {
+			const data = action.payload;
+			state.tableData = state.tableData.map((task) => {
+				if (task._id === data._id) {
+					return data;
+				}
+				return task;
+			});
+			state.selectData = state.selectData.filter((task) => {
+				if (task.value === data._id) {
+					return {
+						value: data._id,
+						label: data.name,
+					};
+				}
+				return task;
+			});
+		},
+		deleteTaskStore: (state, action) => {
+			const id = action.payload;
+			state.tableData = state.tableData.filter((task) => task._id !== id);
+			state.selectData = state.selectData.filter((task) => task.value !== id);
 		},
 	},
 });
@@ -58,5 +80,7 @@ export const {
 	taskLoading,
 	setTaskTableParams,
 	setTaskSelectParams,
+	updateTaskStore,
+	deleteTaskStore,
 } = taskSlice.actions;
 export default taskSlice.reducer;

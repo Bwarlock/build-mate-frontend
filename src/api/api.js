@@ -100,6 +100,18 @@ GetTask.v1 = function v1(params) {
 	});
 };
 
+export function UpdateTask(id) {
+	return UpdateTask.v1(id);
+}
+
+UpdateTask.v1 = function v1(id, data) {
+	return AuthAxiosInstance({
+		method: "put",
+		url: `/task/update-task/${id}`,
+		data: data,
+	});
+};
+
 export function DeleteTask(id) {
 	return DeleteTask.v1(id);
 }

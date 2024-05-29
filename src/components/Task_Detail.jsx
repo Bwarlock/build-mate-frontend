@@ -20,7 +20,7 @@ import {
 } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	ArrowLeftOutlined,
 	CaretLeftFilled,
@@ -34,14 +34,17 @@ import {
 	WarningOutlined,
 } from "@ant-design/icons";
 import TextEditorQuill from "./TextEditorQuill";
-import { useGetData } from "../api/hooks";
+import { useGetData, useUpdateData } from "../api/hooks";
 import dayjs from "dayjs";
+import { uniqueArrayOfObjects } from "../util/functions";
 
 const Task_Detail = () => {
 	//Tasks Route Component
 	const location = useLocation();
 	const selectedTask =
 		location.pathname?.split("/")[2]?.split("?")[0] ?? undefined;
+	const [selectedProject, setSelectedProject] = useState();
+
 	const [loading, setLoading] = useState(true);
 	const { tableData: taskTableData } = useSelector((state) => state.task);
 	const {
@@ -55,24 +58,15 @@ const Task_Detail = () => {
 		loading: staffLoading,
 	} = useSelector((state) => state.staff);
 	const { selectProjects, selectStaff } = useGetData();
+	const { updateTask } = useUpdateData();
 
-	const projectDropdown = [
-		{
-			label: <a href="#">1st menu item</a>,
-			key: "0",
-		},
-		{
-			label: <p>2nd menu item</p>,
-			key: "1",
-		},
-		{
-			type: "divider",
-		},
-		{
-			label: "3rd menu item",
-			key: "3",
-		},
-	];
+	const projectDropdown = taskTableData.reduce((acc, task) => {
+		if (task.project) {
+			acc.push({ label: task.project.name, value: task.project._id });
+		}
+		return acc;
+	}, []);
+
 	const statusDropdown = [
 		{
 			label: <Badge status="success" text="Success" />,
@@ -121,6 +115,7 @@ const Task_Detail = () => {
 
 	const [values, setValues] = useState({
 		name: "Task",
+		_id: "1",
 		startDate: "",
 		description: "Description",
 		assignedTo: [],
@@ -130,11 +125,10 @@ const Task_Detail = () => {
 		createdBy: { _id: "1", name: "Someone", email: "Someone@email.com" },
 		status: "todo",
 		task_id: "Task-1",
-		project: { _id: "Project-1", name: "Project" },
+		project: { value: "Project-1", label: "Project" },
 		domainName: "Domain",
 		isTrash: false,
 	});
-	console.log(values);
 
 	const taskInformation = [
 		{
@@ -253,18 +247,28 @@ const Task_Detail = () => {
 				<Select
 					loading={projectLoading}
 					allowClear={true}
-					value={[values.project ? values.project._id : undefined]}
-					onChange={(e) => {
+					value={values.project.value ? values.project : undefined}
+					onChange={(e, option) => {
+						console.log(option, e);
 						setEditing(true);
 						setValues((val) => {
-							return { ...val, project: { ...val.project, _id: e } };
+							return {
+								...val,
+								project: option
+									? option
+									: { value: undefined, label: undefined },
+							};
 						});
 					}}
 					style={{
 						width: "100%",
 						maxWidth: 360,
 					}}
-					options={projectSelectData}
+					options={uniqueArrayOfObjects(
+						projectSelectData,
+						values.project.value ? [values.project] : [],
+						"value"
+					)}
 					placeholder="Project"
 					dropdownRender={(menu) => (
 						<>
@@ -309,21 +313,15 @@ const Task_Detail = () => {
 				<Select
 					loading={staffLoading}
 					allowClear={true}
-					value={
-						values.assignedTo
-							? values.assignedTo.map((staff) => staff._id)
-							: undefined
-					}
+					value={values.assignedTo}
 					mode="multiple"
-					onChange={(e) => {
-						console.log(e, staffSelectData);
+					onChange={(e, option) => {
+						console.log(option, e);
 						setEditing(true);
 						setValues((val) => {
 							return {
 								...val,
-								assignedTo: e.map((staffId) => {
-									return { _id: staffId };
-								}),
+								assignedTo: option ? [...option] : [],
 							};
 						});
 					}}
@@ -331,7 +329,11 @@ const Task_Detail = () => {
 						width: "100%",
 					}}
 					placeholder="Staff"
-					options={staffSelectData}
+					options={uniqueArrayOfObjects(
+						staffSelectData,
+						values.assignedTo,
+						"value"
+					)}
 					dropdownRender={(menu) => (
 						<>
 							{menu}
@@ -363,7 +365,6 @@ const Task_Detail = () => {
 	];
 
 	const [editing, setEditing] = useState(false);
-	const [saving, setSaving] = useState(false);
 	const [commentEditorHtml, setCommentEditorHtml] = useState("");
 	const taskTabs = [
 		{
@@ -404,13 +405,30 @@ const Task_Detail = () => {
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
 	};
+
 	const handleTaskValue = useCallback(() => {
 		setLoading(true);
 		const taskValues = taskTableData.filter(
 			(task) => task._id === selectedTask
 		);
 		if (taskValues.length) {
-			setValues(taskValues[0]);
+			setValues({
+				...taskValues[0],
+				assignedTo: taskValues[0].assignedTo
+					? taskValues[0].assignedTo.map((staff) => {
+							return {
+								label: staff.name,
+								value: staff._id,
+							};
+					  })
+					: [],
+				project: taskValues[0].project
+					? {
+							label: taskValues[0].project.name,
+							value: taskValues[0].project._id,
+					  }
+					: { value: undefined, label: undefined },
+			});
 		} else {
 			navigate("/page-not-found");
 		}
@@ -421,15 +439,25 @@ const Task_Detail = () => {
 	}, [navigate, setValues, selectedTask, taskTableData]);
 
 	const handleSave = () => {
-		setSaving(true);
 		console.log(new Date());
-		setValues((val) => {
-			return { ...val, updatedAt: new Date() };
+		console.log(values);
+		updateTask(values._id, {
+			...values,
+			assignedTo: values.assignedTo
+				? values.assignedTo.map((staff) => {
+						return {
+							name: staff.label,
+							_id: staff.value,
+						};
+				  })
+				: [],
+			project: values.project.value
+				? {
+						_id: values.project.value,
+						name: values.project.label,
+				  }
+				: {},
 		});
-		//Demonstrating Api Call
-		setTimeout(() => {
-			setSaving(false);
-		}, 2000);
 	};
 
 	useEffect(() => {
@@ -494,27 +522,19 @@ const Task_Detail = () => {
 						justifyContent: collapsed ? "end" : "space-between",
 					}}>
 					{!collapsed && (
-						<Dropdown
-							menu={{
-								items: projectDropdown,
-								selectable: true,
-								defaultSelectedKeys: ["1"],
+						<Select
+							style={{
+								fontSize: "14px",
+								fontWeight: "bold",
 							}}
-							trigger={["click"]}
-							// placement="bottomRight"
-						>
-							<a href="#" onClick={(e) => e.preventDefault()}>
-								<Space
-									style={{
-										margin: "12px 16px",
-										fontSize: "14px",
-										fontWeight: "bold",
-									}}>
-									Project Name
-									<DownOutlined />
-								</Space>
-							</a>
-						</Dropdown>
+							variant="borderless"
+							allowClear={true}
+							placeholder="Project Name"
+							onChange={(e) => {
+								setSelectedProject(e);
+							}}
+							options={uniqueArrayOfObjects(projectDropdown, [], "value")}
+						/>
 					)}
 					<Button
 						onClick={() => {
@@ -525,23 +545,30 @@ const Task_Detail = () => {
 						}></Button>
 				</Space>
 				{taskTableData.map((task, index) => {
-					return (
-						<Menu.Item
-							icon={
-								<>
-									<OrderedListOutlined />
-									{index + 1}
-								</>
-							}
-							style={{ fontWeight: "bold" }}
-							// key={`${task._id}`}
-							key={task.name}>
-							<Link replace={true} to={`/task_detail/${task._id}`}>
-								{task.name}
-							</Link>
-						</Menu.Item>
-					);
-				})}
+					if (
+						!selectedProject ||
+						(selectedProject &&
+							task.project &&
+							task.project._id == selectedProject)
+					) {
+						return (
+							<Menu.Item
+								icon={
+									<>
+										<OrderedListOutlined />
+										{index + 1}
+									</>
+								}
+								style={{ fontWeight: "bold" }}
+								// key={`${task._id}`}
+								key={task._id}>
+								<Link replace={true} to={`/task_detail/${task._id}`}>
+									{task.name}
+								</Link>
+							</Menu.Item>
+						);
+					}
+				}) || <></>}
 			</Menu>
 
 			<div
@@ -615,7 +642,6 @@ const Task_Detail = () => {
 								<Typography.Text
 									style={{
 										marginLeft: 12,
-										opacity: saving ? 0.5 : 1,
 										transition: "transform 0.2s ease, opacity 0.2s ease",
 									}}>
 									Last Updated on {new Date(values.updatedAt).toDateString()}

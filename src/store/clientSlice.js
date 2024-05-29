@@ -34,9 +34,8 @@ const clientSlice = createSlice({
 		storeClientSelect: (state, action) => {
 			state.selectData = action.payload;
 		},
-		clearClient: (state) => {
-			state.tableData = [];
-			state.selectData = [];
+		clearClient: () => {
+			return { ...initialValue };
 		},
 		clientLoading: (state, action) => {
 			state.loading = action.payload;

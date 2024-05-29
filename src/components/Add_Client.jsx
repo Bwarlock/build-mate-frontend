@@ -291,10 +291,10 @@ const Add_Client = () => {
 									style={{
 										margin: 8,
 									}}
-									// showSizeChanger={false}
+									showSizeChanger={false}
 									size="small"
 									pageSizeOptions={[10, 20]}
-									// simple={true}
+									simple={true}
 									pageSize={projectSelectParams[0].pagination.pageSize}
 									total={projectSelectParams[0].pagination.total}
 									current={projectSelectParams[0].pagination.current}

@@ -19,3 +19,10 @@ export const horizontalScroll = () => {
 		};
 	}
 };
+
+export const uniqueArrayOfObjects = (arr1, arr2, key = "value") => {
+	const map = new Map();
+	arr1.forEach((item) => map.set(item[key], item));
+	arr2.forEach((item) => map.set(item[key], item));
+	return Array.from(map.values());
+};
