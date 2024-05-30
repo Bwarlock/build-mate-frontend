@@ -16,6 +16,9 @@ import {
 	CheckDomain,
 	DeleteTask,
 	UpdateTask,
+	DeleteProject,
+	GetTrashTask,
+	GetTrashProject,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -24,12 +27,16 @@ import {
 	clearClient,
 	clientLoading,
 	setClientSelectParams,
+	setClientTableParams,
+	setClientTotal,
 	storeClientSelect,
 	storeClientTable,
 } from "../store/clientSlice";
 import {
 	clearStaff,
 	setStaffSelectParams,
+	setStaffTableParams,
+	setStaffTotal,
 	staffLoading,
 	storeStaffSelect,
 	storeStaffTable,
@@ -38,17 +45,28 @@ import {
 	clearTask,
 	deleteTaskStore,
 	setTaskSelectParams,
+	setTaskTableParams,
+	setTaskTotal,
+	setTaskTrashParams,
+	setTaskTrashTotal,
 	storeTaskSelect,
 	storeTaskTable,
+	storeTaskTrash,
 	taskLoading,
 	updateTaskStore,
 } from "../store/taskSlice";
 import {
 	clearProject,
+	deleteProjectStore,
 	projectLoading,
 	setProjectSelectParams,
+	setProjectTableParams,
+	setProjectTotal,
+	setProjectTrashParams,
+	setProjectTrashTotal,
 	storeProjectSelect,
 	storeProjectTable,
+	storeProjectTrash,
 } from "../store/projectSlice";
 
 // Api Hooks For Redirect and Other React Logic
@@ -131,19 +149,31 @@ export const useRegister = () => {
 export const useGetData = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { selectParams: projectSelectParams } = useSelector(
-		(state) => state.project
-	);
-	const { selectParams: staffSelectParams } = useSelector(
-		(state) => state.staff
-	);
-	const { selectParams: clientSelectParams } = useSelector(
-		(state) => state.client
-	);
-	const { selectParams: taskSelectParams } = useSelector((state) => state.task);
+	const {
+		selectParams: projectSelectParams,
+		tableParams: projectTableParams,
+		trashParams: projectTrashParams,
+	} = useSelector((state) => state.project);
+	const { selectParams: staffSelectParams, tableParams: staffTableParams } =
+		useSelector((state) => state.staff);
+	const { selectParams: clientSelectParams, tableParams: clientTableParams } =
+		useSelector((state) => state.client);
+	const {
+		selectParams: taskSelectParams,
+		tableParams: taskTableParams,
+		trashParams: taskTrashParams,
+	} = useSelector((state) => state.task);
 
-	function getClients(params) {
+	function getClients(params, filters) {
 		dispatch(clientLoading(true));
+		if (params) {
+			dispatch(setClientTableParams(filters));
+		} else {
+			params = {
+				page: clientTableParams[0].pagination.current,
+				limit: clientTableParams[0].pagination.pageSize,
+			};
+		}
 		GetClients.v1(params)
 			.then((res) => {
 				if (res?.data?.clientData?.length ?? null) {
@@ -154,6 +184,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setClientTotal(res.data?.totalClients ?? 200));
 				} else {
 					dispatch(storeClientTable([]));
 				}
@@ -200,6 +231,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setClientTotal(res.data?.totalClients ?? 200));
 				} else {
 					dispatch(storeClientSelect([]));
 				}
@@ -213,8 +245,16 @@ export const useGetData = () => {
 				);
 			});
 	}
-	function getStaff(params) {
+	function getStaff(params, filters) {
 		dispatch(staffLoading(true));
+		if (params) {
+			dispatch(setStaffTableParams(filters));
+		} else {
+			params = {
+				page: staffTableParams[0].pagination.current,
+				limit: staffTableParams[0].pagination.pageSize,
+			};
+		}
 		GetStaff.v1(params)
 			.then((res) => {
 				if (res?.data?.staffData?.length ?? null) {
@@ -225,6 +265,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setStaffTotal(res.data?.totalStaff ?? 200));
 				} else {
 					dispatch(storeStaffTable([]));
 				}
@@ -232,7 +273,6 @@ export const useGetData = () => {
 			})
 			.catch((e) => {
 				dispatch(staffLoading(false));
-
 				message.error(
 					e.response.data.message ||
 						"There was an error while fetching the staff data. Please try again or contact support."
@@ -271,6 +311,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setStaffTotal(res.data?.totalStaff ?? 200));
 				} else {
 					dispatch(storeStaffSelect([]));
 				}
@@ -284,8 +325,16 @@ export const useGetData = () => {
 				);
 			});
 	}
-	function getTasks(params) {
+	function getTasks(params, filters) {
 		dispatch(taskLoading(true));
+		if (params) {
+			dispatch(setTaskTableParams(filters));
+		} else {
+			params = {
+				page: taskTableParams[0].pagination.current,
+				limit: taskTableParams[0].pagination.pageSize,
+			};
+		}
 		GetTask.v1(params)
 			.then((res) => {
 				if (res?.data?.tasks?.length ?? null) {
@@ -300,8 +349,47 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setTaskTotal(res.data?.totalTasks ?? 200));
 				} else {
 					dispatch(storeTaskTable([]));
+				}
+				dispatch(taskLoading(false));
+			})
+			.catch((e) => {
+				dispatch(taskLoading(false));
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the tasks. Please try again or contact support."
+				);
+			});
+	}
+	function getTrashTasks(params, filters) {
+		dispatch(taskLoading(true));
+		if (params) {
+			dispatch(setTaskTrashParams(filters));
+		} else {
+			params = {
+				page: taskTrashParams[0].pagination.current,
+				limit: taskTrashParams[0].pagination.pageSize,
+			};
+		}
+		GetTrashTask.v1(params)
+			.then((res) => {
+				if (res?.data?.tasks?.length ?? null) {
+					dispatch(
+						storeTaskTrash(
+							res.data.tasks.map((val, index) => {
+								return {
+									...val,
+									key: "" + index,
+									id: val.task_id,
+								};
+							})
+						)
+					);
+					dispatch(setTaskTrashTotal(res.data?.totalTrashTasks ?? 200));
+				} else {
+					dispatch(storeTaskTrash([]));
 				}
 				dispatch(taskLoading(false));
 			})
@@ -345,6 +433,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setTaskTotal(res.data?.totalTasks ?? 200));
 				} else {
 					dispatch(storeTaskSelect([]));
 				}
@@ -359,8 +448,16 @@ export const useGetData = () => {
 			});
 	}
 
-	function getProjects(params) {
+	function getProjects(params, filters) {
 		dispatch(projectLoading(true));
+		if (params) {
+			dispatch(setProjectTableParams(filters));
+		} else {
+			params = {
+				page: projectTableParams[0].pagination.current,
+				limit: projectTableParams[0].pagination.pageSize,
+			};
+		}
 		GetProject.v1(params)
 			.then((res) => {
 				if (res?.data?.projects?.length ?? null) {
@@ -371,8 +468,43 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setProjectTotal(res.data?.totalProjects ?? 200));
 				} else {
 					dispatch(storeProjectTable([]));
+				}
+				dispatch(projectLoading(false));
+			})
+			.catch((e) => {
+				dispatch(projectLoading(false));
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the projects. Please try again or contact support."
+				);
+			});
+	}
+	function getTrashProjects(params, filters) {
+		dispatch(projectLoading(true));
+		if (params) {
+			dispatch(setProjectTrashParams(filters));
+		} else {
+			params = {
+				page: projectTrashParams[0].pagination.current,
+				limit: projectTrashParams[0].pagination.pageSize,
+			};
+		}
+		GetTrashProject.v1(params)
+			.then((res) => {
+				if (res?.data?.projects?.length ?? null) {
+					dispatch(
+						storeProjectTrash(
+							res.data.projects.map((val, index) => {
+								return { ...val, key: "" + index, id: val.project_id };
+							})
+						)
+					);
+					dispatch(setProjectTrashTotal(res.data?.totalTrashProjects ?? 200));
+				} else {
+					dispatch(storeProjectTrash([]));
 				}
 				dispatch(projectLoading(false));
 			})
@@ -416,6 +548,7 @@ export const useGetData = () => {
 							})
 						)
 					);
+					dispatch(setProjectTotal(res.data?.totalProjects ?? 200));
 				} else {
 					dispatch(storeProjectSelect([]));
 				}
@@ -480,8 +613,10 @@ export const useGetData = () => {
 		getStaff,
 		selectStaff,
 		getTasks,
+		getTrashTasks,
 		selectTasks,
 		getProjects,
+		getTrashProjects,
 		selectProjects,
 		getDocument,
 		getDocuments,
@@ -513,11 +648,8 @@ export const useAddData = () => {
 	function addClient(data) {
 		CreateClient.v1(data)
 			.then((res) => {
-				getClients({
-					page: clientTableParams[0].pagination.current,
-					limit: clientTableParams[0].pagination.pageSize,
-				});
-				selectClients({ page: 1, limit: 10 });
+				getClients();
+				selectClients();
 				message.success(res.data.message);
 				// navigate("/dashboard/clients");
 			})
@@ -528,11 +660,8 @@ export const useAddData = () => {
 	function addStaff(data) {
 		CreateStaff.v1(data)
 			.then((res) => {
-				getStaff({
-					page: staffTableParams[0].pagination.current,
-					limit: staffTableParams[0].pagination.pageSize,
-				});
-				selectStaff({ page: 1, limit: 10 });
+				getStaff();
+				selectStaff();
 				message.success(res.data.message);
 				// navigate("/dashboard/staff");
 			})
@@ -543,11 +672,8 @@ export const useAddData = () => {
 	function addTask(data) {
 		CreateTask.v1(data)
 			.then((res) => {
-				getTasks({
-					page: taskTableParams[0].pagination.current,
-					limit: taskTableParams[0].pagination.pageSize,
-				});
-				selectTasks({ page: 1, limit: 10 });
+				getTasks();
+				selectTasks();
 				message.success(res.data.message);
 				// navigate("/dashboard/tasks");
 			})
@@ -559,11 +685,8 @@ export const useAddData = () => {
 	function addProject(data) {
 		CreateProject.v1(data)
 			.then((res) => {
-				getProjects({
-					page: projectTableParams[0].pagination.current,
-					limit: projectTableParams[0].pagination.pageSize,
-				});
-				selectProjects({ page: 1, limit: 10 });
+				getProjects();
+				selectProjects();
 				message.success(res.data.message);
 				// navigate("/dashboard/project");
 			})
@@ -599,21 +722,43 @@ export const useDeleteData = () => {
 		selectProjects,
 	} = useGetData();
 	const { tableParams: taskTableParams } = useSelector((state) => state.task);
+	const { getTrashProjects, getTrashTasks } = useGetData();
 
 	function deleteTask(id) {
+		dispatch(taskLoading(true));
 		DeleteTask.v1(id)
 			.then((res) => {
 				dispatch(deleteTaskStore(id));
+				dispatch(taskLoading(false));
+				getTrashTasks();
 				message.success(res?.data?.message ?? "Task Deleted ?");
 			})
 			.catch((e) => {
+				dispatch(taskLoading(false));
 				message.error(
-					e.response.data.message ||
+					e.response?.data?.message ||
 						"There was an error while Deleting the Task"
 				);
 			});
 	}
-	return { deleteTask };
+	function deleteProject(id) {
+		dispatch(projectLoading(true));
+		DeleteProject.v1(id)
+			.then((res) => {
+				dispatch(deleteProjectStore(id));
+				dispatch(projectLoading(false));
+				getTrashProjects();
+				message.success(res?.data?.message ?? "Project Deleted ?");
+			})
+			.catch((e) => {
+				dispatch(projectLoading(false));
+				message.error(
+					e.response?.data?.message ||
+						"There was an error while Deleting the Project"
+				);
+			});
+	}
+	return { deleteTask, deleteProject };
 };
 
 export const useUpdateData = () => {

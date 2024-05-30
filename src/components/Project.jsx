@@ -1,4 +1,4 @@
-import { Drawer, Radio } from "antd";
+import { Drawer, Radio, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Add_Project from "./Add_Project";
 import { setProjectView } from "../store/projectSlice";
@@ -8,6 +8,8 @@ import { useState } from "react";
 import Project_Table from "./Project_Table";
 import Project_Card from "./Project_Card";
 
+//Need To Modularize the Table And Card
+//Also with all other components
 function Project() {
 	const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
 	const dispatch = useDispatch();
@@ -37,12 +39,16 @@ function Project() {
 				onChange={handleViewChange}
 				defaultValue={projectView}
 				buttonStyle="solid">
-				<Radio.Button value="table">
-					<TableOutlined />
-				</Radio.Button>
-				<Radio.Button value="card">
-					<RefIcon />
-				</Radio.Button>
+				<Tooltip title="Table View">
+					<Radio.Button value="table">
+						<TableOutlined />
+					</Radio.Button>
+				</Tooltip>
+				<Tooltip title="Card View">
+					<Radio.Button value="card">
+						<RefIcon />
+					</Radio.Button>
+				</Tooltip>
 			</Radio.Group>
 			<Drawer
 				title="Create New Project"

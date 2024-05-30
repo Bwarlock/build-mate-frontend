@@ -1,14 +1,27 @@
-import { Button, Table, Tooltip, Space, Tag, Modal } from "antd";
+import {
+	Button,
+	Table,
+	Tooltip,
+	Space,
+	Tag,
+	Modal,
+	Row,
+	Col,
+	Card,
+} from "antd";
 import { useEffect } from "react";
 import { useDeleteData, useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectTableParams } from "../store/projectSlice";
 import { horizontalScroll } from "../util/functions";
-import { DeleteFilled, ExclamationCircleFilled } from "@ant-design/icons";
+import {
+	DeleteFilled,
+	ExclamationCircleFilled,
+	UndoOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import PropTypes from "prop-types";
 
-function Project_Table({ showAddProjectDrawer }) {
+function Project_Trash() {
 	//Projects Page Component
 	const columns = [
 		// TODO: add ID column
@@ -40,7 +53,7 @@ function Project_Table({ showAddProjectDrawer }) {
 			},
 			render: (name) => (
 				<Tooltip placement="topLeft" title={name}>
-					<a>{name}</a>
+					{name}
 				</Tooltip>
 			),
 		},
@@ -200,13 +213,13 @@ function Project_Table({ showAddProjectDrawer }) {
 						display: "flex",
 						justifyContent: "center",
 					}}>
-					<Tooltip title="Delete">
+					<Tooltip title="Restore">
 						<Button
 							type="primary"
-							icon={<DeleteFilled />}
-							danger
+							icon={<UndoOutlined />}
 							onClick={() => {
-								showDeleteConfirm(record?._id);
+								// showDeleteConfirm(record?._id);
+								handleRestoreProject(record._id, record);
 							}}></Button>
 					</Tooltip>
 				</Space>
@@ -215,16 +228,13 @@ function Project_Table({ showAddProjectDrawer }) {
 	];
 
 	const {
-		tableData: projectTableData,
+		trashData: projectTableData,
 		loading: projectLoading,
-		tableParams: projectTableParams,
+		trashParams: projectTableParams,
 	} = useSelector((state) => state.project);
+	const { getTrashProjects } = useGetData();
 
-	const dispatch = useDispatch();
-	const { getProjects } = useGetData();
-	const { deleteProject } = useDeleteData();
-
-	const showDeleteConfirm = (id) => {
+	const showDeleteConfirm = (id, record) => {
 		Modal.confirm({
 			title: "Confirm deleting this Project?",
 			icon: <ExclamationCircleFilled />,
@@ -236,18 +246,19 @@ function Project_Table({ showAddProjectDrawer }) {
 			maskClosable: true,
 			// centered: true,
 			onOk() {
-				handleDeleteProject(id);
+				handleRestoreProject(id, record);
 			},
 			onCancel() {},
 		});
 	};
 
-	const handleDeleteProject = (id) => {
-		deleteProject(id);
+	const handleRestoreProject = (id, record) => {
+		// deleteProject(id);
+		//need project update api
 	};
 
 	const handleTableChange = (pagination, filters, sorter) => {
-		getProjects(
+		getTrashProjects(
 			{
 				page: pagination.current,
 				limit: pagination.pageSize,
@@ -262,7 +273,7 @@ function Project_Table({ showAddProjectDrawer }) {
 
 	useEffect(() => {
 		if (!projectTableData.length) {
-			getProjects();
+			getTrashProjects();
 		}
 
 		return horizontalScroll();
@@ -277,42 +288,132 @@ function Project_Table({ showAddProjectDrawer }) {
 				justifyContent: "center",
 				alignItems: "center",
 				flexDirection: "column",
-				padding: "1rem",
+				padding: 12,
 			}}>
-			<div
+			<Row
 				style={{
-					display: "flex",
 					width: "100%",
-					justifyContent: "space-between",
-					alignItems: "center",
-					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
-				}}>
-				<Button
-					onClick={() => {
-						getProjects();
-					}}>
-					Refresh
-				</Button>
 
-				<Button
-					onClick={showAddProjectDrawer}
+					justifyContent: "left",
+					marginBottom: 8,
+				}}
+				gutter={[16, 16]}>
+				<Col
+					span={6}
 					style={{
-						alignSelf: "end",
-						marginBottom: "1rem",
-						minWidth: "140px",
-						minHeight: "40px",
-					}}
-					size="small"
-					type="primary">
-					Create New Project
-				</Button>
-			</div>
-
+						alignContent: "end",
+						justifyContent: "start",
+						padding: 0,
+					}}>
+					<Button
+						onClick={() => {
+							getTrashProjects();
+						}}>
+						Refresh
+					</Button>
+				</Col>
+				<Col span={6}>
+					{projectTableData[2] && (
+						<Card
+							style={{ cursor: "unset" }}
+							extra={
+								<Button
+									type="text"
+									onClick={() => {
+										handleRestoreTask(
+											projectTableData[2]._id,
+											projectTableData[2]
+										);
+									}}>
+									<UndoOutlined />
+								</Button>
+							}
+							title={projectTableData[2].name}
+							size="small"
+							bordered={false}
+							hoverable={true}>
+							<div
+								style={{
+									width: "100%",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									textWrap: "nowrap",
+								}}>
+								{projectTableData[2].description}
+							</div>
+						</Card>
+					)}
+				</Col>
+				<Col span={6}>
+					{projectTableData[1] && (
+						<Card
+							style={{ cursor: "unset" }}
+							extra={
+								<Button
+									type="text"
+									onClick={() => {
+										handleRestoreTask(
+											projectTableData[1]._id,
+											projectTableData[1]
+										);
+									}}>
+									<UndoOutlined />
+								</Button>
+							}
+							title={projectTableData[1].name}
+							size="small"
+							bordered={false}
+							hoverable={true}>
+							<div
+								style={{
+									width: "100%",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									textWrap: "nowrap",
+								}}>
+								{projectTableData[1].description}
+							</div>
+						</Card>
+					)}
+				</Col>
+				<Col span={6}>
+					{projectTableData[0] && (
+						<Card
+							style={{ cursor: "unset" }}
+							extra={
+								<Button
+									type="text"
+									onClick={() => {
+										handleRestoreTask(
+											projectTableData[0]._id,
+											projectTableData[0]
+										);
+									}}>
+									<UndoOutlined />
+								</Button>
+							}
+							title={projectTableData[0].name}
+							size="small"
+							bordered={false}
+							hoverable={true}>
+							<div
+								style={{
+									width: "100%",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+									textWrap: "nowrap",
+								}}>
+								{projectTableData[0].description}
+							</div>
+						</Card>
+					)}
+				</Col>
+			</Row>
 			<div
 				style={{
 					width: "100%",
 					overflowX: "auto",
-					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
+					transform: "translateY(8px)",
 				}}>
 				<Table
 					size="small"
@@ -328,7 +429,5 @@ function Project_Table({ showAddProjectDrawer }) {
 		</div>
 	);
 }
-Project_Table.propTypes = {
-	showAddProjectDrawer: PropTypes.func.isRequired,
-};
-export default Project_Table;
+
+export default Project_Trash;

@@ -68,16 +68,6 @@ body {
 	align-items: center;
 }
 
-/* .gridded {
-	display: grid;
-	gap: 2rem;
-	padding: 4rem;
-	grid-template-columns: repeat(3, 1fr);
-	grid-row-end: auto;
-} */
-.gridded .card {
-	/* max-width: 256px; */
-}
 .ant-table-wrapper {
 	min-width: calc(100vw - 360px);
 }

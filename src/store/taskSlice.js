@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialValue = {
 	tableData: [],
 	selectData: [],
+	trashData: [],
 	loading: false,
 	tableParams: [
 		{
@@ -15,6 +16,15 @@ const initialValue = {
 		},
 	],
 	selectParams: [
+		{
+			pagination: {
+				current: 1,
+				pageSize: 10,
+				total: 200,
+			},
+		},
+	],
+	trashParams: [
 		{
 			pagination: {
 				current: 1,
@@ -35,6 +45,9 @@ const taskSlice = createSlice({
 		storeTaskSelect: (state, action) => {
 			state.selectData = action.payload;
 		},
+		storeTaskTrash: (state, action) => {
+			state.trashData = action.payload;
+		},
 		clearTask: () => {
 			return { ...initialValue };
 		},
@@ -46,6 +59,42 @@ const taskSlice = createSlice({
 		},
 		setTaskSelectParams: (state, action) => {
 			state.selectParams = [action.payload];
+		},
+		setTaskTrashParams: (state, action) => {
+			state.trashParams = [action.payload];
+		},
+		setTaskTrashTotal: (state, action) => {
+			const total = action.payload;
+			state.trashParams = [
+				{
+					...state.trashParams[0],
+					pagination: {
+						...state.trashParams[0].pagination,
+						total: total,
+					},
+				},
+			];
+		},
+		setTaskTotal: (state, action) => {
+			const total = action.payload;
+			state.tableParams = [
+				{
+					...state.tableParams[0],
+					pagination: {
+						...state.tableParams[0].pagination,
+						total: total,
+					},
+				},
+			];
+			state.selectParams = [
+				{
+					...state.selectParams[0],
+					pagination: {
+						...state.selectParams[0].pagination,
+						total: total,
+					},
+				},
+			];
 		},
 		updateTaskStore: (state, action) => {
 			const data = action.payload;
@@ -76,10 +125,14 @@ const taskSlice = createSlice({
 export const {
 	storeTaskTable,
 	storeTaskSelect,
+	storeTaskTrash,
 	clearTask,
 	taskLoading,
 	setTaskTableParams,
 	setTaskSelectParams,
+	setTaskTrashParams,
+	setTaskTrashTotal,
+	setTaskTotal,
 	updateTaskStore,
 	deleteTaskStore,
 } = taskSlice.actions;

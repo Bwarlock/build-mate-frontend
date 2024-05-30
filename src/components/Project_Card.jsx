@@ -1,8 +1,13 @@
-import { Button, Card, Pagination, Spin } from "antd";
+import { Button, Card, Flex, Modal, Pagination, Spin, Tooltip } from "antd";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
-import { useGetData } from "../api/hooks";
+import {
+	DeleteFilled,
+	DeleteOutlined,
+	ExclamationCircleFilled,
+	PlusOutlined,
+} from "@ant-design/icons";
+import { useDeleteData, useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { setProjectTableParams } from "../store/projectSlice";
@@ -12,36 +17,52 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 	const {
 		tableData: projectTableData,
 		loading: projectLoading,
-		tableParams: params,
+		tableParams: projectTableParams,
 	} = useSelector((state) => state.project);
-	const tableParams = params[0];
 	const dispatch = useDispatch();
 	const { getProjects } = useGetData();
+	const { deleteProject } = useDeleteData();
 
+	const showDeleteConfirm = (id) => {
+		Modal.confirm({
+			title: "Confirm deleting this Project?",
+			icon: <ExclamationCircleFilled />,
+			content: "Project will go to Trash",
+			okText: "Yes",
+			okType: "danger",
+			cancelText: "No",
+			closable: true,
+			maskClosable: true,
+			// centered: true,
+			onOk() {
+				handleDeleteProject(id);
+			},
+			onCancel() {},
+		});
+	};
+	const handleDeleteProject = (id) => {
+		deleteProject(id);
+	};
 	const handlePageChange = (page, pageSize) => {
-		dispatch(
-			setProjectTableParams({
-				...tableParams,
+		getProjects(
+			{
+				page: page,
+				limit: pageSize,
+			},
+			{
+				...projectTableParams[0],
 				pagination: {
-					...tableParams.pagination,
+					...projectTableParams[0].pagination,
 					current: page,
 					pageSize: pageSize,
 				},
-			})
+			}
 		);
-
-		getProjects({
-			page: page,
-			limit: pageSize,
-		});
 	};
 
 	useEffect(() => {
 		if (!projectTableData.length) {
-			getProjects({
-				page: tableParams.pagination.current,
-				limit: tableParams.pagination.pageSize,
-			});
+			getProjects();
 		}
 	}, []);
 	return (
@@ -54,7 +75,6 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 					gap: "2rem",
 					padding: "4rem",
 					gridTemplateColumns: "repeat(3, 1fr)",
-					// justifyContent: "center",
 					alignItems: "center",
 					justifyItems: "center",
 				}}>
@@ -64,12 +84,63 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 							hoverable
 							className="card"
 							key={index}
-							title={pro.name}
+							title={
+								<span
+									style={{
+										display: "flex",
+										alignItems: "center",
+									}}>
+									<span
+										style={{
+											marginRight: 8,
+											maxWidth: 160,
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+										}}>
+										{pro.name}
+									</span>
+									<Tooltip title="Delete">
+										<Button
+											style={{}}
+											type="text"
+											size="middle"
+											icon={<DeleteOutlined />}
+											// danger
+											onClick={() => {
+												showDeleteConfirm(pro._id);
+											}}></Button>
+									</Tooltip>
+								</span>
+							}
 							extra={
 								<Link to={"/dashboard/project/" + pro._id ? pro._id : ""}>
 									More
 								</Link>
 							}
+							actions={[
+								<Tooltip title="Delete">
+									<div
+										style={{
+											width: "100%",
+											display: "flex",
+											justifyContent: "end",
+											paddingRight: 16,
+										}}>
+										<Button
+											style={{}}
+											type="text"
+											size="middle"
+											icon={<DeleteOutlined />}
+											// danger
+											onClick={() => {
+												showDeleteConfirm(pro._id);
+											}}>
+											Delete
+										</Button>
+									</div>
+								</Tooltip>,
+								// <DeleteOutlined key="delete" />,
+							]}
 							style={{
 								width: 300,
 								height: "fit-content",
@@ -138,17 +209,14 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 				}}>
 				<Button
 					onClick={() => {
-						getProjects({
-							page: tableParams.pagination.current,
-							limit: tableParams.pagination.pageSize,
-						});
+						getProjects();
 					}}>
 					Refresh
 				</Button>
 				<Pagination
-					pageSize={tableParams.pagination.pageSize}
-					total={tableParams.pagination.total}
-					current={tableParams.pagination.current}
+					pageSize={projectTableParams[0].pagination.pageSize}
+					total={projectTableParams[0].pagination.total}
+					current={projectTableParams[0].pagination.current}
 					onChange={handlePageChange}
 				/>
 			</div>

@@ -46,6 +46,27 @@ const clientSlice = createSlice({
 		setClientSelectParams: (state, action) => {
 			state.selectParams = [action.payload];
 		},
+		setClientTotal: (state, action) => {
+			const total = action.payload;
+			state.tableParams = [
+				{
+					...state.tableParams[0],
+					pagination: {
+						...state.tableParams[0].pagination,
+						total: total,
+					},
+				},
+			];
+			state.selectParams = [
+				{
+					...state.selectParams[0],
+					pagination: {
+						...state.selectParams[0].pagination,
+						total: total,
+					},
+				},
+			];
+		},
 	},
 });
 
@@ -56,5 +77,6 @@ export const {
 	clientLoading,
 	setClientTableParams,
 	setClientSelectParams,
+	setClientTotal,
 } = clientSlice.actions;
 export default clientSlice.reducer;

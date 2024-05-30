@@ -69,48 +69,31 @@ const Task_Detail = () => {
 
 	const statusDropdown = [
 		{
-			label: <Badge status="success" text="Success" />,
-			key: "success",
-			value: "success",
-		},
-		{
-			label: <Badge status="error" text="Error" />,
-			key: "error",
-			value: "error",
-		},
-		{
-			label: <Badge status="default" text="Default" />,
-			key: "default",
-			value: "default",
-		},
-		{
-			label: <Badge status="processing" text="Processing" />,
-			key: "processing",
-			value: "processing",
-		},
-		{
-			label: <Badge status="warning" text="Warning" />,
-			key: "warning",
-			value: "warning",
-		},
-		{
-			label: <Badge color="red" status="processing" text="Todo" />,
+			label: <Badge color="gold" status="default" text="Todo" />,
 			key: "todo",
 			value: "todo",
 		},
+		{
+			label: <Badge status="processing" text="In-progress" />,
+			key: "in-progress",
+			value: "in-progress",
+		},
+		{
+			label: <Badge status="default" text="On-hold" />,
+			key: "on-hold",
+			value: "on-hold",
+		},
+		{
+			label: <Badge status="success" text="Completed" />,
+			key: "completed",
+			value: "completed",
+		},
 	];
 	const statusBadge = {
-		success: <Badge status="success" />,
-
-		error: <Badge status="error" />,
-
-		default: <Badge status="default" />,
-
-		processing: <Badge status="processing" />,
-
-		warning: <Badge status="warning" />,
-
-		todo: <Badge color="red" status="processing" />,
+		todo: <Badge color="gold" status="default" />,
+		"in-progress": <Badge status="processing" />,
+		"on-hold": <Badge status="default" />,
+		completed: <Badge status="success" />,
 	};
 
 	const [values, setValues] = useState({
@@ -137,12 +120,7 @@ const Task_Detail = () => {
 			children: <span>{values.name}</span>,
 			span: 2,
 		},
-		{
-			key: "8",
-			label: "Created By",
-			children: <span>{values.createdBy.name}</span>,
-			span: 1,
-		},
+
 		{
 			key: "2",
 			label: "Task ID",
@@ -185,7 +163,7 @@ const Task_Detail = () => {
 					</span>
 				</span>
 			),
-			span: 1,
+			span: 2,
 		},
 
 		{
@@ -299,13 +277,18 @@ const Task_Detail = () => {
 			),
 			span: 2,
 		},
-
 		{
-			key: "5",
-			label: "Domain Name",
-			children: <span>{values.domainName}</span>,
+			key: "8",
+			label: "Created By",
+			children: <span>{values.createdBy.name}</span>,
 			span: 1,
 		},
+		// {
+		// 	key: "5",
+		// 	label: "Domain Name",
+		// 	children: <span>{values.domainName}</span>,
+		// 	span: 1,
+		// },
 		{
 			key: "10",
 			label: "Assigned To",
@@ -715,7 +698,7 @@ const Task_Detail = () => {
 									children: (
 										<Segmented
 											style={{
-												// marginLeft: 30,
+												marginLeft: 30,
 												flexWrap: "wrap",
 												textWrap: "wrap",
 											}}

@@ -19,6 +19,8 @@ import Task_Table from "./components/Task_Table";
 import Task_Detail from "./components/Task_Detail";
 import Page_Not_Exist from "./components/Page_Not_Exist";
 import Project from "./components/Project";
+import Task_Trash from "./components/Task_Trash";
+import Project_Trash from "./components/Project_Trash";
 
 function App() {
 	return (
@@ -35,13 +37,19 @@ function App() {
 						<Route path="/dashboard/tasks" element={<Task_Table />}></Route>
 						<Route path="/dashboard/clients" element={<Clients />}></Route>
 						<Route
+							path="/dashboard/project-trash"
+							element={<Project_Trash />}></Route>
+						<Route
+							path="/dashboard/tasks-trash"
+							element={<Task_Trash />}></Route>
+						{/* <Route
 							path="/dashboard/add_client"
 							element={<Add_Client />}></Route>
 						<Route
 							path="/dashboard/add_project"
 							element={<Add_Project />}></Route>
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
-						<Route path="/dashboard/add_task" element={<Add_Task />}></Route>
+						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
 					</Route>
 					<Route path="/task_detail/:id" element={<Task_Detail />}></Route>
 					<Route path="/documents/:id" element={<TextEditor />}></Route>

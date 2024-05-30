@@ -7,133 +7,134 @@ import { horizontalScroll } from "../util/functions";
 import { setClientTableParams } from "../store/clientSlice";
 import { DeleteFilled } from "@ant-design/icons";
 
-//Column Titles
-const columns = [
-	{
-		title: "ID",
-		dataIndex: "id",
-		key: "id",
-		fixed: "left",
-		width: 200,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (id) => (
-			<Tooltip placement="topLeft" title={id}>
-				{id}
-			</Tooltip>
-		),
-	},
-	{
-		title: "Name",
-		dataIndex: "name",
-		key: "name",
-		fixed: "left",
-		width: 120,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (name) => (
-			<Tooltip placement="topLeft" title={name}>
-				<a>{name}</a>
-			</Tooltip>
-		),
-	},
-	{
-		title: "Company Name",
-		dataIndex: "companyName",
-		key: "companyName",
-		width: 150,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (companyName) => (
-			<Tooltip placement="topLeft" title={companyName}>
-				{companyName}
-			</Tooltip>
-		),
-	},
-	{
-		title: "Email",
-		dataIndex: "email",
-		key: "email",
-		width: 200,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (email) => (
-			<Tooltip placement="topLeft" title={email}>
-				{email}
-			</Tooltip>
-		),
-	},
-	{
-		title: "PhoneNumber",
-		dataIndex: "phoneNumber",
-		key: "phoneNumber",
-		width: 120,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (phoneNumber) => (
-			<Tooltip placement="topLeft" title={phoneNumber}>
-				{phoneNumber}
-			</Tooltip>
-		),
-	},
-	{
-		title: "Projects",
-		dataIndex: "projects",
-		key: "projects",
-		width: 400,
-		ellipsis: {
-			showTitle: false,
-		},
-		render: (_, { projects }) => {
-			return (
-				<Tooltip
-					placement="topLeft"
-					title={projects.reduce((accumulator, currentObject) => {
-						return accumulator + currentObject.project_id;
-					}, "")}>
-					<Space
-						size="small"
-						style={{
-							textOverflow: "ellipsis",
-							overflow: "hidden",
-						}}>
-						{projects.map((proj, index) => {
-							return (
-								<Tag color={"volcano"} key={index}>
-									{proj.name}
-								</Tag>
-							);
-						})}
-					</Space>
-				</Tooltip>
-			);
-		},
-	},
-	{
-		title: "Action",
-		key: "action",
-		fixed: "right",
-		width: 80,
-		render: () => (
-			<Space
-				size="small"
-				style={{
-					width: "100%",
-					display: "flex",
-					justifyContent: "center",
-				}}>
-				<Button type="primary" icon={<DeleteFilled />} danger></Button>
-			</Space>
-		),
-	},
-];
-
 const Clients = () => {
+	//Column Titles
+	const columns = [
+		{
+			title: "ID",
+			dataIndex: "id",
+			key: "id",
+			fixed: "left",
+			width: 200,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (id) => (
+				<Tooltip placement="topLeft" title={id}>
+					{id}
+				</Tooltip>
+			),
+		},
+		{
+			title: "Name",
+			dataIndex: "name",
+			key: "name",
+			fixed: "left",
+			width: 120,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (name) => (
+				<Tooltip placement="topLeft" title={name}>
+					<a>{name}</a>
+				</Tooltip>
+			),
+		},
+		{
+			title: "Company Name",
+			dataIndex: "companyName",
+			key: "companyName",
+			width: 150,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (companyName) => (
+				<Tooltip placement="topLeft" title={companyName}>
+					{companyName}
+				</Tooltip>
+			),
+		},
+		{
+			title: "Email",
+			dataIndex: "email",
+			key: "email",
+			width: 200,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (email) => (
+				<Tooltip placement="topLeft" title={email}>
+					{email}
+				</Tooltip>
+			),
+		},
+		{
+			title: "PhoneNumber",
+			dataIndex: "phoneNumber",
+			key: "phoneNumber",
+			width: 120,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (phoneNumber) => (
+				<Tooltip placement="topLeft" title={phoneNumber}>
+					{phoneNumber}
+				</Tooltip>
+			),
+		},
+		{
+			title: "Projects",
+			dataIndex: "projects",
+			key: "projects",
+			width: 400,
+			ellipsis: {
+				showTitle: false,
+			},
+			render: (_, { projects }) => {
+				return (
+					<Tooltip
+						placement="topLeft"
+						title={projects.reduce((accumulator, currentObject) => {
+							return accumulator + currentObject.project_id;
+						}, "")}>
+						<Space
+							size="small"
+							style={{
+								textOverflow: "ellipsis",
+								overflow: "hidden",
+							}}>
+							{projects.map((proj, index) => {
+								return (
+									<Tag color={"volcano"} key={index}>
+										{proj.name}
+									</Tag>
+								);
+							})}
+						</Space>
+					</Tooltip>
+				);
+			},
+		},
+		{
+			title: "Action",
+			key: "action",
+			fixed: "right",
+			width: 80,
+			render: () => (
+				<Space
+					size="small"
+					style={{
+						width: "100%",
+						display: "flex",
+						justifyContent: "center",
+					}}>
+					<Tooltip title="Delete">
+						<Button type="primary" icon={<DeleteFilled />} danger></Button>
+					</Tooltip>
+				</Space>
+			),
+		},
+	];
 	const [openAddClientDrawer, setOpenAddClientDrawer] = useState(false);
 	const showAddClientDrawer = () => {
 		setOpenAddClientDrawer(true);
@@ -145,33 +146,28 @@ const Clients = () => {
 	const {
 		tableData: clientTableData,
 		loading: clientLoading,
-		tableParams: params,
+		tableParams: clientTableParams,
 	} = useSelector((state) => state.client);
-	const tableParams = params[0];
 	const dispatch = useDispatch();
 	const { getClients } = useGetData();
 
 	const handleTableChange = (pagination, filters, sorter) => {
-		dispatch(
-			setClientTableParams({
+		getClients(
+			{
+				page: pagination.current,
+				limit: pagination.pageSize,
+			},
+			{
 				pagination,
 				filters,
 				...sorter,
-			})
+			}
 		);
-
-		getClients({
-			page: pagination.current,
-			limit: pagination.pageSize,
-		});
 	};
 
 	useEffect(() => {
 		if (!clientTableData.length) {
-			getClients({
-				page: tableParams.pagination.current,
-				limit: tableParams.pagination.pageSize,
-			});
+			getClients();
 		}
 
 		return horizontalScroll();
@@ -196,10 +192,7 @@ const Clients = () => {
 				}}>
 				<Button
 					onClick={() => {
-						getClients({
-							page: tableParams.pagination.current,
-							limit: tableParams.pagination.pageSize,
-						});
+						getClients();
 					}}>
 					Refresh
 				</Button>
@@ -233,7 +226,7 @@ const Clients = () => {
 					dataSource={clientTableData}
 					scroll={{ x: 1200 }}
 					loading={clientLoading}
-					pagination={tableParams.pagination}
+					pagination={clientTableParams[0].pagination}
 					onChange={handleTableChange}
 					bordered={true}
 				/>

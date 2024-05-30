@@ -166,6 +166,7 @@ function Add_Task() {
 				</Form.Item>
 				<Form.Item label="Project" name="project" rules={[]}>
 					<Select
+						allowClear={true}
 						loading={projectLoading}
 						onChange={(e) => {
 							setValues((val) => {

@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import {
 	CaretLeftFilled,
 	CaretRightFilled,
+	DeleteFilled,
+	DeleteOutlined,
 	LogoutOutlined,
 	OrderedListOutlined,
 	ProfileFilled,
@@ -65,13 +67,13 @@ const Dashboard = () => {
 					height: "100vh",
 					display: "flex",
 					flexDirection: "column",
-					// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
+					transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 				}}
 				inlineCollapsed={collapsed}
 				selectedKeys={[
 					location.pathname?.split("/")[2]?.split("?")[0] ?? "tasks",
 				]}
-				mode="inline">
+				mode="vertical">
 				<div
 					style={{
 						maxWidth: 256,
@@ -118,6 +120,25 @@ const Dashboard = () => {
 					key="clients">
 					<Link to="/dashboard/clients">Clients</Link>
 				</Menu.Item>
+
+				<Menu.SubMenu
+					icon={<DeleteOutlined />}
+					style={{ fontWeight: "bold" }}
+					key="trash"
+					title="Trash">
+					<Menu.Item
+						icon={<DeleteFilled />}
+						style={{ fontWeight: "bold" }}
+						key="tasks-trash">
+						<Link to="/dashboard/tasks-trash">Tasks-Trash</Link>
+					</Menu.Item>
+					<Menu.Item
+						icon={<DeleteFilled />}
+						style={{ fontWeight: "bold" }}
+						key="project-trash">
+						<Link to="/dashboard/project-trash">Project-Trash</Link>
+					</Menu.Item>
+				</Menu.SubMenu>
 
 				<Menu.Item
 					icon={<UserOutlined />}

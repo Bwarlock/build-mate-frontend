@@ -100,6 +100,18 @@ GetTask.v1 = function v1(params) {
 	});
 };
 
+export function GetTrashTask(params) {
+	return GetTrashTask.v1(params);
+}
+
+GetTrashTask.v1 = function v1(params) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/task/get-trash-tasks`,
+		params: params,
+	});
+};
+
 export function UpdateTask(id) {
 	return UpdateTask.v1(id);
 }
@@ -144,6 +156,29 @@ GetProject.v1 = function v1(params) {
 		method: "get",
 		url: `/project/get-projects`,
 		params: params,
+	});
+};
+
+export function GetTrashProject(params) {
+	return GetTrashProject.v1(params);
+}
+
+GetTrashProject.v1 = function v1(params) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/project/get-trash-projects`,
+		params: params,
+	});
+};
+
+export function DeleteProject(id) {
+	return DeleteProject.v1(id);
+}
+
+DeleteProject.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "delete",
+		url: `/project/delete-project/${id}`,
 	});
 };
 
