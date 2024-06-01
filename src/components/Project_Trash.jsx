@@ -8,6 +8,7 @@ import {
 	Row,
 	Col,
 	Card,
+	Flex,
 } from "antd";
 import { useEffect } from "react";
 import { useDeleteData, useGetData } from "../api/hooks";
@@ -305,12 +306,31 @@ function Project_Trash() {
 						justifyContent: "start",
 						padding: 0,
 					}}>
-					<Button
-						onClick={() => {
-							getTrashProjects();
+					<Flex
+						style={{
+							flexDirection: "column",
+							paddingLeft: 32,
+							height: "100%",
+							justifyContent: "space-between",
+							alignItems: "start",
 						}}>
-						Refresh
-					</Button>
+						<div
+							style={{
+								fontSize: 32,
+								fontWeight: "bold",
+								display: "flex",
+								justifyContent: "center",
+								// padding: 16,
+							}}>
+							Project Trash
+						</div>
+						<Button
+							onClick={() => {
+								getTrashProjects();
+							}}>
+							Refresh
+						</Button>
+					</Flex>
 				</Col>
 				<Col span={6}>
 					{projectTableData[2] && (

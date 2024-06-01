@@ -255,6 +255,16 @@ const Task_Table = () => {
 			}}>
 			<div
 				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					// padding: 16,
+				}}>
+				Task
+			</div>
+			<div
+				style={{
 					display: "flex",
 					width: "100%",
 					justifyContent: "space-between",
@@ -271,7 +281,8 @@ const Task_Table = () => {
 					onClick={showAddTaskDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: "1rem",
+						marginBottom: taskTableData.length > 9 ? "" : "1rem",
+						// marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
@@ -290,6 +301,7 @@ const Task_Table = () => {
 				style={{
 					width: "100%",
 					overflowX: "auto",
+					transform: taskTableData.length > 9 ? "translateY(16px)" : "",
 				}}>
 				<Table
 					size="small"

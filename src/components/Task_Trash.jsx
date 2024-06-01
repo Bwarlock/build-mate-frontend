@@ -9,6 +9,7 @@ import {
 	Row,
 	Col,
 	Card,
+	Flex,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
@@ -271,16 +272,36 @@ const Task_Trash = () => {
 				<Col
 					span={6}
 					style={{
-						alignContent: "end",
+						alignContent: "start",
 						justifyContent: "start",
 						padding: 0,
 					}}>
-					<Button
-						onClick={() => {
-							getTrashTasks();
+					<Flex
+						style={{
+							flexDirection: "column",
+							paddingLeft: 32,
+							height: "100%",
+							justifyContent: "space-between",
+							alignItems: "start",
 						}}>
-						Refresh
-					</Button>
+						<div
+							style={{
+								fontSize: 32,
+								fontWeight: "bold",
+								display: "flex",
+								justifyContent: "center",
+								// padding: 16,
+							}}>
+							Task Trash
+						</div>
+
+						<Button
+							onClick={() => {
+								getTrashTasks();
+							}}>
+							Refresh
+						</Button>
+					</Flex>
 				</Col>
 				<Col span={6}>
 					{taskTableData[2] && (

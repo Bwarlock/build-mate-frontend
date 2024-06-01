@@ -21,6 +21,7 @@ import Page_Not_Exist from "./components/Page_Not_Exist";
 import Project from "./components/Project";
 import Task_Trash from "./components/Task_Trash";
 import Project_Trash from "./components/Project_Trash";
+import Project_Detail from "./components/Project_Detail";
 
 function App() {
 	return (
@@ -51,6 +52,9 @@ function App() {
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
 						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
 					</Route>
+					<Route
+						path="/project_detail/:id"
+						element={<Project_Detail />}></Route>
 					<Route path="/task_detail/:id" element={<Task_Detail />}></Route>
 					<Route path="/documents/:id" element={<TextEditor />}></Route>
 					TODO: show a list of documents and a button to create a new document

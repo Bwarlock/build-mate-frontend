@@ -172,3 +172,8 @@ body {
 .ant-segmented-group {
 	flex-wrap: wrap;
 }
+@media (min-width: 1260px) {
+	.gridded {
+		grid-template-columns: repeat(3, 1fr) !important;
+	}
+}

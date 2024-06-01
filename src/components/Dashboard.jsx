@@ -68,6 +68,7 @@ const Dashboard = () => {
 					display: "flex",
 					flexDirection: "column",
 					transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
+					// transition: "all 0.4s ease",
 				}}
 				inlineCollapsed={collapsed}
 				selectedKeys={[
@@ -174,6 +175,7 @@ const Dashboard = () => {
 				style={{
 					position: "absolute",
 					left: vanished ? 0 : collapsed ? 80 : 256,
+					zIndex: 5,
 					// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 				}}
 				icon={vanished ? <CaretRightFilled /> : <CaretLeftFilled />}></Button>

@@ -730,7 +730,7 @@ export const useDeleteData = () => {
 			.then((res) => {
 				dispatch(deleteTaskStore(id));
 				dispatch(taskLoading(false));
-				getTrashTasks();
+				// getTrashTasks();
 				message.success(res?.data?.message ?? "Task Deleted ?");
 			})
 			.catch((e) => {
@@ -747,7 +747,7 @@ export const useDeleteData = () => {
 			.then((res) => {
 				dispatch(deleteProjectStore(id));
 				dispatch(projectLoading(false));
-				getTrashProjects();
+				// getTrashProjects();
 				message.success(res?.data?.message ?? "Project Deleted ?");
 			})
 			.catch((e) => {

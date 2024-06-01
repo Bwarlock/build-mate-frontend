@@ -38,9 +38,9 @@ function Project_Table({ showAddProjectDrawer }) {
 			ellipsis: {
 				showTitle: false,
 			},
-			render: (name) => (
-				<Tooltip placement="topLeft" title={name}>
-					<a>{name}</a>
+			render: (text, record) => (
+				<Tooltip placement="topLeft" title={text}>
+					<Link to={`/project_detail/${record._id}`}>{text}</Link>
 				</Tooltip>
 			),
 		},
@@ -281,11 +281,21 @@ function Project_Table({ showAddProjectDrawer }) {
 			}}>
 			<div
 				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					// padding: 16,
+				}}>
+				Project
+			</div>
+			<div
+				style={{
 					display: "flex",
 					width: "100%",
 					justifyContent: "space-between",
 					alignItems: "center",
-					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
+					// transform: projectTableData.length > 9 ? "translateY(-8px)" : "",
 				}}>
 				<Button
 					onClick={() => {
@@ -298,7 +308,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					onClick={showAddProjectDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: "1rem",
+						marginBottom: projectTableData.length > 9 ? "" : "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
@@ -312,7 +322,7 @@ function Project_Table({ showAddProjectDrawer }) {
 				style={{
 					width: "100%",
 					overflowX: "auto",
-					transform: projectTableData.length > 9 ? "translateY(26px)" : "",
+					transform: projectTableData.length > 9 ? "translateY(16px)" : "",
 				}}>
 				<Table
 					size="small"

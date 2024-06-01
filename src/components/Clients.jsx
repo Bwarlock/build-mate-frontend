@@ -185,6 +185,16 @@ const Clients = () => {
 			}}>
 			<div
 				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					// padding: 16,
+				}}>
+				Client
+			</div>
+			<div
+				style={{
 					display: "flex",
 					width: "100%",
 					justifyContent: "space-between",
@@ -200,7 +210,8 @@ const Clients = () => {
 					onClick={showAddClientDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: "1rem",
+						marginBottom: clientTableData.length > 9 ? "" : "1rem",
+						// marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
@@ -219,6 +230,7 @@ const Clients = () => {
 				style={{
 					width: "100%",
 					overflowX: "auto",
+					transform: clientTableData.length > 9 ? "translateY(16px)" : "",
 				}}>
 				<Table
 					size="small"

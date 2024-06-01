@@ -69,12 +69,22 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 		<>
 			<Spin spinning={projectLoading} fullscreen={true} />
 			<div
+				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					padding: 16,
+				}}>
+				Project
+			</div>
+			<div
 				className="gridded"
 				style={{
 					display: "grid",
-					gap: "2rem",
-					padding: "4rem",
-					gridTemplateColumns: "repeat(3, 1fr)",
+					gap: "1rem",
+					padding: "1rem",
+					gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
 					alignItems: "center",
 					justifyItems: "center",
 				}}>
@@ -112,40 +122,37 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 									</Tooltip>
 								</span>
 							}
-							extra={
-								<Link to={"/dashboard/project/" + pro._id ? pro._id : ""}>
-									More
-								</Link>
-							}
-							actions={[
-								<Tooltip title="Delete">
-									<div
-										style={{
-											width: "100%",
-											display: "flex",
-											justifyContent: "end",
-											paddingRight: 16,
-										}}>
-										<Button
-											style={{}}
-											type="text"
-											size="middle"
-											icon={<DeleteOutlined />}
-											// danger
-											onClick={() => {
-												showDeleteConfirm(pro._id);
-											}}>
-											Delete
-										</Button>
-									</div>
-								</Tooltip>,
-								// <DeleteOutlined key="delete" />,
-							]}
+							extra={<Link to={`/project_detail/${pro._id}`}>More</Link>}
+							// actions={[
+							// 	<Tooltip title="Delete">
+							// 		<div
+							// 			style={{
+							// 				width: "100%",
+							// 				display: "flex",
+							// 				justifyContent: "end",
+							// 				paddingRight: 16,
+							// 			}}>
+							// 			<Button
+							// 				style={{}}
+							// 				type="text"
+							// 				size="middle"
+							// 				icon={<DeleteOutlined />}
+							// 				// danger
+							// 				onClick={() => {
+							// 					showDeleteConfirm(pro._id);
+							// 				}}>
+							// 				Delete
+							// 			</Button>
+							// 		</div>
+							// 	</Tooltip>,
+							// 	// <DeleteOutlined key="delete" />,
+							// ]}
 							style={{
 								width: 300,
 								height: "fit-content",
 								textWrap: "nowrap",
-								// borderRadius: 10,
+								cursor: "unset",
+								borderRadius: 10,
 							}}>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Description : </span>

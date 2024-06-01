@@ -397,7 +397,7 @@ const Task_Detail = () => {
 		if (taskValues.length) {
 			setValues({
 				...taskValues[0],
-				assignedTo: taskValues[0].assignedTo
+				assignedTo: taskValues[0].assignedTo.length
 					? taskValues[0].assignedTo.map((staff) => {
 							return {
 								label: staff.name,
@@ -490,10 +490,9 @@ const Task_Detail = () => {
 				style={{
 					maxWidth: 256,
 					height: "calc(100vh - 24px)",
-					display: "flex",
-					flexDirection: "column",
-					borderRadius: 10,
+					// borderRadius: 10,
 					marginRight: 8,
+					overflow: "auto",
 				}}
 				inlineCollapsed={collapsed}
 				selectedKeys={[selectedTask]}
@@ -568,7 +567,7 @@ const Task_Detail = () => {
 						width: "100%",
 						minHeight: "calc(100vh - 24px)",
 						padding: "1rem",
-						borderRadius: 10,
+						// borderRadius: 10,
 						backgroundColor: "white",
 					}}>
 					<Space
