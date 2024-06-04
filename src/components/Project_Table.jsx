@@ -40,7 +40,7 @@ function Project_Table({ showAddProjectDrawer }) {
 			},
 			render: (text, record) => (
 				<Tooltip placement="topLeft" title={text}>
-					<Link to={`/project_detail/${record._id}`}>{text}</Link>
+					<Link to={`/project_detail/${record?._id}`}>{text}</Link>
 				</Tooltip>
 			),
 		},
@@ -53,8 +53,10 @@ function Project_Table({ showAddProjectDrawer }) {
 				showTitle: false,
 			},
 			render: (createdAt) => (
-				<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
-					{new Date(createdAt).toDateString()}
+				<Tooltip
+					placement="topLeft"
+					title={new Date(createdAt)?.toDateString()}>
+					{new Date(createdAt)?.toDateString()}
 				</Tooltip>
 			),
 		},
@@ -86,7 +88,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					<Tooltip
 						placement="topLeft"
 						title={client.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -97,7 +99,7 @@ function Project_Table({ showAddProjectDrawer }) {
 							{client.map((clien, index) => {
 								return (
 									<Tag color={"lightblue"} key={index}>
-										{clien?.name.toUpperCase()}
+										{clien?.name?.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -119,7 +121,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					<Tooltip
 						placement="topLeft"
 						title={staff.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -130,7 +132,7 @@ function Project_Table({ showAddProjectDrawer }) {
 							{staff.map((staf, index) => {
 								return (
 									<Tag color={"volcano"} key={index}>
-										{staf?.name.toUpperCase()}
+										{staf?.name?.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -152,7 +154,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					<Tooltip
 						placement="topLeft"
 						title={tasks.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -162,9 +164,9 @@ function Project_Table({ showAddProjectDrawer }) {
 							}}>
 							{tasks.map((task, index) => {
 								return (
-									<Link color={"volcano"} key={index}>
-										{task?.name.toUpperCase()}
-									</Link>
+									<Tag color={"volcano"} key={index}>
+										{task?.task_id?.toUpperCase()}
+									</Tag>
 								);
 							})}
 						</Space>
@@ -181,8 +183,8 @@ function Project_Table({ showAddProjectDrawer }) {
 				showTitle: false,
 			},
 			render: (owner) => (
-				<Tooltip placement="topLeft" title={owner.name}>
-					{owner.name}
+				<Tooltip placement="topLeft" title={owner?.email}>
+					{owner?.name}
 				</Tooltip>
 			),
 		},
@@ -228,7 +230,8 @@ function Project_Table({ showAddProjectDrawer }) {
 		Modal.confirm({
 			title: "Confirm deleting this Project?",
 			icon: <ExclamationCircleFilled />,
-			content: "Project will go to Trash",
+			content:
+				"Project will be removed from staff and client as well , one has to manually add it after restoring the project",
 			okText: "Yes",
 			okType: "danger",
 			cancelText: "No",

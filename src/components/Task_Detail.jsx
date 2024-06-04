@@ -17,6 +17,7 @@ import {
 	DatePicker,
 	Tabs,
 	Pagination,
+	Modal,
 } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -26,15 +27,17 @@ import {
 	CaretLeftFilled,
 	CaretRightFilled,
 	CommentOutlined,
+	DeleteOutlined,
 	DownOutlined,
 	EditOutlined,
+	ExclamationCircleFilled,
 	FileOutlined,
 	OrderedListOutlined,
 	SubnodeOutlined,
 	WarningOutlined,
 } from "@ant-design/icons";
 import TextEditorQuill from "./TextEditorQuill";
-import { useGetData, useUpdateData } from "../api/hooks";
+import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
 import dayjs from "dayjs";
 import { uniqueArrayOfObjects } from "../util/functions";
 
@@ -60,9 +63,9 @@ const Task_Detail = () => {
 	const { selectProjects, selectStaff } = useGetData();
 	const { updateTask } = useUpdateData();
 
-	const projectDropdown = taskTableData.reduce((acc, task) => {
-		if (task.project) {
-			acc.push({ label: task.project.name, value: task.project._id });
+	const projectDropdown = taskTableData?.reduce((acc, task) => {
+		if (task?.project) {
+			acc?.push({ label: task?.project?.name, value: task?.project?._id });
 		}
 		return acc;
 	}, []);
@@ -117,61 +120,46 @@ const Task_Detail = () => {
 		{
 			key: "1",
 			label: "Task Name",
-			children: <span>{values.name}</span>,
+			children: <span>{values?.name}</span>,
 			span: 2,
 		},
 
 		{
 			key: "2",
 			label: "Task ID",
-			children: <span>{values.task_id}</span>,
+			children: <span>{values?.task_id}</span>,
 			span: 1,
 		},
-		{
-			key: "7",
-			label: "Deleted",
-			children: (
-				<Select
-					value={[values.isTrash]}
-					onChange={(e) => {
-						setEditing(true);
-						setValues((val) => {
-							return { ...val, isTrash: e };
-						});
-					}}
-					style={{
-						width: 120,
-					}}
-					options={[
-						{ label: "False", value: false },
-						{ label: "True", value: true },
-					]}
-				/>
-			),
-			span: 1,
-		},
-		{
-			key: "6",
-			label: "Status",
-			children: (
-				<span>
-					{values.status ? statusBadge[values.status] : ""}
-					<span style={{ marginLeft: 8 }}>
-						{values.status
-							? values.status.charAt(0).toUpperCase() + values.status.slice(1)
-							: ""}
-					</span>
-				</span>
-			),
-			span: 2,
-		},
+		// {
+		// 	key: "7",
+		// 	label: "Deleted",
+		// 	children: (
+		// 		<Select
+		// 			value={[values?.isTrash]}
+		// 			onChange={(e) => {
+		// 				setEditing(true);
+		// 				setValues((val) => {
+		// 					return { ...val, isTrash: e };
+		// 				});
+		// 			}}
+		// 			style={{
+		// 				width: 120,
+		// 			}}
+		// 			options={[
+		// 				{ label: "False", value: false },
+		// 				{ label: "True", value: true },
+		// 			]}
+		// 		/>
+		// 	),
+		// 	span: 1,
+		// },
 
 		{
 			key: "45",
 			label: "Created On",
 			children: (
 				<span>
-					{values.createdAt ? new Date(values.createdAt).toDateString() : ""}
+					{values?.createdAt ? new Date(values?.createdAt)?.toDateString() : ""}
 				</span>
 			),
 			span: 1,
@@ -181,10 +169,26 @@ const Task_Detail = () => {
 			label: "Last Updated",
 			children: (
 				<span>
-					{values.updatedAt ? new Date(values.updatedAt).toDateString() : ""}
+					{values?.updatedAt ? new Date(values?.updatedAt)?.toDateString() : ""}
 				</span>
 			),
 			span: 2,
+		},
+		{
+			key: "6",
+			label: "Status",
+			children: (
+				<span>
+					{values?.status ? statusBadge[values.status] : ""}
+					<span style={{ marginLeft: 8 }}>
+						{values?.status
+							? values?.status?.charAt(0)?.toUpperCase() +
+							  values?.status?.slice(1)
+							: ""}
+					</span>
+				</span>
+			),
+			span: 3,
 		},
 		{
 			key: "4",
@@ -195,10 +199,10 @@ const Task_Detail = () => {
 						style={{
 							marginRight: 16,
 						}}>
-						{values.dueDate ? new Date(values.dueDate).toDateString() : ""}
+						{values?.dueDate ? new Date(values?.dueDate)?.toDateString() : ""}
 					</span>
 					<DatePicker
-						value={[values.dueDate ? dayjs(values.dueDate) : undefined]}
+						value={[values?.dueDate ? dayjs(values?.dueDate) : undefined]}
 						showTime={true}
 						showNow={true}
 						allowClear={false}
@@ -225,7 +229,7 @@ const Task_Detail = () => {
 				<Select
 					loading={projectLoading}
 					allowClear={true}
-					value={values.project.value ? values.project : undefined}
+					value={values?.project?.value ? values?.project : undefined}
 					onChange={(e, option) => {
 						console.log(option, e);
 						setEditing(true);
@@ -244,7 +248,7 @@ const Task_Detail = () => {
 					}}
 					options={uniqueArrayOfObjects(
 						projectSelectData,
-						values.project.value ? [values.project] : [],
+						values?.project?.value ? [values?.project] : [],
 						"value"
 					)}
 					placeholder="Project"
@@ -280,7 +284,7 @@ const Task_Detail = () => {
 		{
 			key: "8",
 			label: "Created By",
-			children: <span>{values.createdBy.name}</span>,
+			children: <span>{values?.createdBy?.name}</span>,
 			span: 1,
 		},
 		// {
@@ -296,7 +300,7 @@ const Task_Detail = () => {
 				<Select
 					loading={staffLoading}
 					allowClear={true}
-					value={values.assignedTo}
+					value={values?.assignedTo}
 					mode="multiple"
 					onChange={(e, option) => {
 						console.log(option, e);
@@ -314,7 +318,7 @@ const Task_Detail = () => {
 					placeholder="Staff"
 					options={uniqueArrayOfObjects(
 						staffSelectData,
-						values.assignedTo,
+						values?.assignedTo,
 						"value"
 					)}
 					dropdownRender={(menu) => (
@@ -383,32 +387,55 @@ const Task_Detail = () => {
 	];
 
 	const [collapsed, setCollapsed] = useState(false);
+	const { deleteTask } = useDeleteData();
 	const navigate = useNavigate();
 
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
 	};
+	const showDeleteConfirm = (id) => {
+		Modal.confirm({
+			title: "Confirm deleting this Task?",
+			icon: <ExclamationCircleFilled />,
+			content: "Task will go to Trash",
+			okText: "Yes",
+			okType: "danger",
+			cancelText: "No",
+			closable: true,
+			maskClosable: true,
+			// centered: true,
+			onOk() {
+				handleDeleteTask(id);
+			},
+			onCancel() {},
+		});
+	};
+
+	const handleDeleteTask = (id) => {
+		deleteTask(id);
+		navigate(-1);
+	};
 
 	const handleTaskValue = useCallback(() => {
 		setLoading(true);
-		const taskValues = taskTableData.filter(
-			(task) => task._id === selectedTask
+		const taskValues = taskTableData?.filter(
+			(task) => task?._id === selectedTask
 		);
-		if (taskValues.length) {
+		if (taskValues?.length) {
 			setValues({
 				...taskValues[0],
-				assignedTo: taskValues[0].assignedTo.length
-					? taskValues[0].assignedTo.map((staff) => {
+				assignedTo: taskValues[0]?.assignedTo?.length
+					? taskValues[0]?.assignedTo?.map((staff) => {
 							return {
-								label: staff.name,
-								value: staff._id,
+								label: staff?.name,
+								value: staff?._id,
 							};
 					  })
 					: [],
-				project: taskValues[0].project
+				project: taskValues[0]?.project
 					? {
-							label: taskValues[0].project.name,
-							value: taskValues[0].project._id,
+							label: taskValues[0]?.project?.name,
+							value: taskValues[0]?.project?._id,
 					  }
 					: { value: undefined, label: undefined },
 			});
@@ -424,45 +451,37 @@ const Task_Detail = () => {
 	const handleSave = () => {
 		console.log(new Date());
 		console.log(values);
-		updateTask(values._id, {
+		updateTask(values?._id, {
 			...values,
-			assignedTo: values.assignedTo
-				? values.assignedTo.map((staff) => {
-						return {
-							name: staff.label,
-							_id: staff.value,
-						};
+			assignedTo: values?.assignedTo
+				? values?.assignedTo?.map((staff) => {
+						return staff?.value;
 				  })
 				: [],
-			project: values.project.value
-				? {
-						_id: values.project.value,
-						name: values.project.label,
-				  }
-				: {},
-			updatedAt: new Date().toISOString(),
+			project: values?.project?.value ? values?.project?.value : "",
+			updatedAt: new Date()?.toISOString(),
 		});
 	};
 
 	useEffect(() => {
 		const checkIfMobile = () => {
-			if (window.innerWidth <= 830) {
+			if (window?.innerWidth <= 830) {
 				setCollapsed(true);
 			}
 		};
-		if (!projectSelectData.length) {
+		if (!projectSelectData?.length) {
 			selectProjects();
 		}
-		if (!staffSelectData.length) {
+		if (!staffSelectData?.length) {
 			selectStaff();
 		}
 
 		checkIfMobile();
 		handleTaskValue();
 
-		window.addEventListener("resize", checkIfMobile);
+		window?.addEventListener("resize", checkIfMobile);
 		return () => {
-			window.removeEventListener("resize", checkIfMobile);
+			window?.removeEventListener("resize", checkIfMobile);
 		};
 	}, []);
 	useEffect(() => {
@@ -527,12 +546,12 @@ const Task_Detail = () => {
 							collapsed ? <CaretRightFilled /> : <CaretLeftFilled />
 						}></Button>
 				</Space>
-				{taskTableData.map((task, index) => {
+				{taskTableData?.map((task, index) => {
 					if (
 						!selectedProject ||
 						(selectedProject &&
-							task.project &&
-							task.project._id == selectedProject)
+							task?.project &&
+							task?.project?._id == selectedProject)
 					) {
 						return (
 							<Menu.Item
@@ -544,9 +563,9 @@ const Task_Detail = () => {
 								}
 								style={{ fontWeight: "bold" }}
 								// key={`${task._id}`}
-								key={task._id}>
-								<Link replace={true} to={`/task_detail/${task._id}`}>
-									{task.name}
+								key={task?._id}>
+								<Link replace={true} to={`/task_detail/${task?._id}`}>
+									{task?.name}
 								</Link>
 							</Menu.Item>
 						);
@@ -594,7 +613,7 @@ const Task_Detail = () => {
 								editable={{
 									onChange: (txt) => {
 										setEditing(true);
-										if (txt.length >= 1) {
+										if (txt?.length >= 1) {
 											setValues((val) => {
 												return { ...val, name: txt };
 											});
@@ -609,7 +628,7 @@ const Task_Detail = () => {
 									),
 								}}
 								copyable={true}>
-								{values.name}
+								{values?.name}
 							</Typography.Title>
 							<Flex
 								style={{
@@ -619,15 +638,15 @@ const Task_Detail = () => {
 									style={{
 										marginLeft: 12,
 									}}>
-									By {values.createdBy.name} , On{" "}
-									{new Date(values.createdAt).toDateString()}
+									By {values?.createdBy?.name} , On{" "}
+									{new Date(values?.createdAt)?.toDateString()}
 								</Typography.Text>
 								<Typography.Text
 									style={{
 										marginLeft: 12,
 										transition: "transform 0.2s ease, opacity 0.2s ease",
 									}}>
-									Last Updated on {new Date(values.updatedAt).toDateString()}
+									Last Updated on {new Date(values?.updatedAt)?.toDateString()}
 								</Typography.Text>
 							</Flex>
 						</Space>
@@ -648,7 +667,7 @@ const Task_Detail = () => {
 												Badge: { statusSize: 12 },
 											},
 										}}>
-										{statusBadge[values.status]}
+										{statusBadge[values?.status]}
 									</ConfigProvider>
 								);
 							}}
@@ -662,13 +681,13 @@ const Task_Detail = () => {
 												style={{
 													fontSize: "24px",
 												}}>
-												{values.status.charAt(0).toUpperCase() +
-													values.status.slice(1)}
+												{values?.status?.charAt(0).toUpperCase() +
+													values?.status?.slice(1)}
 												<Dropdown
 													menu={{
 														items: statusDropdown,
 														selectable: true,
-														selectedKeys: [values.status],
+														selectedKeys: [values?.status],
 														onSelect: ({ key }) => {
 															setEditing(true);
 															setValues((val) => {
@@ -701,7 +720,7 @@ const Task_Detail = () => {
 												flexWrap: "wrap",
 												textWrap: "wrap",
 											}}
-											value={values.status}
+											value={values?.status}
 											options={statusDropdown}
 											onChange={(value) => {
 												setEditing(true);
@@ -735,7 +754,7 @@ const Task_Detail = () => {
 													textOverflow: "ellipsis",
 													overflow: "hidden",
 												}}>
-												{values.description}
+												{values?.description}
 											</div>
 										</div>
 									),
@@ -745,7 +764,7 @@ const Task_Detail = () => {
 											editable={{
 												onChange: (txt) => {
 													setEditing(true);
-													if (txt.length >= 1) {
+													if (txt?.length >= 1) {
 														setValues((val) => {
 															return { ...val, description: txt };
 														});
@@ -763,7 +782,7 @@ const Task_Detail = () => {
 												marginLeft: 30,
 												marginBottom: 0,
 											}}>
-											{values.description}
+											{values?.description}
 										</Typography.Paragraph>
 									),
 								},
@@ -805,10 +824,13 @@ const Task_Detail = () => {
 
 						<div
 							style={{
+								width: "50%",
 								position: "absolute",
 								top: 0,
 								right: 0,
 								display: "flex",
+								justifyContent: "end",
+								flexWrap: "wrap",
 								gap: 8,
 							}}>
 							<Button
@@ -826,6 +848,13 @@ const Task_Detail = () => {
 								danger>
 								Reset
 							</Button>
+							<Button
+								icon={<DeleteOutlined />}
+								size="large"
+								danger
+								onClick={() => {
+									showDeleteConfirm(values?._id);
+								}}></Button>
 							<Button
 								onClick={() => {
 									navigate(-1);

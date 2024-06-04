@@ -39,7 +39,7 @@ const Task_Table = () => {
 			},
 			render: (text, record) => (
 				<Tooltip placement="topLeft" title={text}>
-					<Link to={`/task_detail/${record._id}`}>{text}</Link>
+					<Link to={`/task_detail/${record?._id}`}>{text}</Link>
 				</Tooltip>
 			),
 		},
@@ -52,8 +52,10 @@ const Task_Table = () => {
 				showTitle: false,
 			},
 			render: (createdAt) => (
-				<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
-					{new Date(createdAt).toDateString()}
+				<Tooltip
+					placement="topLeft"
+					title={new Date(createdAt)?.toDateString()}>
+					{new Date(createdAt)?.toDateString()}
 				</Tooltip>
 			),
 		},
@@ -98,7 +100,7 @@ const Task_Table = () => {
 					<Tooltip
 						placement="topLeft"
 						title={assignedTo.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -109,7 +111,7 @@ const Task_Table = () => {
 							{assignedTo.map((staff, index) => {
 								return (
 									<Tag color={"volcano"} key={index}>
-										{staff?.name.toUpperCase()}
+										{staff?.name?.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -145,8 +147,8 @@ const Task_Table = () => {
 					{dueDate ? (
 						<Tooltip
 							placement="topLeft"
-							title={new Date(dueDate).toDateString()}>
-							{new Date(dueDate).toDateString()}
+							title={new Date(dueDate)?.toDateString()}>
+							{new Date(dueDate)?.toDateString()}
 						</Tooltip>
 					) : (
 						"-"
@@ -237,7 +239,7 @@ const Task_Table = () => {
 	};
 
 	useEffect(() => {
-		if (!taskTableData.length) {
+		if (!taskTableData?.length) {
 			getTasks();
 		}
 		return horizontalScroll();
@@ -281,7 +283,7 @@ const Task_Table = () => {
 					onClick={showAddTaskDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: taskTableData.length > 9 ? "" : "1rem",
+						marginBottom: taskTableData?.length > 9 ? "" : "1rem",
 						// marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",

@@ -19,6 +19,9 @@ import {
 	DeleteProject,
 	GetTrashTask,
 	GetTrashProject,
+	UpdateProject,
+	RestoreTask,
+	RestoreProject,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -44,6 +47,7 @@ import {
 import {
 	clearTask,
 	deleteTaskStore,
+	restoreTaskStore,
 	setTaskSelectParams,
 	setTaskTableParams,
 	setTaskTotal,
@@ -59,6 +63,7 @@ import {
 	clearProject,
 	deleteProjectStore,
 	projectLoading,
+	restoreProjectStore,
 	setProjectSelectParams,
 	setProjectTableParams,
 	setProjectTotal,
@@ -67,6 +72,7 @@ import {
 	storeProjectSelect,
 	storeProjectTable,
 	storeProjectTrash,
+	updateProjectStore,
 } from "../store/projectSlice";
 
 // Api Hooks For Redirect and Other React Logic
@@ -778,9 +784,10 @@ export const useUpdateData = () => {
 	function updateTask(id, data) {
 		UpdateTask.v1(id, data)
 			.then((res) => {
-				console.log(res.data);
-				dispatch(updateTaskStore(data));
+				// console.log(res.data);
+				// dispatch(updateTaskStore(data));
 				message.success(res?.data?.message ?? "Task Updated Successfully ?");
+				getTasks();
 			})
 			.catch((e) => {
 				message.error(
@@ -789,5 +796,51 @@ export const useUpdateData = () => {
 				);
 			});
 	}
-	return { updateTask };
+
+	function restoreTask(id, data) {
+		RestoreTask.v1(id, data)
+			.then((res) => {
+				// console.log(res.data);
+				dispatch(restoreTaskStore(id));
+				message.success(res?.data?.message ?? "Task Restored Successfully ?");
+			})
+			.catch((e) => {
+				message.error(
+					e.response.data.message ||
+						"There was an error while Updating the Task"
+				);
+			});
+	}
+
+	function updateProject(id, data) {
+		UpdateProject.v1(id, data)
+			.then((res) => {
+				// console.log(res.data);
+				// dispatch(updateProjectStore(data));
+				message.success(res?.data?.message ?? "Project Updated Successfully ?");
+				getProjects();
+			})
+			.catch((e) => {
+				message.error(
+					e.response.data.message ||
+						"There was an error while Updating the Task"
+				);
+			});
+	}
+
+	function restoreProject(id, data) {
+		RestoreProject.v1(id, data)
+			.then((res) => {
+				// console.log(res.data);
+				dispatch(restoreProjectStore(id));
+				message.success(res?.data?.message ?? "Task Restored Successfully ?");
+			})
+			.catch((e) => {
+				message.error(
+					e.response.data.message ||
+						"There was an error while Updating the Task"
+				);
+			});
+	}
+	return { updateTask, restoreTask, updateProject, restoreProject };
 };

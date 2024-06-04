@@ -99,16 +99,16 @@ const taskSlice = createSlice({
 		updateTaskStore: (state, action) => {
 			const data = action.payload;
 			state.tableData = state.tableData.map((task) => {
-				if (task._id === data._id) {
+				if (task?._id === data?._id) {
 					return data;
 				}
 				return task;
 			});
 			state.selectData = state.selectData.filter((task) => {
-				if (task.value === data._id) {
+				if (task?.value === data?._id) {
 					return {
-						value: data._id,
-						label: data.name,
+						value: data?._id,
+						label: data?.name,
 					};
 				}
 				return task;
@@ -116,8 +116,12 @@ const taskSlice = createSlice({
 		},
 		deleteTaskStore: (state, action) => {
 			const id = action.payload;
-			state.tableData = state.tableData.filter((task) => task._id !== id);
-			state.selectData = state.selectData.filter((task) => task.value !== id);
+			state.tableData = state.tableData.filter((task) => task?._id !== id);
+			state.selectData = state.selectData.filter((task) => task?.value !== id);
+		},
+		restoreTaskStore: (state, action) => {
+			const id = action.payload;
+			state.trashData = state.trashData.filter((task) => task?._id !== id);
 		},
 	},
 });
@@ -135,5 +139,6 @@ export const {
 	setTaskTotal,
 	updateTaskStore,
 	deleteTaskStore,
+	restoreTaskStore,
 } = taskSlice.actions;
 export default taskSlice.reducer;

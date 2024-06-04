@@ -95,7 +95,7 @@ const Clients = () => {
 					<Tooltip
 						placement="topLeft"
 						title={projects.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.project_id;
+							return accumulator + currentObject?.project_id;
 						}, "")}>
 						<Space
 							size="small"
@@ -106,7 +106,7 @@ const Clients = () => {
 							{projects.map((proj, index) => {
 								return (
 									<Tag color={"volcano"} key={index}>
-										{proj.name}
+										{proj?.name}
 									</Tag>
 								);
 							})}

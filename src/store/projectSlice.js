@@ -99,10 +99,39 @@ const projectSlice = createSlice({
 		setProjectView: (state, action) => {
 			state.view = action.payload;
 		},
+		updateProjectStore: (state, action) => {
+			const data = action.payload;
+			state.tableData = state.tableData.map((project) => {
+				if (project?._id === data?._id) {
+					return data;
+				}
+				return project;
+			});
+			state.selectData = state.selectData.filter((project) => {
+				if (project?.value === data?._id) {
+					return {
+						value: data?._id,
+						label: data?.name,
+					};
+				}
+				return project;
+			});
+		},
+
 		deleteProjectStore: (state, action) => {
 			const id = action.payload;
-			state.tableData = state.tableData.filter((task) => task._id !== id);
-			state.selectData = state.selectData.filter((task) => task.value !== id);
+			state.tableData = state.tableData.filter(
+				(project) => project?._id !== id
+			);
+			state.selectData = state.selectData.filter(
+				(project) => project?.value !== id
+			);
+		},
+		restoreProjectStore: (state, action) => {
+			const id = action.payload;
+			state.trashData = state.trashData.filter(
+				(project) => project?._id !== id
+			);
 		},
 	},
 });
@@ -119,6 +148,8 @@ export const {
 	setProjectTrashTotal,
 	setProjectTotal,
 	setProjectView,
+	updateProjectStore,
 	deleteProjectStore,
+	restoreProjectStore,
 } = projectSlice.actions;
 export default projectSlice.reducer;

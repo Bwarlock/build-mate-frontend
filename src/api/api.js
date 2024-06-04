@@ -135,6 +135,17 @@ DeleteTask.v1 = function v1(id) {
 	});
 };
 
+export function RestoreTask(id) {
+	return RestoreTask.v1(id);
+}
+
+RestoreTask.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "post",
+		url: `/task/restore-task/${id}`,
+	});
+};
+
 export function CreateProject(data) {
 	return CreateProject.v1(data);
 }
@@ -171,6 +182,18 @@ GetTrashProject.v1 = function v1(params) {
 	});
 };
 
+export function UpdateProject(id) {
+	return UpdateProject.v1(id);
+}
+
+UpdateProject.v1 = function v1(id, data) {
+	return AuthAxiosInstance({
+		method: "put",
+		url: `/project/update-project/${id}`,
+		data: data,
+	});
+};
+
 export function DeleteProject(id) {
 	return DeleteProject.v1(id);
 }
@@ -179,6 +202,17 @@ DeleteProject.v1 = function v1(id) {
 	return AuthAxiosInstance({
 		method: "delete",
 		url: `/project/delete-project/${id}`,
+	});
+};
+
+export function RestoreProject(id) {
+	return RestoreProject.v1(id);
+}
+
+RestoreProject.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "post",
+		url: `/project/restore-project/${id}`,
 	});
 };
 

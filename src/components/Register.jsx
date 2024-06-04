@@ -86,6 +86,9 @@ const Register = () => {
 					<Form.Item
 						label="Name"
 						name="Name"
+						style={{
+							maxWidth: 515,
+						}}
 						rules={[
 							{
 								required: true,
@@ -104,6 +107,9 @@ const Register = () => {
 					<Form.Item
 						label="Company Name"
 						name="company"
+						style={{
+							maxWidth: 515,
+						}}
 						rules={[
 							{
 								required: true,
@@ -123,6 +129,9 @@ const Register = () => {
 						// validateTrigger="onBlur"
 						label="Phone Number"
 						name="phoneNumber"
+						style={{
+							maxWidth: 515,
+						}}
 						rules={[
 							{
 								required: true,
@@ -174,6 +183,9 @@ const Register = () => {
 					<Form.Item
 						label="Domain Name"
 						name="domainName"
+						style={{
+							maxWidth: 515,
+						}}
 						// valuePropName="checked"
 						rules={[
 							{
@@ -235,6 +247,9 @@ const Register = () => {
 						validateTrigger="onBlur"
 						label="Email"
 						name="email"
+						style={{
+							maxWidth: 515,
+						}}
 						rules={[
 							{
 								required: true,
@@ -276,7 +291,7 @@ const Register = () => {
 							},
 							// {
 							// 	pattern:
-							// 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+							// 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/,
 							// 	message:
 							// 		"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
 							// },
@@ -305,6 +320,9 @@ const Register = () => {
 					<Form.Item
 						label="Confirm Password"
 						name="confirmpassword"
+						style={{
+							maxWidth: 515,
+						}}
 						rules={[
 							{
 								required: true,

@@ -18,7 +18,7 @@ function Add_Project() {
 		description: "",
 		owner: "",
 		staff: [],
-		clients: [],
+		client: [],
 		tasks: [],
 	});
 
@@ -171,7 +171,7 @@ function Add_Project() {
 						loading={clientLoading}
 						onChange={(e) => {
 							setValues((val) => {
-								return { ...val, clients: [e] };
+								return { ...val, client: [e] };
 							});
 						}}
 						style={{

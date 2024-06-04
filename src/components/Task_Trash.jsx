@@ -10,6 +10,7 @@ import {
 	Col,
 	Card,
 	Flex,
+	Switch,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
@@ -23,6 +24,7 @@ import {
 	UndoOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { AuthAxiosInstance } from "../api/axios";
 
 const Task_Trash = () => {
 	const columns = [
@@ -69,8 +71,10 @@ const Task_Trash = () => {
 				showTitle: false,
 			},
 			render: (createdAt) => (
-				<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
-					{new Date(createdAt).toDateString()}
+				<Tooltip
+					placement="topLeft"
+					title={new Date(createdAt)?.toDateString()}>
+					{new Date(createdAt)?.toDateString()}
 				</Tooltip>
 			),
 		},
@@ -115,7 +119,7 @@ const Task_Trash = () => {
 					<Tooltip
 						placement="topLeft"
 						title={assignedTo.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -162,8 +166,8 @@ const Task_Trash = () => {
 					{dueDate ? (
 						<Tooltip
 							placement="topLeft"
-							title={new Date(dueDate).toDateString()}>
-							{new Date(dueDate).toDateString()}
+							title={new Date(dueDate)?.toDateString()}>
+							{new Date(dueDate)?.toDateString()}
 						</Tooltip>
 					) : (
 						"-"
@@ -190,8 +194,7 @@ const Task_Trash = () => {
 							type="primary"
 							icon={<UndoOutlined />}
 							onClick={() => {
-								// showDeleteConfirm(record?._id);
-								handleRestoreTask(record._id, record);
+								handleRestoreTask(record?._id);
 							}}></Button>
 					</Tooltip>
 				</Space>
@@ -199,6 +202,7 @@ const Task_Trash = () => {
 		},
 	];
 
+	const [showRecent, setShowRecent] = useState(true);
 	const {
 		trashData: taskTableData,
 		loading: taskLoading,
@@ -207,27 +211,10 @@ const Task_Trash = () => {
 
 	const { getTrashTasks } = useGetData();
 	const { deleteTask } = useDeleteData();
-	const { updateTask } = useUpdateData();
-	const showDeleteConfirm = (id, record) => {
-		Modal.confirm({
-			title: "Confirm deleting this Task?",
-			icon: <ExclamationCircleFilled />,
-			content: "Task will go to Trash",
-			okText: "Yes",
-			okType: "danger",
-			cancelText: "No",
-			closable: true,
-			maskClosable: true,
-			// centered: true,
-			onOk() {
-				handleRestoreTask(id, record);
-			},
-			onCancel() {},
-		});
-	};
+	const { restoreTask } = useUpdateData();
 
-	const handleRestoreTask = (id, record) => {
-		updateTask(id, { ...record, isTrash: false });
+	const handleRestoreTask = (id) => {
+		restoreTask(id);
 	};
 
 	const handleTableChange = (pagination, filters, sorter) => {
@@ -261,6 +248,17 @@ const Task_Trash = () => {
 				flexDirection: "column",
 				padding: 12,
 			}}>
+			<div
+				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					marginBottom: 16,
+					// padding: 16,
+				}}>
+				Task Trash
+			</div>
 			<Row
 				style={{
 					width: "100%",
@@ -279,22 +277,27 @@ const Task_Trash = () => {
 					<Flex
 						style={{
 							flexDirection: "column",
-							paddingLeft: 32,
+							// paddingLeft: 32,
 							height: "100%",
-							justifyContent: "space-between",
+							justifyContent: "end",
+							gap: 8,
 							alignItems: "start",
 						}}>
-						<div
-							style={{
-								fontSize: 32,
-								fontWeight: "bold",
-								display: "flex",
-								justifyContent: "center",
-								// padding: 16,
-							}}>
-							Task Trash
-						</div>
-
+						<Card size="small" bordered>
+							<span
+								style={{
+									display: "flex",
+									alignItems: "center",
+								}}>
+								<Switch
+									size="small"
+									defaultChecked
+									onChange={(checked) => {
+										setShowRecent(checked);
+									}}></Switch>
+								&nbsp; Show Recent
+							</span>
+						</Card>
 						<Button
 							onClick={() => {
 								getTrashTasks();
@@ -303,93 +306,97 @@ const Task_Trash = () => {
 						</Button>
 					</Flex>
 				</Col>
-				<Col span={6}>
-					{taskTableData[2] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(taskTableData[2]._id, taskTableData[2]);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={taskTableData[2].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{taskTableData[2].description}
-							</div>
-						</Card>
-					)}
-				</Col>
-				<Col span={6}>
-					{taskTableData[1] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(taskTableData[1]._id, taskTableData[1]);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={taskTableData[1].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{taskTableData[1].description}
-							</div>
-						</Card>
-					)}
-				</Col>
-				<Col span={6}>
-					{taskTableData[0] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(taskTableData[0]._id, taskTableData[0]);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={taskTableData[0].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{taskTableData[0].description}
-							</div>
-						</Card>
-					)}
-				</Col>
+				{showRecent && (
+					<>
+						<Col span={6}>
+							{taskTableData[2] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreTask(taskTableData[2]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={taskTableData[2].name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{taskTableData[2].description}
+									</div>
+								</Card>
+							)}
+						</Col>
+						<Col span={6}>
+							{taskTableData[1] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreTask(taskTableData[1]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={taskTableData[1].name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{taskTableData[1].description}
+									</div>
+								</Card>
+							)}
+						</Col>
+						<Col span={6}>
+							{taskTableData[0] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreTask(taskTableData[0]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={taskTableData[0].name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{taskTableData[0].description}
+									</div>
+								</Card>
+							)}
+						</Col>
+					</>
+				)}
 			</Row>
 
 			<div

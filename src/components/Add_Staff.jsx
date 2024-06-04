@@ -104,7 +104,7 @@ const Add_Staff = () => {
 						},
 						{
 							pattern:
-								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+								/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/,
 							message:
 								"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
 						},

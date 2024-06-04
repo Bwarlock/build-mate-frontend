@@ -149,7 +149,7 @@ const Dashboard = () => {
 						// width: "100%",
 					}}
 					key="user">
-					{user.name || user.email}
+					{user?.name || user?.email}
 				</Menu.Item>
 				<Menu.Item
 					icon={<LogoutOutlined />}

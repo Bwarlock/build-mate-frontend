@@ -9,9 +9,10 @@ import {
 	Col,
 	Card,
 	Flex,
+	Switch,
 } from "antd";
-import { useEffect } from "react";
-import { useDeleteData, useGetData } from "../api/hooks";
+import { useEffect, useState } from "react";
+import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setProjectTableParams } from "../store/projectSlice";
 import { horizontalScroll } from "../util/functions";
@@ -67,8 +68,10 @@ function Project_Trash() {
 				showTitle: false,
 			},
 			render: (createdAt) => (
-				<Tooltip placement="topLeft" title={new Date(createdAt).toDateString()}>
-					{new Date(createdAt).toDateString()}
+				<Tooltip
+					placement="topLeft"
+					title={new Date(createdAt)?.toDateString()}>
+					{new Date(createdAt)?.toDateString()}
 				</Tooltip>
 			),
 		},
@@ -100,7 +103,7 @@ function Project_Trash() {
 					<Tooltip
 						placement="topLeft"
 						title={client.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -111,7 +114,7 @@ function Project_Trash() {
 							{client.map((clien, index) => {
 								return (
 									<Tag color={"lightblue"} key={index}>
-										{clien?.name.toUpperCase()}
+										{clien?.name?.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -133,7 +136,7 @@ function Project_Trash() {
 					<Tooltip
 						placement="topLeft"
 						title={staff.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -144,7 +147,7 @@ function Project_Trash() {
 							{staff.map((staf, index) => {
 								return (
 									<Tag color={"volcano"} key={index}>
-										{staf?.name.toUpperCase()}
+										{staf?.name?.toUpperCase()}
 									</Tag>
 								);
 							})}
@@ -166,7 +169,7 @@ function Project_Trash() {
 					<Tooltip
 						placement="topLeft"
 						title={tasks.reduce((accumulator, currentObject) => {
-							return accumulator + currentObject.name + " , ";
+							return accumulator + currentObject?.name + " , ";
 						}, "")}>
 						<Space
 							size="small"
@@ -177,7 +180,7 @@ function Project_Trash() {
 							{tasks.map((task, index) => {
 								return (
 									<Link color={"volcano"} key={index}>
-										{task?.name.toUpperCase()}
+										{task?.name?.toUpperCase()}
 									</Link>
 								);
 							})}
@@ -195,8 +198,8 @@ function Project_Trash() {
 				showTitle: false,
 			},
 			render: (owner) => (
-				<Tooltip placement="topLeft" title={owner.name}>
-					{owner.name}
+				<Tooltip placement="topLeft" title={owner?.name}>
+					{owner?.name}
 				</Tooltip>
 			),
 		},
@@ -220,42 +223,24 @@ function Project_Trash() {
 							icon={<UndoOutlined />}
 							onClick={() => {
 								// showDeleteConfirm(record?._id);
-								handleRestoreProject(record._id, record);
+								handleRestoreProject(record?._id);
 							}}></Button>
 					</Tooltip>
 				</Space>
 			),
 		},
 	];
-
+	const [showRecent, setShowRecent] = useState(true);
 	const {
 		trashData: projectTableData,
 		loading: projectLoading,
 		trashParams: projectTableParams,
 	} = useSelector((state) => state.project);
 	const { getTrashProjects } = useGetData();
+	const { restoreProject } = useUpdateData();
 
-	const showDeleteConfirm = (id, record) => {
-		Modal.confirm({
-			title: "Confirm deleting this Project?",
-			icon: <ExclamationCircleFilled />,
-			content: "Project will go to Trash",
-			okText: "Yes",
-			okType: "danger",
-			cancelText: "No",
-			closable: true,
-			maskClosable: true,
-			// centered: true,
-			onOk() {
-				handleRestoreProject(id, record);
-			},
-			onCancel() {},
-		});
-	};
-
-	const handleRestoreProject = (id, record) => {
-		// deleteProject(id);
-		//need project update api
+	const handleRestoreProject = (id) => {
+		restoreProject(id);
 	};
 
 	const handleTableChange = (pagination, filters, sorter) => {
@@ -291,6 +276,17 @@ function Project_Trash() {
 				flexDirection: "column",
 				padding: 12,
 			}}>
+			<div
+				style={{
+					fontSize: 32,
+					fontWeight: "bold",
+					display: "flex",
+					justifyContent: "center",
+					marginBottom: 16,
+					// padding: 16,
+				}}>
+				Project Trash
+			</div>
 			<Row
 				style={{
 					width: "100%",
@@ -309,21 +305,27 @@ function Project_Trash() {
 					<Flex
 						style={{
 							flexDirection: "column",
-							paddingLeft: 32,
+							// paddingLeft: 32,
 							height: "100%",
-							justifyContent: "space-between",
+							justifyContent: "end",
+							gap: 8,
 							alignItems: "start",
 						}}>
-						<div
-							style={{
-								fontSize: 32,
-								fontWeight: "bold",
-								display: "flex",
-								justifyContent: "center",
-								// padding: 16,
-							}}>
-							Project Trash
-						</div>
+						<Card size="small" bordered>
+							<span
+								style={{
+									display: "flex",
+									alignItems: "center",
+								}}>
+								<Switch
+									size="small"
+									defaultChecked
+									onChange={(checked) => {
+										setShowRecent(checked);
+									}}></Switch>
+								&nbsp; Show Recent
+							</span>
+						</Card>
 						<Button
 							onClick={() => {
 								getTrashProjects();
@@ -332,102 +334,97 @@ function Project_Trash() {
 						</Button>
 					</Flex>
 				</Col>
-				<Col span={6}>
-					{projectTableData[2] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(
-											projectTableData[2]._id,
-											projectTableData[2]
-										);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={projectTableData[2].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{projectTableData[2].description}
-							</div>
-						</Card>
-					)}
-				</Col>
-				<Col span={6}>
-					{projectTableData[1] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(
-											projectTableData[1]._id,
-											projectTableData[1]
-										);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={projectTableData[1].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{projectTableData[1].description}
-							</div>
-						</Card>
-					)}
-				</Col>
-				<Col span={6}>
-					{projectTableData[0] && (
-						<Card
-							style={{ cursor: "unset" }}
-							extra={
-								<Button
-									type="text"
-									onClick={() => {
-										handleRestoreTask(
-											projectTableData[0]._id,
-											projectTableData[0]
-										);
-									}}>
-									<UndoOutlined />
-								</Button>
-							}
-							title={projectTableData[0].name}
-							size="small"
-							bordered={false}
-							hoverable={true}>
-							<div
-								style={{
-									width: "100%",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									textWrap: "nowrap",
-								}}>
-								{projectTableData[0].description}
-							</div>
-						</Card>
-					)}
-				</Col>
+				{showRecent && (
+					<>
+						<Col span={6}>
+							{projectTableData[2] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreProject(projectTableData[2]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={projectTableData[2]?.name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{projectTableData[2]?.description}
+									</div>
+								</Card>
+							)}
+						</Col>
+						<Col span={6}>
+							{projectTableData[1] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreProject(projectTableData[1]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={projectTableData[1]?.name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{projectTableData[1]?.description}
+									</div>
+								</Card>
+							)}
+						</Col>
+						<Col span={6}>
+							{projectTableData[0] && (
+								<Card
+									style={{ cursor: "unset" }}
+									extra={
+										<Button
+											type="text"
+											onClick={() => {
+												handleRestoreProject(projectTableData[0]._id);
+											}}>
+											<UndoOutlined />
+										</Button>
+									}
+									title={projectTableData[0]?.name}
+									size="small"
+									bordered={false}
+									hoverable={true}>
+									<div
+										style={{
+											width: "100%",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											textWrap: "nowrap",
+										}}>
+										{projectTableData[0]?.description}
+									</div>
+								</Card>
+							)}
+						</Col>
+					</>
+				)}
 			</Row>
 			<div
 				style={{

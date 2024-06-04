@@ -27,7 +27,8 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 		Modal.confirm({
 			title: "Confirm deleting this Project?",
 			icon: <ExclamationCircleFilled />,
-			content: "Project will go to Trash",
+			content:
+				"Project will be removed from staff and client as well , one has to manually add it after restoring the project",
 			okText: "Yes",
 			okType: "danger",
 			cancelText: "No",
@@ -107,7 +108,7 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 											overflow: "hidden",
 											textOverflow: "ellipsis",
 										}}>
-										{pro.name}
+										{pro?.name}
 									</span>
 									<Tooltip title="Delete">
 										<Button
@@ -117,12 +118,12 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 											icon={<DeleteOutlined />}
 											// danger
 											onClick={() => {
-												showDeleteConfirm(pro._id);
+												showDeleteConfirm(pro?._id);
 											}}></Button>
 									</Tooltip>
 								</span>
 							}
-							extra={<Link to={`/project_detail/${pro._id}`}>More</Link>}
+							extra={<Link to={`/project_detail/${pro?._id}`}>More</Link>}
 							// actions={[
 							// 	<Tooltip title="Delete">
 							// 		<div
@@ -156,28 +157,36 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 							}}>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Description : </span>
-								{pro.description}
+								{pro?.description}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Staff : </span>
-								{pro.staff
-									.map((sta) => {
-										return sta.name;
+								{pro?.staff
+									?.map((sta) => {
+										return sta?.name;
 									})
-									.join(", ")}
+									?.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Client : </span>
-								{pro.client.join(", ")}
+								{pro?.client
+									?.map((clin) => {
+										return clin?.name;
+									})
+									?.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Tasks : </span>
-								{pro.tasks.join(", ")}
+								{pro?.tasks
+									?.map((tas) => {
+										return tas?.name;
+									})
+									?.join(", ")}
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Created At : </span>
 								<small>
-									{new Date(pro.createdAt).toDateString()}
+									{new Date(pro?.createdAt)?.toDateString()}
 									{/* {new Date(pro.createdAt).getDate() + 1}&nbsp;&nbsp;{", "}
 									{new Date(pro.createdAt).getMonth() + 1}&nbsp;&nbsp;{", "}
 									{new Date(pro.createdAt).getFullYear()} */}
@@ -185,7 +194,7 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 							</p>
 							<p style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
 								<span style={{ fontWeight: "bold" }}>Owner : </span>
-								{pro.owner.name}
+								{pro?.owner?.name}
 							</p>
 						</Card>
 					);

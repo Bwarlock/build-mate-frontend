@@ -21,6 +21,7 @@ import {
 	Card,
 	Statistic,
 	Row,
+	Modal,
 } from "antd";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
@@ -31,8 +32,10 @@ import {
 	CaretLeftFilled,
 	CaretRightFilled,
 	CommentOutlined,
+	DeleteOutlined,
 	DownOutlined,
 	EditOutlined,
+	ExclamationCircleFilled,
 	FileOutlined,
 	InfoCircleOutlined,
 	OrderedListOutlined,
@@ -42,7 +45,7 @@ import {
 	WarningOutlined,
 } from "@ant-design/icons";
 import TextEditorQuill from "./TextEditorQuill";
-import { useGetData, useUpdateData } from "../api/hooks";
+import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
 import dayjs from "dayjs";
 import { uniqueArrayOfObjects } from "../util/functions";
 import CountUp from "react-countup";
@@ -76,7 +79,8 @@ const Project_Detail = () => {
 	} = useSelector((state) => state.task);
 
 	const { selectStaff, selectClients, selectTasks } = useGetData();
-
+	const { updateProject } = useUpdateData();
+	const { deleteProject } = useDeleteData();
 	const [values, setValues] = useState({
 		name: "",
 		description: "",
@@ -101,52 +105,46 @@ const Project_Detail = () => {
 		{
 			key: "1",
 			label: "Project Name",
-			children: <span>{values.name}</span>,
+			children: <span>{values?.name}</span>,
 			span: 2,
 		},
 
 		{
 			key: "2",
 			label: "Project ID",
-			children: <span>{values.project_id}</span>,
+			children: <span>{values?.project_id}</span>,
 			span: 1,
 		},
-		{
-			key: "7",
-			label: "Deleted",
-			children: (
-				<Select
-					value={[values.isTrash]}
-					onChange={(e) => {
-						setEditing(true);
-						setValues((val) => {
-							return { ...val, isTrash: e };
-						});
-					}}
-					style={{
-						width: 120,
-					}}
-					options={[
-						{ label: "False", value: false },
-						{ label: "True", value: true },
-					]}
-				/>
-			),
-			span: 1,
-		},
-		{
-			key: "8",
-			label: "Owner",
-			children: <span>{values.owner.name}</span>,
-			span: 2,
-		},
+		// {
+		// 	key: "7",
+		// 	label: "Deleted",
+		// 	children: (
+		// 		<Select
+		// 			value={[values?.isTrash]}
+		// 			onChange={(e) => {
+		// 				setEditing(true);
+		// 				setValues((val) => {
+		// 					return { ...val, isTrash: e };
+		// 				});
+		// 			}}
+		// 			style={{
+		// 				width: 120,
+		// 			}}
+		// 			options={[
+		// 				{ label: "False", value: false },
+		// 				{ label: "True", value: true },
+		// 			]}
+		// 		/>
+		// 	),
+		// 	span: 1,
+		// },
 
 		{
 			key: "45",
 			label: "Created On",
 			children: (
 				<span>
-					{values.createdAt ? new Date(values.createdAt).toDateString() : ""}
+					{values.createdAt ? new Date(values.createdAt)?.toDateString() : ""}
 				</span>
 			),
 			span: 1,
@@ -156,10 +154,16 @@ const Project_Detail = () => {
 			label: "Last Updated",
 			children: (
 				<span>
-					{values.updatedAt ? new Date(values.updatedAt).toDateString() : ""}
+					{values.updatedAt ? new Date(values.updatedAt)?.toDateString() : ""}
 				</span>
 			),
 			span: 2,
+		},
+		{
+			key: "8",
+			label: "Owner",
+			children: <span>{values?.owner?.name}</span>,
+			span: 3,
 		},
 		{
 			key: "56788",
@@ -168,7 +172,7 @@ const Project_Detail = () => {
 				<Select
 					loading={taskLoading}
 					allowClear={true}
-					value={values.tasks}
+					value={values?.tasks}
 					mode="multiple"
 					onChange={(e, option) => {
 						console.log(option, e);
@@ -184,7 +188,7 @@ const Project_Detail = () => {
 						width: "100%",
 					}}
 					placeholder="Tasks"
-					options={uniqueArrayOfObjects(taskSelectData, values.tasks, "value")}
+					options={uniqueArrayOfObjects(taskSelectData, values?.tasks, "value")}
 					dropdownRender={(menu) => (
 						<>
 							{menu}
@@ -284,7 +288,7 @@ const Project_Detail = () => {
 				<Select
 					loading={staffLoading}
 					allowClear={true}
-					value={values.staff}
+					value={values?.staff}
 					mode="multiple"
 					onChange={(e, option) => {
 						console.log(option, e);
@@ -300,7 +304,11 @@ const Project_Detail = () => {
 						width: "100%",
 					}}
 					placeholder="Staff"
-					options={uniqueArrayOfObjects(staffSelectData, values.staff, "value")}
+					options={uniqueArrayOfObjects(
+						staffSelectData,
+						values?.staff,
+						"value"
+					)}
 					dropdownRender={(menu) => (
 						<>
 							{menu}
@@ -395,7 +403,7 @@ const Project_Detail = () => {
 												<Card bordered={true}>
 													<Statistic
 														title="Total Tasks"
-														value={values?.tasksMeta.totalTasks ?? 0}
+														value={values?.tasksMeta?.totalTasks ?? 0}
 														formatter={formatter}
 													/>
 												</Card>
@@ -408,7 +416,7 @@ const Project_Detail = () => {
 												<Card bordered={true}>
 													<Statistic
 														title="Todo Tasks"
-														value={values?.tasksMeta.todoCount ?? 0}
+														value={values?.tasksMeta?.todoCount ?? 0}
 														precision={2}
 														formatter={formatter}
 													/>
@@ -424,9 +432,9 @@ const Project_Detail = () => {
 												<Card bordered={true}>
 													<Statistic
 														title="Completed Tasks"
-														value={values?.tasksMeta.completedCount ?? 0}
+														value={values?.tasksMeta?.completedCount ?? 0}
 														formatter={formatter}
-														suffix={`/ ${values?.tasksMeta.totalTasks ?? 0}`}
+														suffix={`/ ${values?.tasksMeta?.totalTasks ?? 0}`}
 													/>
 												</Card>
 											</Col>
@@ -438,10 +446,10 @@ const Project_Detail = () => {
 												<Card bordered={true}>
 													<Statistic
 														title="In-Progress Tasks"
-														value={values?.tasksMeta.inProgressCount ?? 0}
+														value={values?.tasksMeta?.inProgressCount ?? 0}
 														precision={2}
 														formatter={formatter}
-														suffix={`/ ${values?.tasksMeta.totalTasks ?? 0}`}
+														suffix={`/ ${values?.tasksMeta?.totalTasks ?? 0}`}
 													/>
 												</Card>
 											</Col>
@@ -455,9 +463,9 @@ const Project_Detail = () => {
 												<Card bordered={true}>
 													<Statistic
 														title="On-Hold Tasks"
-														value={values?.tasksMeta.onHoldCount ?? 0}
+														value={values?.tasksMeta?.onHoldCount ?? 0}
 														formatter={formatter}
-														suffix={`/ ${values?.tasksMeta.totalTasks ?? 0}`}
+														suffix={`/ ${values?.tasksMeta?.totalTasks ?? 0}`}
 													/>
 												</Card>
 											</Col>
@@ -512,7 +520,7 @@ const Project_Detail = () => {
 								),
 							}}
 							copyable={true}>
-							{values.name}
+							{values?.name}
 						</Typography.Title>
 						<Flex
 							style={{
@@ -522,15 +530,15 @@ const Project_Detail = () => {
 								style={{
 									marginLeft: 12,
 								}}>
-								Created By {values.owner.name} , On{" "}
-								{new Date(values.createdAt).toDateString()}
+								Created By {values?.owner?.name} , On{" "}
+								{new Date(values?.createdAt).toDateString()}
 							</Typography.Text>
 							<Typography.Text
 								style={{
 									marginLeft: 12,
 									transition: "transform 0.2s ease, opacity 0.2s ease",
 								}}>
-								Last Updated on {new Date(values.updatedAt).toDateString()}
+								Last Updated on {new Date(values?.updatedAt)?.toDateString()}
 							</Typography.Text>
 						</Flex>
 					</Space>
@@ -563,7 +571,7 @@ const Project_Detail = () => {
 												textOverflow: "ellipsis",
 												overflow: "hidden",
 											}}>
-											{values.description}
+											{values?.description}
 										</div>
 									</div>
 								),
@@ -573,7 +581,7 @@ const Project_Detail = () => {
 										editable={{
 											onChange: (txt) => {
 												setEditing(true);
-												if (txt.length >= 1) {
+												if (txt?.length >= 1) {
 													setValues((val) => {
 														return { ...val, description: txt };
 													});
@@ -591,7 +599,7 @@ const Project_Detail = () => {
 											marginLeft: 30,
 											marginBottom: 0,
 										}}>
-										{values.description}
+										{values?.description}
 									</Typography.Paragraph>
 								),
 							},
@@ -639,35 +647,59 @@ const Project_Detail = () => {
 		setCollapsed(!collapsed);
 	};
 
+	const showDeleteConfirm = (id) => {
+		Modal.confirm({
+			title: "Confirm deleting this Project?",
+			icon: <ExclamationCircleFilled />,
+			content:
+				"Project will be removed from staff and client as well , one has to manually add it after restoring the project",
+			okText: "Yes",
+			okType: "danger",
+			cancelText: "No",
+			closable: true,
+			maskClosable: true,
+			// centered: true,
+			onOk() {
+				handleDeleteProject(id);
+			},
+			onCancel() {},
+		});
+	};
+
+	const handleDeleteProject = (id) => {
+		deleteProject(id);
+		navigate(-1);
+	};
+
 	const handleProjectValue = useCallback(() => {
 		setLoading(true);
-		const projectValues = projectTableData.filter(
-			(project) => project._id === selectedProject
+		const projectValues = projectTableData?.filter(
+			(project) => project?._id === selectedProject
 		);
-		if (projectValues.length) {
+		if (projectValues?.length) {
 			setValues({
 				...projectValues[0],
-				staff: projectValues[0].staff.length
-					? projectValues[0].staff.map((staf) => {
+				staff: projectValues[0]?.staff?.length
+					? projectValues[0]?.staff?.map((staf) => {
 							return {
-								label: staf.name,
-								value: staf._id,
+								label: staf?.name,
+								value: staf?._id,
 							};
 					  })
 					: [],
-				client: projectValues[0].client.length
+				client: projectValues[0]?.client?.length
 					? [
 							{
-								label: projectValues[0].client[0].name,
-								value: projectValues[0].client[0]._id,
+								label: projectValues[0]?.client[0]?.name,
+								value: projectValues[0]?.client[0]?._id,
 							},
 					  ]
 					: [{ value: undefined, label: undefined }],
-				tasks: projectValues[0].tasks.length
-					? projectValues[0].tasks.map((task) => {
+				tasks: projectValues[0]?.tasks?.length
+					? projectValues[0]?.tasks?.map((task) => {
 							return {
-								label: task.name,
-								value: task._id,
+								label: task?.name,
+								value: task?._id,
 							};
 					  })
 					: [],
@@ -681,7 +713,23 @@ const Project_Detail = () => {
 		}, 200);
 	}, [navigate, setValues, selectedProject, projectTableData]);
 
-	const handleSave = () => {};
+	const handleSave = () => {
+		updateProject(values?._id, {
+			...values,
+			staff: values?.staff
+				? values?.staff?.map((staf) => {
+						return staf?.value;
+				  })
+				: [],
+			tasks: values?.tasks
+				? values?.tasks?.map((task) => {
+						return task?.value;
+				  })
+				: [],
+			client: values?.client[0]?.value ? [values?.client[0]?.value] : [],
+			updatedAt: new Date()?.toISOString(),
+		});
+	};
 
 	useEffect(() => {
 		const checkIfMobile = () => {
@@ -771,7 +819,7 @@ const Project_Detail = () => {
 							collapsed ? <CaretRightFilled /> : <CaretLeftFilled />
 						}></Button>
 				</Space>
-				{projectTableData.map((project, index) => {
+				{projectTableData?.map((project, index) => {
 					return (
 						<Menu.Item
 							icon={
@@ -782,9 +830,9 @@ const Project_Detail = () => {
 							}
 							style={{ fontWeight: "bold" }}
 							// key={`${task._id}`}
-							key={project._id}>
-							<Link replace={true} to={`/project_detail/${project._id}`}>
-								{project.name}
+							key={project?._id}>
+							<Link replace={true} to={`/project_detail/${project?._id}`}>
+								{project?.name}
 							</Link>
 						</Menu.Item>
 					);
@@ -817,6 +865,7 @@ const Project_Detail = () => {
 							<div
 								style={{
 									display: "flex",
+									flexWrap: "wrap",
 									gap: 8,
 									marginBottom: 8,
 								}}>
@@ -835,6 +884,13 @@ const Project_Detail = () => {
 									danger>
 									Reset
 								</Button>
+								<Button
+									icon={<DeleteOutlined />}
+									size="large"
+									danger
+									onClick={() => {
+										showDeleteConfirm(values?._id);
+									}}></Button>
 								<Button
 									onClick={() => {
 										navigate(-1);

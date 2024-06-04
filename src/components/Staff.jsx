@@ -106,7 +106,7 @@ const Staff = () => {
 							{projects.map((proj, index) => {
 								return (
 									<Tag color={"volcano"} key={index}>
-										{proj.toUpperCase()}
+										{proj?.toUpperCase()}
 									</Tag>
 								);
 							})}
