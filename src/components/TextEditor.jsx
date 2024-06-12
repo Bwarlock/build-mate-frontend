@@ -28,8 +28,18 @@ export default function TextEditor() {
 
   useEffect(() => {
     // TODO: add base URL to .env file
-    const s = io("https://api.build-mate.in/")
-    // const s = io("http://localhost:8000/")
+    const s = io("https://api.build-mate.in/", {
+      // Get the token from localStorage
+      auth: {
+          token: localStorage.getItem("token")
+      }
+        })
+    // const s = io("http://localhost:8000/", {
+    //   // Get the token from localStorage
+    //   auth: {
+    //       token: localStorage.getItem("token")
+    //   }
+    //     })
     setSocket(s);
     return () => {
       s.disconnect()
