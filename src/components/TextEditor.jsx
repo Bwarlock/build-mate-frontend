@@ -28,7 +28,8 @@ export default function TextEditor() {
 
   useEffect(() => {
     // TODO: add base URL to .env file
-    const s = io("http://localhost:8001")
+    const s = io("https://api.build-mate.in/")
+    // const s = io("http://localhost:8000/")
     setSocket(s);
     return () => {
       s.disconnect()

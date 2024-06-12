@@ -706,7 +706,7 @@ export const useAddData = () => {
 				message.success(res.data.message);
 				const documentID = res.data.document._id;
 				// Update the list of documents
-				navigate(`/documents/${documentID}`);
+				navigate(`/dashboard/documents/${documentID}`);
 			})
 			.catch((e) => {
 				message.error(e.response.data.message);

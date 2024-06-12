@@ -56,9 +56,8 @@ function App() {
 						path="/project_detail/:id"
 						element={<Project_Detail />}></Route>
 					<Route path="/task_detail/:id" element={<Task_Detail />}></Route>
-					<Route path="/documents/:id" element={<TextEditor />}></Route>
-					TODO: show a list of documents and a button to create a new document
-					<Route path="/documents" element={<Document />}></Route>
+					<Route path="/dashboard/documents/:id" element={<TextEditor />}></Route>
+					<Route path="/dashboard/documents" element={<Document />}></Route>
 					<Route path="*" element={<Page_Not_Exist />} />
 				</Route>
 			</Routes>
