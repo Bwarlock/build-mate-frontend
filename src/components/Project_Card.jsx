@@ -83,7 +83,7 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 				className="gridded"
 				style={{
 					display: "grid",
-					gap: "1rem",
+					gap: "3rem",
 					padding: "1rem",
 					gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
 					alignItems: "center",

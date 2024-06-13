@@ -310,7 +310,7 @@ const Add_Client = () => {
 					/>
 				</Form.Item>
 				{fileInputs.map((input) => (
-					<Space
+					<div
 						key={input.key}
 						style={{
 							width: "100%",
@@ -320,15 +320,13 @@ const Add_Client = () => {
 							// border: "4px solid #ededed",
 							padding: "4px",
 							display: "flex",
-
+							flexWrap: "wrap",
+							alignItems: "start",
 							marginBottom: 8,
 							borderRadius: 10,
-						}}
-						align="start"
-						wrap="true"
-						size="small">
+						}}>
 						<Form.Item
-							style={{ marginBottom: 0 }}
+							style={{ marginBottom: 8, width: "100%" }}
 							name={`file${input.key}`}
 							key="file"
 							rules={[
@@ -342,7 +340,7 @@ const Add_Client = () => {
 									// width: "fit-content",
 									backgroundColor: "lightgray",
 									marginBottom: 0,
-									width: 272,
+									minWidth: 272,
 								}}
 								beforeUpload={() => false}
 								onChange={({ file }) => handleFileChange(input.key, file)}
@@ -368,42 +366,55 @@ const Add_Client = () => {
 								</div>
 							</Dragger>
 						</Form.Item>
-
-						<Form.Item
-							style={{ marginBottom: 0 }}
-							name={`fileName${input.key}`}
-							key="fileName"
-							// valuePropName="checked"
-							rules={[
-								{
-									required: true,
-									message: "Please Write a FileName",
-								},
-							]}>
-							<Input
-								placeholder="File Name"
-								value={input.fileName}
-								onChange={(event) => {
-									handleFileNameChange(input.key, event);
+						<div
+							style={{
+								display: "flex",
+								marginBottom: 8,
+								justifyContent: "space-between",
+								width: "100%",
+							}}>
+							<Form.Item
+								style={{ marginBottom: 0, width: "68%" }}
+								name={`fileName${input.key}`}
+								key="fileName"
+								// valuePropName="checked"
+								rules={[
+									{
+										required: true,
+										message: "Please Write a FileName",
+									},
+								]}>
+								<Input
+									placeholder="File Name"
+									value={input.fileName}
+									onChange={(event) => {
+										handleFileNameChange(input.key, event);
+									}}
+								/>
+							</Form.Item>
+							<Button
+								style={{
+									width: "30%",
 								}}
-							/>
-						</Form.Item>
-						<Button onClick={() => handleRemove(input.key)}>Remove</Button>
+								onClick={() => handleRemove(input.key)}>
+								Remove
+							</Button>
+						</div>
 						<Form.Item
-							style={{ marginBottom: 0 }}
+							style={{ marginBottom: 0, width: "100%" }}
 							name={`fileDesc${input.key}`}
 							key="fileDesc"
 							rules={[]}>
 							<TextArea
 								placeholder="File Description"
-								style={{ minWidth: 272 }}
+								style={{ minWidth: 272, width: "100%" }}
 								value={input.fileDescription}
 								onChange={(event) => {
 									handleFileDescriptionChange(input.key, event);
 								}}
 							/>
 						</Form.Item>
-					</Space>
+					</div>
 				))}
 				<Form.Item>
 					<Button type="dashed" onClick={handleAdd} style={{}}>
