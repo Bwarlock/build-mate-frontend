@@ -705,7 +705,7 @@ const Project_Detail = () => {
 					: [],
 			});
 		} else {
-			navigate("/page-not-found");
+			navigate("/page-not-found", { replace: true });
 		}
 		setEditing(false);
 		setTimeout(() => {

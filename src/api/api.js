@@ -223,7 +223,7 @@ export function CreateDocument(data) {
 CreateDocument.v1 = function v1(data) {
 	return AuthAxiosInstance({
 		method: "post",
-		url: `/document/create`,
+		url: `/writer/create`,
 		data: data,
 	});
 };
@@ -235,18 +235,19 @@ export function GetDocument(id) {
 GetDocument.v1 = function v1(id) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/document/${id}`,
+		url: `/writer/${id}`,
 	});
 };
 
-export function GetDocuments(id) {
-	return GetDocuments.v1(id);
+export function GetDocuments(params) {
+	return GetDocuments.v1(params);
 }
 
-GetDocuments.v1 = function v1() {
+GetDocuments.v1 = function v1(params) {
 	return AuthAxiosInstance({
 		method: "get",
-		url: `/documents`,
+		url: `/writer`,
+		params: params,
 	});
 };
 

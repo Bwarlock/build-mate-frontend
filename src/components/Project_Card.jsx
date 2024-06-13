@@ -80,6 +80,26 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 				Project
 			</div>
 			<div
+				style={{
+					display: "flex",
+					gap: 12,
+					justifyContent: "center",
+					padding: 16,
+				}}>
+				<Button
+					onClick={() => {
+						getProjects();
+					}}>
+					Refresh
+				</Button>
+				<Pagination
+					pageSize={projectTableParams[0].pagination.pageSize}
+					total={projectTableParams[0].pagination.total}
+					current={projectTableParams[0].pagination.current}
+					onChange={handlePageChange}
+				/>
+			</div>
+			<div
 				className="gridded"
 				style={{
 					display: "grid",

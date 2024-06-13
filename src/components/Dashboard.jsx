@@ -9,6 +9,7 @@ import {
 	CaretRightFilled,
 	DeleteFilled,
 	DeleteOutlined,
+	FileTextOutlined,
 	LogoutOutlined,
 	OrderedListOutlined,
 	ProfileFilled,
@@ -96,7 +97,7 @@ const Dashboard = () => {
 				</div>
 
 				<Menu.Item
-					icon={<ProjectFilled />}
+					icon={<ProjectOutlined />}
 					style={{ fontWeight: "bold" }}
 					key="project">
 					<Link to="/dashboard/project">Project</Link>
@@ -140,6 +141,13 @@ const Dashboard = () => {
 						<Link to="/dashboard/project-trash">Project-Trash</Link>
 					</Menu.Item>
 				</Menu.SubMenu>
+
+				<Menu.Item
+					icon={<FileTextOutlined />}
+					style={{ fontWeight: "bold" }}
+					key="documents">
+					<Link to="/dashboard/documents">Documents</Link>
+				</Menu.Item>
 
 				<Menu.Item
 					icon={<UserOutlined />}

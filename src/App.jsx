@@ -51,13 +51,15 @@ function App() {
 							element={<Add_Project />}></Route>
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
 						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
+						<Route path="/dashboard/documents" element={<Document />}></Route>
 					</Route>
 					<Route
 						path="/project_detail/:id"
 						element={<Project_Detail />}></Route>
 					<Route path="/task_detail/:id" element={<Task_Detail />}></Route>
-					<Route path="/dashboard/documents/:id" element={<TextEditor />}></Route>
-					<Route path="/dashboard/documents" element={<Document />}></Route>
+					<Route
+						path="/dashboard/documents/:id"
+						element={<TextEditor />}></Route>
 					<Route path="*" element={<Page_Not_Exist />} />
 				</Route>
 			</Routes>

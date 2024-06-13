@@ -74,6 +74,13 @@ import {
 	storeProjectTrash,
 	updateProjectStore,
 } from "../store/projectSlice";
+import {
+	clearDocument,
+	documentLoading,
+	setDocumentTableParams,
+	setDocumentTotal,
+	storeDocumentTable,
+} from "../store/documentSlice";
 
 // Api Hooks For Redirect and Other React Logic
 
@@ -104,6 +111,7 @@ export const useLogout = () => {
 		dispatch(clearStaff());
 		dispatch(clearTask());
 		dispatch(clearProject());
+		dispatch(clearDocument());
 		localStorage.clear();
 	}
 	return logout;
@@ -169,6 +177,9 @@ export const useGetData = () => {
 		tableParams: taskTableParams,
 		trashParams: taskTrashParams,
 	} = useSelector((state) => state.task);
+	const { tableParams: documentTableParams } = useSelector(
+		(state) => state.document
+	);
 
 	function getClients(params, filters) {
 		dispatch(clientLoading(true));
@@ -581,14 +592,40 @@ export const useGetData = () => {
 			});
 	}
 
-	function getDocuments(id) {
-		GetDocuments.v1(id)
+	function getDocuments(params, filters) {
+		dispatch(documentLoading(true));
+		if (params) {
+			dispatch(setDocumentTableParams(filters));
+		} else {
+			params = {
+				page: documentTableParams[0].pagination.current,
+				limit: documentTableParams[0].pagination.pageSize,
+			};
+		}
+		GetDocuments.v1(params)
 			.then((res) => {
 				console.log(res);
-				// TODO: store the documents in redux
+				if (res?.data?.documents?.length ?? null) {
+					dispatch(
+						storeDocumentTable(
+							res.data.documents.map((val, index) => {
+								return { ...val, key: "" + index, id: val._id };
+							})
+						)
+					);
+					console.log("inside");
+					dispatch(setDocumentTotal(res.data?.totalDocuments ?? 200));
+				} else {
+					dispatch(storeDocumentTable([]));
+				}
+				dispatch(documentLoading(false));
 			})
 			.catch((e) => {
-				message.error(e.message);
+				dispatch(documentLoading(false));
+				message.error(
+					e.response.data.message ||
+						"There was an error while fetching the documents. Please try again or contact support."
+				);
 			});
 	}
 

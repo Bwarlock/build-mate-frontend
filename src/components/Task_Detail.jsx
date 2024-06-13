@@ -440,7 +440,7 @@ const Task_Detail = () => {
 					: { value: undefined, label: undefined },
 			});
 		} else {
-			navigate("/page-not-found");
+			navigate("/page-not-found", { replace: true });
 		}
 		setEditing(false);
 		setTimeout(() => {
