@@ -614,7 +614,7 @@ export const useGetData = () => {
 						)
 					);
 					console.log("inside");
-					dispatch(setDocumentTotal(res.data?.totalDocuments ?? 200));
+					dispatch(setDocumentTotal(res.data?.count ?? 200));
 				} else {
 					dispatch(storeDocumentTable([]));
 				}

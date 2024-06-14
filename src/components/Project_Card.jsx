@@ -75,7 +75,8 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 					fontWeight: "bold",
 					display: "flex",
 					justifyContent: "center",
-					padding: 16,
+					// padding: 16,
+					marginBottom: "1rem",
 				}}>
 				Project
 			</div>
@@ -84,7 +85,8 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 					display: "flex",
 					gap: 12,
 					justifyContent: "center",
-					padding: 16,
+					// padding: 16,
+					marginBottom: "1rem",
 				}}>
 				<Button
 					onClick={() => {
@@ -103,8 +105,10 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 				className="gridded"
 				style={{
 					display: "grid",
+					width: "100%",
 					gap: "3rem",
-					padding: "1rem",
+					// padding: "1rem",
+					marginBottom: "1rem",
 					gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
 					alignItems: "center",
 					justifyItems: "center",
@@ -241,7 +245,7 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 					display: "flex",
 					gap: 12,
 					justifyContent: "center",
-					padding: 16,
+					// padding: 16,
 				}}>
 				<Button
 					onClick={() => {

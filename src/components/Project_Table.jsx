@@ -272,16 +272,7 @@ function Project_Table({ showAddProjectDrawer }) {
 	}, []);
 
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: "1rem",
-			}}>
+		<>
 			<div
 				style={{
 					fontSize: 32,
@@ -338,7 +329,7 @@ function Project_Table({ showAddProjectDrawer }) {
 					bordered={true}
 				/>
 			</div>
-		</div>
+		</>
 	);
 }
 Project_Table.propTypes = {

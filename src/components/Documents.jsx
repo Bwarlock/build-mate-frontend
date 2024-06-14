@@ -96,12 +96,22 @@ const Document = () => {
 		// deleteProject(id);
 	};
 	return (
-		<>
+		<div
+			style={{
+				width: "100%",
+				minHeight: "100vh",
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				flexDirection: "column",
+				padding: "1rem",
+				position: "relative",
+			}}>
 			<Radio.Group
 				style={{
 					position: "absolute",
-					top: 0,
-					right: 16,
+					top: "1rem",
+					right: "1rem",
 					zIndex: 1,
 				}}
 				onChange={handleViewChange}
@@ -125,7 +135,8 @@ const Document = () => {
 					fontWeight: "bold",
 					display: "flex",
 					justifyContent: "center",
-					padding: 16,
+					// padding: 16,
+					marginBottom: "1rem",
 				}}>
 				Document
 			</div>
@@ -135,7 +146,9 @@ const Document = () => {
 				style={{
 					display: "grid",
 					gap: "1rem",
-					padding: "1rem",
+					width: "100%",
+					// padding: "1rem",
+					marginBottom: "1rem",
 					gridTemplateColumns:
 						documentView == "card"
 							? "repeat(auto-fit, minmax(200px, 1fr))"
@@ -279,7 +292,10 @@ const Document = () => {
 						display: "flex",
 						justifyContent: "center",
 						alignItems: "center",
-						justifySelf: documentView == "list" ? "end" : "",
+						justifySelf:
+							documentView == "list" && documentTableData.length > 0
+								? "end"
+								: "",
 						// borderRadius: 10,
 					}}>
 					<PlusOutlined style={{ fontSize: 24 }} />
@@ -290,7 +306,7 @@ const Document = () => {
 					display: "flex",
 					gap: 12,
 					justifyContent: "center",
-					padding: 16,
+					// padding: 16,
 				}}>
 				<Button
 					onClick={() => {
@@ -329,7 +345,7 @@ const Document = () => {
 					}}
 				/>
 			</Modal>
-		</>
+		</div>
 	);
 
 	return (

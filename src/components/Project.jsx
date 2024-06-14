@@ -29,39 +29,51 @@ function Project() {
 
 	return (
 		<>
-			<Radio.Group
-				style={{
-					position: "absolute",
-					top: 0,
-					right: 16,
-					zIndex: 1,
-				}}
-				onChange={handleViewChange}
-				defaultValue={projectView}
-				buttonStyle="solid">
-				<Tooltip title="Table View">
-					<Radio.Button value="table">
-						<TableOutlined />
-					</Radio.Button>
-				</Tooltip>
-				<Tooltip title="Card View">
-					<Radio.Button value="card">
-						<RefIcon />
-					</Radio.Button>
-				</Tooltip>
-			</Radio.Group>
 			<Drawer
 				title="Create New Project"
 				onClose={closeAddProjectDrawer}
 				open={openAddProjectDrawer}>
 				<Add_Project />
 			</Drawer>
-			{projectView === "table" && (
-				<Project_Table showAddProjectDrawer={showAddProjectDrawer} />
-			)}
-			{projectView === "card" && (
-				<Project_Card showAddProjectDrawer={showAddProjectDrawer} />
-			)}
+			<div
+				style={{
+					width: "100%",
+					minHeight: "100vh",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					flexDirection: "column",
+					padding: "1rem",
+					position: "relative",
+				}}>
+				<Radio.Group
+					style={{
+						position: "absolute",
+						top: "1rem",
+						right: "1rem",
+						zIndex: 1,
+					}}
+					onChange={handleViewChange}
+					defaultValue={projectView}
+					buttonStyle="solid">
+					<Tooltip title="Table View">
+						<Radio.Button value="table">
+							<TableOutlined />
+						</Radio.Button>
+					</Tooltip>
+					<Tooltip title="Card View">
+						<Radio.Button value="card">
+							<RefIcon />
+						</Radio.Button>
+					</Tooltip>
+				</Radio.Group>
+				{projectView === "table" && (
+					<Project_Table showAddProjectDrawer={showAddProjectDrawer} />
+				)}
+				{projectView === "card" && (
+					<Project_Card showAddProjectDrawer={showAddProjectDrawer} />
+				)}
+			</div>
 		</>
 	);
 }
