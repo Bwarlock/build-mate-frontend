@@ -652,7 +652,7 @@ const Project_Detail = () => {
 			title: "Confirm deleting this Project?",
 			icon: <ExclamationCircleFilled />,
 			content:
-				"Project will be removed from staff and client as well , one has to manually add it after restoring the project",
+			"Project will be moved to trash. You can restore the project within 30 Days. Note: the staff and client access will be revoked.",
 			okText: "Yes",
 			okType: "danger",
 			cancelText: "No",
