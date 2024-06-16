@@ -138,7 +138,7 @@ const Document = () => {
 					// padding: 16,
 					marginBottom: "1rem",
 				}}>
-				Document
+				Writer
 			</div>
 
 			<div

@@ -146,7 +146,7 @@ const Dashboard = () => {
 					icon={<FileTextOutlined />}
 					style={{ fontWeight: "bold" }}
 					key="documents">
-					<Link to="/dashboard/documents">Documents</Link>
+					<Link to="/dashboard/documents">Writer</Link>
 				</Menu.Item>
 
 				<Menu.Item
