@@ -20,6 +20,7 @@ import {
 	UserOutlined,
 	UserSwitchOutlined,
 } from "@ant-design/icons";
+import Navbar from "./Navbar";
 
 const Dashboard = () => {
 	//Dashboard Route Component
@@ -41,6 +42,9 @@ const Dashboard = () => {
 	const toggleVanished = () => {
 		setVanished(!vanished);
 	};
+	if (location.pathname === "/dashboard") {
+		navigate("/dashboard/tasks");
+	}
 	useEffect(() => {
 		const checkIfMobile = () => {
 			if (window.innerWidth <= 640) {
@@ -49,10 +53,6 @@ const Dashboard = () => {
 			}
 		};
 		checkIfMobile();
-
-		if (location.pathname === "/dashboard") {
-			navigate("/dashboard/tasks");
-		}
 
 		window.addEventListener("resize", checkIfMobile);
 		return () => {
@@ -68,14 +68,13 @@ const Dashboard = () => {
 					height: "100vh",
 					display: "flex",
 					flexDirection: "column",
+					overflowY: "auto",
 					transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 					// transition: "all 0.4s ease",
 				}}
 				inlineCollapsed={collapsed}
-				selectedKeys={[
-					location.pathname?.split("/")[2]?.split("?")[0] ?? "tasks",
-				]}
-				mode="vertical">
+				selectedKeys={[location.pathname?.split("/")[2] ?? undefined]}
+				mode="inline">
 				<div
 					style={{
 						maxWidth: 256,
@@ -98,27 +97,40 @@ const Dashboard = () => {
 
 				<Menu.Item
 					icon={<ProjectOutlined />}
-					style={{ fontWeight: "bold" }}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
 					key="project">
 					<Link to="/dashboard/project">Project</Link>
 				</Menu.Item>
 
-				<Menu.Item icon={<TeamOutlined />} key="staff">
-					<Link style={{ fontWeight: "bold" }} to="/dashboard/staff">
-						Staff
-					</Link>
+				<Menu.Item
+					icon={<TeamOutlined />}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
+					key="staff">
+					<Link to="/dashboard/staff">Staff</Link>
 				</Menu.Item>
 
 				<Menu.Item
 					icon={<OrderedListOutlined />}
-					style={{ fontWeight: "bold" }}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
 					key="tasks">
 					<Link to="/dashboard/tasks">Tasks</Link>
 				</Menu.Item>
 
 				<Menu.Item
 					icon={<UserSwitchOutlined />}
-					style={{ fontWeight: "bold" }}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
 					key="clients">
 					<Link to="/dashboard/clients">Clients</Link>
 				</Menu.Item>
@@ -130,13 +142,19 @@ const Dashboard = () => {
 					title="Trash">
 					<Menu.Item
 						icon={<DeleteFilled />}
-						style={{ fontWeight: "bold" }}
+						style={{
+							fontWeight: "bold",
+							minHeight: "40px",
+						}}
 						key="tasks-trash">
 						<Link to="/dashboard/tasks-trash">Tasks-Trash</Link>
 					</Menu.Item>
 					<Menu.Item
 						icon={<DeleteFilled />}
-						style={{ fontWeight: "bold" }}
+						style={{
+							fontWeight: "bold",
+							minHeight: "40px",
+						}}
 						key="project-trash">
 						<Link to="/dashboard/project-trash">Project-Trash</Link>
 					</Menu.Item>
@@ -144,7 +162,10 @@ const Dashboard = () => {
 
 				<Menu.Item
 					icon={<FileTextOutlined />}
-					style={{ fontWeight: "bold" }}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
 					key="documents">
 					<Link to="/dashboard/documents">Writer</Link>
 				</Menu.Item>
@@ -154,15 +175,17 @@ const Dashboard = () => {
 					style={{
 						marginTop: "auto",
 						fontWeight: "bold",
+						minHeight: "40px",
 						// width: "100%",
 					}}
-					key="user">
-					{user?.name || user?.email}
+					key="profile">
+					<Link to="/dashboard/profile">{user?.name || user?.email}</Link>
 				</Menu.Item>
 				<Menu.Item
 					icon={<LogoutOutlined />}
 					style={{
 						fontWeight: "bold",
+						minHeight: "40px",
 						// width: "100%",
 					}}
 					key="logout"
@@ -172,7 +195,7 @@ const Dashboard = () => {
 			</Menu>
 			{/* )} */}
 
-			<Button
+			{/* <Button
 				onClick={() => {
 					vanished
 						? toggleCollapsed()
@@ -186,7 +209,7 @@ const Dashboard = () => {
 					zIndex: 5,
 					// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
 				}}
-				icon={vanished ? <CaretRightFilled /> : <CaretLeftFilled />}></Button>
+				icon={vanished ? <CaretRightFilled /> : <CaretLeftFilled />}></Button> */}
 
 			<div
 				id="inside"
@@ -199,13 +222,15 @@ const Dashboard = () => {
 					height: "100vh",
 					overflow: "auto",
 					margin: 0,
-					// display: "flex",
-					// justifyContent: "center",
-					// alignItems: "center",
-					// flexDirection: "column",
 					// padding: "1rem",
 				}}>
-				<Outlet />
+				<Navbar
+					vanished={vanished}
+					collapsed={collapsed}
+					toggleCollapsed={toggleCollapsed}
+					toggleVanished={toggleVanished}
+				/>
+				<Outlet context={{ vanished, collapsed, setVanished, setCollapsed }} />
 			</div>
 			{/* </Layout> */}
 		</div>

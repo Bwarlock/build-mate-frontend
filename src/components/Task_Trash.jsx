@@ -235,25 +235,13 @@ const Task_Trash = () => {
 		if (!taskTableData.length) {
 			getTrashTasks();
 		}
-		return horizontalScroll();
+		// return horizontalScroll();
 	}, []);
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: 12,
-			}}>
+		<div className="insideOutlet">
 			<div
+				className="headingTitle"
 				style={{
-					fontSize: 32,
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
 					marginBottom: 16,
 					// padding: 16,
 				}}>
@@ -409,11 +397,12 @@ const Task_Trash = () => {
 					size="small"
 					columns={columns}
 					dataSource={taskTableData}
-					scroll={{ x: 1200 }}
+					scroll={{ x: 1200, y: 40000 }}
 					loading={taskLoading}
 					pagination={taskTableParams[0].pagination}
 					onChange={handleTableChange}
 					bordered={true}
+					virtual={true}
 				/>
 			</div>
 		</div>

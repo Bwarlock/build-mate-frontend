@@ -40,12 +40,12 @@ import TextEditorQuill from "./TextEditorQuill";
 import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
 import dayjs from "dayjs";
 import { uniqueArrayOfObjects } from "../util/functions";
+import { useDeleteConfirm } from "./Component_Hooks";
 
 const Task_Detail = () => {
 	//Tasks Route Component
 	const location = useLocation();
-	const selectedTask =
-		location.pathname?.split("/")[2]?.split("?")[0] ?? undefined;
+	const selectedTask = location.pathname?.split("/")[2] ?? undefined;
 	const [selectedProject, setSelectedProject] = useState();
 
 	const [loading, setLoading] = useState(true);
@@ -387,33 +387,11 @@ const Task_Detail = () => {
 	];
 
 	const [collapsed, setCollapsed] = useState(false);
-	const { deleteTask } = useDeleteData();
 	const navigate = useNavigate();
+	const { showTaskDeleteConfirm } = useDeleteConfirm();
 
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
-	};
-	const showDeleteConfirm = (id) => {
-		Modal.confirm({
-			title: "Confirm deleting this Task?",
-			icon: <ExclamationCircleFilled />,
-			content: "Task will go to Trash",
-			okText: "Yes",
-			okType: "danger",
-			cancelText: "No",
-			closable: true,
-			maskClosable: true,
-			// centered: true,
-			onOk() {
-				handleDeleteTask(id);
-			},
-			onCancel() {},
-		});
-	};
-
-	const handleDeleteTask = (id) => {
-		deleteTask(id);
-		navigate(-1);
 	};
 
 	const handleTaskValue = useCallback(() => {
@@ -853,7 +831,9 @@ const Task_Detail = () => {
 								size="large"
 								danger
 								onClick={() => {
-									showDeleteConfirm(values?._id);
+									showTaskDeleteConfirm(values?._id, () => {
+										navigate(-1);
+									});
 								}}></Button>
 							<Button
 								onClick={() => {

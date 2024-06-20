@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+	BrowserRouter,
+	Routes,
+	Route,
+	useNavigate,
+	Navigate,
+} from "react-router-dom";
 import "./App.css";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -22,12 +28,15 @@ import Project from "./components/Project";
 import Task_Trash from "./components/Task_Trash";
 import Project_Trash from "./components/Project_Trash";
 import Project_Detail from "./components/Project_Detail";
+import Profile from "./components/Profile";
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<LandingPage />}></Route>
+				<Route
+					path="/"
+					element={<Navigate to={"/login"} replace={true} />}></Route>
 				<Route path="/login" element={<Login />}></Route>
 				<Route path="/register" element={<Register />}></Route>
 				<Route path="/page-not-found" element={<Page_Not_Exist />}></Route>
@@ -52,6 +61,7 @@ function App() {
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
 						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
 						<Route path="/dashboard/documents" element={<Document />}></Route>
+						<Route path="/dashboard/profile" element={<Profile />}></Route>
 					</Route>
 					<Route
 						path="/project_detail/:id"
@@ -60,7 +70,10 @@ function App() {
 					<Route
 						path="/dashboard/documents/:id"
 						element={<TextEditor />}></Route>
-					<Route path="*" element={<Page_Not_Exist />} />
+					<Route
+						path="*"
+						element={<Navigate to={"/page-not-found"} replace={true} />}
+					/>
 				</Route>
 			</Routes>
 		</BrowserRouter>

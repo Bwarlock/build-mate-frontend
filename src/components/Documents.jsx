@@ -96,17 +96,7 @@ const Document = () => {
 		// deleteProject(id);
 	};
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: "1rem",
-				position: "relative",
-			}}>
+		<div className="insideOutlet">
 			<Radio.Group
 				style={{
 					position: "absolute",
@@ -129,14 +119,12 @@ const Document = () => {
 				</Tooltip>
 			</Radio.Group>
 			<Spin spinning={documentLoading} fullscreen={true} />
+
 			<div
+				className="headingTitle"
 				style={{
-					fontSize: 32,
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
-					// padding: 16,
 					marginBottom: "1rem",
+					// padding: 16,
 				}}>
 				Writer
 			</div>

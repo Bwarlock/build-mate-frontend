@@ -262,26 +262,14 @@ function Project_Trash() {
 			getTrashProjects();
 		}
 
-		return horizontalScroll();
+		// return horizontalScroll();
 	}, []);
 
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: 12,
-			}}>
+		<div className="insideOutlet">
 			<div
+				className="headingTitle"
 				style={{
-					fontSize: 32,
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
 					marginBottom: 16,
 					// padding: 16,
 				}}>
@@ -436,11 +424,12 @@ function Project_Trash() {
 					size="small"
 					columns={columns}
 					dataSource={projectTableData}
-					scroll={{ x: 1200 }}
+					scroll={{ x: 1200, y: 40000 }}
 					loading={projectLoading}
 					pagination={projectTableParams[0].pagination}
 					onChange={handleTableChange}
 					bordered={true}
+					virtual={true}
 				/>
 			</div>
 		</div>

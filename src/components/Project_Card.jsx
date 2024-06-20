@@ -11,6 +11,7 @@ import { useDeleteData, useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { setProjectTableParams } from "../store/projectSlice";
+import { useDeleteConfirm } from "./Component_Hooks";
 
 const Project_Card = ({ showAddProjectDrawer }) => {
 	//Projects Page Component
@@ -21,29 +22,8 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 	} = useSelector((state) => state.project);
 	const dispatch = useDispatch();
 	const { getProjects } = useGetData();
-	const { deleteProject } = useDeleteData();
+	const { showProjectDeleteConfirm } = useDeleteConfirm();
 
-	const showDeleteConfirm = (id) => {
-		Modal.confirm({
-			title: "Confirm deleting this Project?",
-			icon: <ExclamationCircleFilled />,
-			content:
-				"Project will be moved to trash. You can restore the project within 30 Days. Note: the staff and client access will be revoked.",
-			okText: "Yes",
-			okType: "danger",
-			cancelText: "No",
-			closable: true,
-			maskClosable: true,
-			// centered: true,
-			onOk() {
-				handleDeleteProject(id);
-			},
-			onCancel() {},
-		});
-	};
-	const handleDeleteProject = (id) => {
-		deleteProject(id);
-	};
 	const handlePageChange = (page, pageSize) => {
 		getProjects(
 			{
@@ -69,13 +49,10 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 	return (
 		<>
 			<Spin spinning={projectLoading} fullscreen={true} />
+
 			<div
+				className="headingTitle"
 				style={{
-					fontSize: 32,
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
-					// padding: 16,
 					marginBottom: "1rem",
 				}}>
 				Project
@@ -142,7 +119,7 @@ const Project_Card = ({ showAddProjectDrawer }) => {
 											icon={<DeleteOutlined />}
 											// danger
 											onClick={() => {
-												showDeleteConfirm(pro?._id);
+												showProjectDeleteConfirm(pro?._id);
 											}}></Button>
 									</Tooltip>
 								</span>

@@ -49,14 +49,14 @@ import { useDeleteData, useGetData, useUpdateData } from "../api/hooks";
 import dayjs from "dayjs";
 import { uniqueArrayOfObjects } from "../util/functions";
 import CountUp from "react-countup";
+import { useDeleteConfirm } from "./Component_Hooks";
 
 const formatter = (value) => <CountUp end={value} separator="," />;
 
 const Project_Detail = () => {
 	//Project Route Component
 	const [loading, setLoading] = useState(true);
-	const selectedProject =
-		location.pathname?.split("/")[2]?.split("?")[0] ?? undefined;
+	const selectedProject = location.pathname?.split("/")[2] ?? undefined;
 	const { tableData: projectTableData } = useSelector((state) => state.project);
 	const [editing, setEditing] = useState(false);
 
@@ -80,7 +80,8 @@ const Project_Detail = () => {
 
 	const { selectStaff, selectClients, selectTasks } = useGetData();
 	const { updateProject } = useUpdateData();
-	const { deleteProject } = useDeleteData();
+	const { showProjectDeleteConfirm } = useDeleteConfirm();
+
 	const [values, setValues] = useState({
 		name: "",
 		description: "",
@@ -647,30 +648,6 @@ const Project_Detail = () => {
 		setCollapsed(!collapsed);
 	};
 
-	const showDeleteConfirm = (id) => {
-		Modal.confirm({
-			title: "Confirm deleting this Project?",
-			icon: <ExclamationCircleFilled />,
-			content:
-			"Project will be moved to trash. You can restore the project within 30 Days. Note: the staff and client access will be revoked.",
-			okText: "Yes",
-			okType: "danger",
-			cancelText: "No",
-			closable: true,
-			maskClosable: true,
-			// centered: true,
-			onOk() {
-				handleDeleteProject(id);
-			},
-			onCancel() {},
-		});
-	};
-
-	const handleDeleteProject = (id) => {
-		deleteProject(id);
-		navigate(-1);
-	};
-
 	const handleProjectValue = useCallback(() => {
 		setLoading(true);
 		const projectValues = projectTableData?.filter(
@@ -889,7 +866,9 @@ const Project_Detail = () => {
 									size="large"
 									danger
 									onClick={() => {
-										showDeleteConfirm(values?._id);
+										showProjectDeleteConfirm(values?._id, () => {
+											navigate(-1);
+										});
 									}}></Button>
 								<Button
 									onClick={() => {

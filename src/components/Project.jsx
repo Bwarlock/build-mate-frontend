@@ -36,14 +36,8 @@ function Project() {
 				<Add_Project />
 			</Drawer>
 			<div
+				className="insideOutlet"
 				style={{
-					width: "100%",
-					minHeight: "100vh",
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					flexDirection: "column",
-					padding: "1rem",
 					position: "relative",
 				}}>
 				<Radio.Group

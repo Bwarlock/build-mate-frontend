@@ -170,29 +170,11 @@ const Staff = () => {
 			getStaff();
 		}
 
-		return horizontalScroll();
+		// return horizontalScroll();
 	}, []);
 	return (
-		<div
-			style={{
-				width: "100%",
-				minHeight: "100vh",
-				display: "flex",
-				justifyContent: "center",
-				alignItems: "center",
-				flexDirection: "column",
-				padding: "1rem",
-			}}>
-			<div
-				style={{
-					fontSize: 32,
-					fontWeight: "bold",
-					display: "flex",
-					justifyContent: "center",
-					// padding: 16,
-				}}>
-				Staff
-			</div>
+		<div className="insideOutlet">
+			<div className="headingTitle">Staff</div>
 			<div
 				style={{
 					display: "flex",
@@ -235,11 +217,12 @@ const Staff = () => {
 					size="small"
 					columns={columns}
 					dataSource={staffTableData}
-					scroll={{ x: 1200 }}
+					scroll={{ x: 1200, y: 40000 }}
 					loading={staffLoading}
 					pagination={staffTableParams[0].pagination}
 					onChange={handleTableChange}
 					bordered={true}
+					virtual={true}
 				/>
 			</div>
 		</div>
