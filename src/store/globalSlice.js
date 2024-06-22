@@ -12,7 +12,7 @@ const globalSlice = createSlice({
 			state.user = action.payload;
 		},
 		clearGlobal: (state) => {
-			state.user = {};
+			return { ...initialValue };
 		},
 	},
 });

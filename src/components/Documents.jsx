@@ -96,7 +96,11 @@ const Document = () => {
 		// deleteProject(id);
 	};
 	return (
-		<div className="insideOutlet">
+		<div
+			className="insideOutlet"
+			style={{
+				position: "relative",
+			}}>
 			<Radio.Group
 				style={{
 					position: "absolute",

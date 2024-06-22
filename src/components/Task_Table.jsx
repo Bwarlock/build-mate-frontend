@@ -69,8 +69,8 @@ const Task_Table = () => {
 					onClick={showAddTaskDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: taskTableData?.length > 9 ? "" : "1rem",
-						// marginBottom: "1rem",
+						// marginBottom: taskTableData?.length > 9 ? "" : "1rem",
+						marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}

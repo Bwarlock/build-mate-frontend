@@ -232,7 +232,8 @@ body {
 
 .navbar-menu .rightMenu {
 	float: right;
-	width: 84px;
+	min-width: 200px;
+	/* width: "max-content"; */
 }
 
 .menuButton {
@@ -264,6 +265,11 @@ body {
 }
 
 .username {
+	/* display: none; */
+	margin-left: 8px;
+}
+
+.menuText {
 	display: none;
 	margin-left: 8px;
 }
@@ -275,7 +281,6 @@ body {
 	}
 	.navbar-menu .rightMenu {
 		display: none;
-		float: left;
 	}
 	.navbar-menu .leftMenu {
 		display: none;
@@ -289,7 +294,10 @@ body {
 		margin-bottom: 0;
 	}
 
-	.username {
+	/* .username {
+		display: inline-block;
+	} */
+	.menuText {
 		display: inline-block;
 	}
 }
@@ -301,6 +309,7 @@ body {
 	font-weight: "bold";
 	display: "flex";
 	justify-content: "center";
+	margin-bottom: 8px;
 }
 
 .insideOutlet {

@@ -6,6 +6,7 @@ import {
 	CaretLeftFilled,
 	CaretRightFilled,
 	MenuOutlined,
+	PlusCircleOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
 
@@ -31,27 +32,55 @@ const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
 					{/* <div className="logo">
 						<h3 className="brand-font">Brand Here</h3>
 					</div> */}
-					<Button
-						onClick={() => {
-							vanished
-								? toggleCollapsed()
-								: collapsed
-								? toggleVanished()
-								: toggleCollapsed();
-						}}
-						style={
-							{
-								// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
-								// border: "none",
-							}
-						}
-						icon={
-							vanished ? <CaretRightFilled /> : <CaretLeftFilled />
-						}></Button>
-					<div className="navbar-menu">
-						<div className="leftMenu">
-							<LeftMenu mode={"horizontal"} />
+
+					<div
+						className="navbar-menu"
+						style={{
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "space-between",
+						}}>
+						<div
+							style={{
+								float: "left",
+								display: "flex",
+								alignItems: "center",
+							}}>
+							<Button
+								onClick={() => {
+									vanished
+										? toggleCollapsed()
+										: collapsed
+										? toggleVanished()
+										: toggleCollapsed();
+								}}
+								style={
+									{
+										// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
+										// border: "none",
+									}
+								}
+								icon={
+									vanished ? <CaretRightFilled /> : <CaretLeftFilled />
+								}></Button>
+							<Button
+								type="link"
+								style={{
+									padding: 0,
+									margin: "auto",
+									marginLeft: "16px",
+								}}>
+								<PlusCircleOutlined
+									style={{
+										fontSize: 28,
+									}}
+								/>
+							</Button>
 						</div>
+
+						{/* <div className="leftMenu">
+							<LeftMenu mode={"horizontal"} />
+						</div> */}
 						<Button className="menuButton" type="text" onClick={showDrawer}>
 							<MenuOutlined />
 						</Button>
@@ -66,7 +95,7 @@ const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
 							onClose={showDrawer}
 							open={visible}
 							style={{ zIndex: 4 }}>
-							<LeftMenu mode={"inline"} />
+							{/* <LeftMenu mode={"inline"} /> */}
 							<RightMenu mode={"inline"} />
 						</Drawer>
 					</div>

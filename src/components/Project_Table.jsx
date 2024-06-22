@@ -65,7 +65,8 @@ function Project_Table({ showAddProjectDrawer }) {
 					onClick={showAddProjectDrawer}
 					style={{
 						alignSelf: "end",
-						marginBottom: projectTableData.length > 9 ? "" : "1rem",
+						// marginBottom: projectTableData.length > 9 ? "" : "1rem",
+						marginBottom: "1rem",
 						minWidth: "140px",
 						minHeight: "40px",
 					}}
@@ -79,7 +80,7 @@ function Project_Table({ showAddProjectDrawer }) {
 				style={{
 					width: "100%",
 					overflowX: "auto",
-					transform: projectTableData.length > 9 ? "translateY(16px)" : "",
+					// transform: projectTableData.length > 9 ? "translateY(16px)" : "",
 				}}>
 				<Table
 					size="small"

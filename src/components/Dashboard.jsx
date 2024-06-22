@@ -42,9 +42,12 @@ const Dashboard = () => {
 	const toggleVanished = () => {
 		setVanished(!vanished);
 	};
-	if (location.pathname === "/dashboard") {
-		navigate("/dashboard/tasks");
-	}
+
+	useEffect(() => {
+		if (location.pathname == "/dashboard") {
+			navigate("/dashboard/tasks", { replace: true });
+		}
+	});
 	useEffect(() => {
 		const checkIfMobile = () => {
 			if (window.innerWidth <= 640) {

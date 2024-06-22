@@ -23,7 +23,7 @@ import TextEditor from "./components/TextEditor";
 import Project_Table from "./components/Project_Table";
 import Task_Table from "./components/Task_Table";
 import Task_Detail from "./components/Task_Detail";
-import Page_Not_Exist from "./components/Page_Not_Exist";
+import Page_Not_Found from "./components/Page_Not_Found";
 import Project from "./components/Project";
 import Task_Trash from "./components/Task_Trash";
 import Project_Trash from "./components/Project_Trash";
@@ -39,7 +39,7 @@ function App() {
 					element={<Navigate to={"/login"} replace={true} />}></Route>
 				<Route path="/login" element={<Login />}></Route>
 				<Route path="/register" element={<Register />}></Route>
-				<Route path="/page-not-found" element={<Page_Not_Exist />}></Route>
+				<Route path="/page-not-found" element={<Page_Not_Found />}></Route>
 				<Route element={<ProtectedRoute />}>
 					<Route path="/dashboard" element={<Dashboard />}>
 						<Route path="/dashboard/project" element={<Project />}></Route>

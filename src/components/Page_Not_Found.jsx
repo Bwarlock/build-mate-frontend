@@ -1,4 +1,4 @@
-function Page_Not_Exist() {
+function Page_Not_Found() {
 	return (
 		<div
 			style={{
@@ -14,4 +14,4 @@ function Page_Not_Exist() {
 	);
 }
 
-export default Page_Not_Exist;
+export default Page_Not_Found;

@@ -391,7 +391,7 @@ const Task_Trash = () => {
 				style={{
 					width: "100%",
 					overflowX: "auto",
-					transform: "translateY(8px)",
+					// transform: "translateY(8px)",
 				}}>
 				<Table
 					size="small"
