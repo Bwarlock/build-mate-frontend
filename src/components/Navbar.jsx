@@ -72,7 +72,7 @@ const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
 								}}>
 								<PlusCircleOutlined
 									style={{
-										fontSize: 28,
+										fontSize: 32,
 									}}
 								/>
 							</Button>

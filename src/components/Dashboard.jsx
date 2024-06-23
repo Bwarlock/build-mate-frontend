@@ -16,6 +16,7 @@ import {
 	ProfileOutlined,
 	ProjectFilled,
 	ProjectOutlined,
+	SettingOutlined,
 	TeamOutlined,
 	UserOutlined,
 	UserSwitchOutlined,
@@ -183,6 +184,15 @@ const Dashboard = () => {
 					}}
 					key="profile">
 					<Link to="/dashboard/profile">{user?.name || user?.email}</Link>
+				</Menu.Item>
+				<Menu.Item
+					icon={<SettingOutlined />}
+					style={{
+						fontWeight: "bold",
+						minHeight: "40px",
+					}}
+					key="settings">
+					<Link to="/dashboard/settings">Settings</Link>
 				</Menu.Item>
 				<Menu.Item
 					icon={<LogoutOutlined />}

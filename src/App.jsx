@@ -29,6 +29,7 @@ import Task_Trash from "./components/Task_Trash";
 import Project_Trash from "./components/Project_Trash";
 import Project_Detail from "./components/Project_Detail";
 import Profile from "./components/Profile";
+import Settings from "./components/Settings";
 
 function App() {
 	return (
@@ -62,6 +63,7 @@ function App() {
 						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
 						<Route path="/dashboard/documents" element={<Document />}></Route>
 						<Route path="/dashboard/profile" element={<Profile />}></Route>
+						<Route path="/dashboard/settings" element={<Settings />}></Route>
 					</Route>
 					<Route
 						path="/project_detail/:id"

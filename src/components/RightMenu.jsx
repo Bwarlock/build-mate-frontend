@@ -20,6 +20,7 @@ const RightMenu = ({ mode }) => {
 				<span className="menuText">Notification</span>
 			</Menu.Item>
 			<Menu.SubMenu
+				key="profile"
 				title={
 					<>
 						<Avatar icon={<UserOutlined />} />
