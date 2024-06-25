@@ -274,13 +274,13 @@ function Settings() {
 							remember: true,
 						}}>
 						<Form.Item
-							style={{ marginBottom: 36 }}
+							// style={{ marginBottom: 36 }}
 							label="Current Password"
 							name="currentpassword"
 							rules={[]}>
 							<Input.Password />
 						</Form.Item>
-						<Divider />
+						{/* <Divider /> */}
 						<Form.Item
 							// validateTrigger="onBlur"
 							label="New Password"
@@ -319,7 +319,7 @@ function Settings() {
 								}}
 							/>
 						</Form.Item>
-						<Divider />
+						{/* <Divider /> */}
 						<Form.Item
 							label="Confirm new Password"
 							name="confirmpassword"
