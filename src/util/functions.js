@@ -75,3 +75,11 @@ export function getTimeLeftForNextBirthday(birthDate) {
 		return seconds === 1 ? "1 second left" : `${seconds} seconds left`;
 	}
 }
+
+export const getBase64 = (file) =>
+	new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve(reader.result);
+		reader.onerror = (error) => reject(error);
+	});

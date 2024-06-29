@@ -12,8 +12,10 @@ import {
 	Badge,
 	Breadcrumb,
 	Button,
+	DatePicker,
 	Divider,
 	Form,
+	Image,
 	Input,
 	List,
 	Select,
@@ -23,20 +25,80 @@ import {
 	Tooltip,
 } from "antd";
 import Dragger from "antd/es/upload/Dragger";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import {
 	Link,
 	useLocation,
 	useNavigate,
 	useOutletContext,
 } from "react-router-dom";
+import { useGetData } from "../api/hooks";
+import { getBase64 } from "../util/functions";
 
 function Settings() {
 	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const location = useLocation();
 	const navigate = useNavigate();
+	const [formMyProfile] = Form.useForm();
+	const [formPassword] = Form.useForm();
+	const [editingMyProfile, setEditingMyProfile] = useState(false);
+	const [editingPassword, setEditingPassword] = useState(false);
+	const { profileData: profileReduxData, loading: profileLoading } =
+		useSelector((state) => state.profile);
+
+	const profileData = useMemo(() => {
+		return {
+			firstname: profileReduxData?.name?.split(/ (.+)/)[0] ?? "",
+			lastname: profileReduxData?.name?.split(/ (.+)/)[1] ?? "",
+			email: profileReduxData?.email ?? "",
+			phoneNumber: profileReduxData?.phoneNumber ?? "",
+			companyName: profileReduxData?.companyName ?? "",
+			country: "",
+			timezone: "",
+			photo: [],
+		};
+		return profileReduxData?.name?.split(/ (.+)/);
+	}, [profileReduxData]);
+
+	const { getProfile } = useGetData();
+	const [previewOpen, setPreviewOpen] = useState(false);
+	const [previewImage, setPreviewImage] = useState("");
+	const handlePreview = async (file) => {
+		if (!file.url && !file.preview) {
+			file.preview = await getBase64(file.originFileObj);
+		}
+		setPreviewImage(file.url || file.preview);
+		setPreviewOpen(true);
+	};
+	const handlePassword = (yo) => {
+		console.log(yo ? yo : "");
+		formPassword
+			.validateFields()
+			.then(() => {
+				console.log("api not added");
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
+	};
+	const handleMyProfile = (yo) => {
+		console.log(yo ? yo : "");
+		formMyProfile
+			.validateFields()
+			.then(() => {
+				// Check the Image file type coz accept isnt enough
+				console.log("api not added");
+			})
+			.catch((info) => {
+				console.log("Validate Failed:", info);
+			});
+	};
 	useEffect(() => {
 		setShowAddButton(false);
+		if (Object.keys(profileData).length == 0) {
+			getProfile();
+		}
 	}, []);
 	useEffect(() => {
 		if (location.hash == "") {
@@ -47,6 +109,7 @@ function Settings() {
 			navigate("/page-not-found", { replace: true });
 		}
 	});
+
 	const loginData = [
 		{
 			avatar: (
@@ -84,11 +147,13 @@ function Settings() {
 					</div>
 					<Divider />
 					<Form
-						// form={formValidate}
+						form={formMyProfile}
 						name="editProfile"
+						onFinish={handleMyProfile}
 						colon={false}
 						size="large"
 						labelAlign="left"
+						labelWrap={true}
 						labelCol={{ span: 6 }}
 						wrapperCol={{ span: 12 }}
 						style={
@@ -98,8 +163,9 @@ function Settings() {
 								// borderRadius: "10px",
 							}
 						}
-						initialValues={{
-							remember: true,
+						initialValues={profileData}
+						onValuesChange={() => {
+							setEditingMyProfile(true);
 						}}>
 						<Form.Item style={{}} label="Name" rules={[{}]}>
 							<div
@@ -111,13 +177,19 @@ function Settings() {
 								}}>
 								<Form.Item
 									name="firstname"
-									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}>
-									<Input />
+									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}
+									rules={[
+										{
+											required: true,
+											message: "Please input The First Name!",
+										},
+									]}>
+									<Input placeholder="First Name" />
 								</Form.Item>
 								<Form.Item
 									name="lastname"
 									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}>
-									<Input />
+									<Input placeholder="Last Name" />
 								</Form.Item>
 							</div>
 						</Form.Item>
@@ -134,12 +206,32 @@ function Settings() {
 								}}>
 								<Form.Item
 									name="email"
-									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}>
+									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}
+									rules={[
+										{
+											required: true,
+											message: "Please input The Email!",
+										},
+										{
+											type: "email",
+											message: "The input is not a valid email!",
+										},
+									]}>
 									<Input />
 								</Form.Item>
 								<Form.Item
-									name="phone"
-									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}>
+									name="phoneNumber"
+									style={{ flexGrow: 1, minWidth: "168px", margin: 0 }}
+									rules={[
+										{
+											required: true,
+											message: "Please input The Phone Number!",
+										},
+										// {
+										// 	pattern: /^(?:\+\d{1,3})?\d{10}$/,
+										// 	message: "The input is not a valid phoneNumber",
+										// },
+									]}>
 									<Input />
 								</Form.Item>
 							</div>
@@ -147,11 +239,19 @@ function Settings() {
 						<Form.Item
 							style={{}}
 							label="Company Name"
-							name="companyname"
+							name="companyName"
 							rules={[]}>
 							<Input />
 						</Form.Item>
-						<Form.Item style={{}} label="Domain Name" name="domain" rules={[]}>
+						<Form.Item style={{}} label="Date of Birth" name="dob" rules={[]}>
+							<DatePicker
+								showNow={false}
+								style={{
+									width: "100%",
+								}}
+							/>
+						</Form.Item>
+						{/* <Form.Item style={{}} label="Domain Name" name="domain" rules={[]}>
 							<Input
 								suffix={
 									<Tooltip title="Extra information">
@@ -161,10 +261,10 @@ function Settings() {
 									</Tooltip>
 								}
 							/>
-						</Form.Item>
+						</Form.Item> */}
 
 						<Form.Item
-							style={{ marginBottom: 36 }}
+							style={{}}
 							label={
 								<div>
 									<div>Your Photo</div>
@@ -176,36 +276,50 @@ function Settings() {
 									</div>
 								</div>
 							}
-							name="photo"
 							rules={[]}>
 							<div
 								style={{
 									width: "100%",
-									display: "grid",
-									gridTemplateColumns: "80px minmax(0, 1fr)",
 									gap: 16,
 								}}>
-								<Avatar size={80} />
-								<div style={{ minheight: 168 }}>
+								{/* <Avatar size={80} /> */}
+
+								<Form.Item
+									style={{
+										margin: 0,
+									}}
+									valuePropName="fileList"
+									getValueFromEvent={(e) => {
+										console.log(e);
+										return Array.isArray(e) ? e : e?.fileList;
+									}}
+									name="photo">
 									<Dragger
-										style={{}}
-										name="photo"
+										accept={".png,.jpg,.jpeg,.svg,.gif"}
+										onPreview={handlePreview}
+										style={{
+											float: "right",
+											width: "calc(100% - 118px)",
+										}}
+										listType="picture-circle"
 										beforeUpload={() => false}
-										onChange={({ file }) => console.log(file)}
+										// onChange={({ file }) => console.log(file)}
 										maxCount={1}
 										showUploadList={{
 											showRemoveIcon: false,
+											showDownloadIcon: true,
 										}}
-										itemRender={(originNode) => (
-											<div
-												style={{
-													width: "100%",
-													overflow: "hidden",
-													textOverflow: "ellipsis",
-												}}>
-												{originNode}
-											</div>
-										)}>
+										// itemRender={(originNode) => (
+										// 	<div
+										// 		style={{
+										// 			width: "100%",
+										// 			overflow: "hidden",
+										// 			textOverflow: "ellipsis",
+										// 		}}>
+										// 		{originNode}
+										// 	</div>
+										// )}
+									>
 										<div>
 											<p>
 												<CloudUploadOutlined
@@ -218,7 +332,7 @@ function Settings() {
 											<p>SVG, PNG, JPG or GIF (max: 800x400px)</p>
 										</div>
 									</Dragger>
-								</div>
+								</Form.Item>
 							</div>
 						</Form.Item>
 
@@ -237,22 +351,35 @@ function Settings() {
 									gap: 8,
 								}}>
 								<Button
-									onClick={(e) => {
-										e.preventDefault();
-									}}>
+									onClick={() => {
+										setEditingMyProfile(false);
+									}}
+									htmlType="reset">
 									Cancel
 								</Button>
 								<Button
+									disabled={!editingMyProfile}
 									type="primary"
-									htmlType="submit"
-									onClick={(e) => {
-										e.preventDefault();
-									}}>
+									htmlType="submit">
 									Save
 								</Button>
 							</div>
 						</Form.Item>
 					</Form>
+
+					{previewImage && (
+						<Image
+							wrapperStyle={{
+								display: "none",
+							}}
+							preview={{
+								visible: previewOpen,
+								onVisibleChange: (visible) => setPreviewOpen(visible),
+								afterOpenChange: (visible) => !visible && setPreviewImage(""),
+							}}
+							src={previewImage}
+						/>
+					)}
 				</div>
 			),
 		},
@@ -269,48 +396,65 @@ function Settings() {
 					</div>
 					<Divider />
 					<Form
-						// form={formValidate}
+						form={formPassword}
 						name="editPassword"
+						onFinish={handlePassword}
 						colon={false}
 						size="large"
-						// layout="vertical"
 						labelAlign="left"
+						labelWrap={true}
 						labelCol={{ span: 6 }}
 						wrapperCol={{ span: 12 }}
 						style={{}}
-						initialValues={{
-							remember: true,
+						initialValues={{}}
+						onValuesChange={() => {
+							setEditingPassword(true);
 						}}>
 						<Form.Item
-							// style={{ marginBottom: 36 }}
 							label="Current Password"
-							name="currentpassword"
-							rules={[]}>
+							name="currentPassword"
+							rules={[
+								{
+									required: true,
+									message: "Please input your old Password!",
+								},
+							]}>
 							<Input.Password />
 						</Form.Item>
 						{/* <Divider /> */}
 						<Form.Item
 							// validateTrigger="onBlur"
 							label="New Password"
-							name="newpassword"
+							name="newPassword"
 							style={{}}
 							rules={[
 								{
 									required: true,
-									message: "Please input your Password!",
+									message: "Please input your new Password!",
 								},
-								// {
-								// 	pattern:
-								// 		/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/,
-								// 	message:
-								// 		"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
-								// },
-							]}>
+								{
+									pattern:
+										/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,}$/,
+									message:
+										"Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one number, and one special character.",
+								},
+								({ getFieldValue }) => ({
+									validator(_, value) {
+										if (!value || getFieldValue("currentPassword") !== value) {
+											return Promise.resolve();
+										}
+										return Promise.reject(
+											new Error("The new password cannot be the old password!")
+										);
+									},
+								}),
+							]}
+							dependencies={["currentPassword"]}>
 							<Input.Password
 								// onFocus={() => {
-								// 	formValidate.setFields([
+								// 	formPassword.setFields([
 								// 		{
-								// 			name: "password",
+								// 			name: "newPassword",
 								// 			errors: [],
 								// 		},
 								// 	]);
@@ -320,29 +464,30 @@ function Settings() {
 										<InfoCircleOutlined style={{ color: "rgba(0,0,0,.45)" }} />
 									</Tooltip>
 								}
-								onChange={(e) => {
-									// setValues((val) => {
-									// 	return { ...val, password: e.target.value };
-									// });
-								}}
 							/>
 						</Form.Item>
-						{/* <Divider /> */}
 						<Form.Item
 							label="Confirm new Password"
-							name="confirmpassword"
+							name="confirmPassword"
 							style={{}}
 							rules={[
 								{
 									required: true,
-									message: "Please Confirm your Password!",
+									message: "Please Confirm your new Password!",
 								},
-							]}>
-							<Input.Password
-								onChange={(e) => {
-									// setConfirmPass(e.target.value);
-								}}
-							/>
+								({ getFieldValue }) => ({
+									validator(_, value) {
+										if (!value || getFieldValue("newPassword") === value) {
+											return Promise.resolve();
+										}
+										return Promise.reject(
+											new Error("The password that you entered do not match!")
+										);
+									},
+								}),
+							]}
+							dependencies={["newPassword"]}>
+							<Input.Password />
 						</Form.Item>
 						<Form.Item wrapperCol={{}}>
 							<div
@@ -353,17 +498,16 @@ function Settings() {
 									gap: 8,
 								}}>
 								<Button
-									onClick={(e) => {
-										e.preventDefault();
-									}}>
+									onClick={() => {
+										setEditingPassword(false);
+									}}
+									htmlType="reset">
 									Cancel
 								</Button>
 								<Button
+									disabled={!editingPassword}
 									type="primary"
-									htmlType="submit"
-									onClick={(e) => {
-										e.preventDefault();
-									}}>
+									htmlType="submit">
 									Save
 								</Button>
 							</div>

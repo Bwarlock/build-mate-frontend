@@ -61,16 +61,7 @@ function Edit_Staff({ staffProfileData }) {
 			onValuesChange={() => {
 				setEditing(true);
 			}}>
-			<Form.Item
-				style={{}}
-				label="Name"
-				rules={[
-					{
-						required: true,
-						message: "",
-						warningOnly: true,
-					},
-				]}>
+			<Form.Item style={{}} label="Name" rules={[]}>
 				<div
 					style={{
 						width: "100%",
@@ -217,6 +208,7 @@ function Edit_Staff({ staffProfileData }) {
 					]
 				}>
 				<DatePicker
+					showNow={false}
 					style={{
 						width: "100%",
 					}}
@@ -290,8 +282,9 @@ function Edit_Staff({ staffProfileData }) {
 					</Button>
 					<Button
 						onClick={() => {
-							formValidate.setFieldsValue(staffProfileData);
+							setEditing(false);
 						}}
+						htmlType="reset"
 						type="text"
 						style={{
 							fontWeight: 600,

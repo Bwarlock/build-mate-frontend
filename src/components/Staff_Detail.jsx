@@ -92,11 +92,7 @@ function Staff_Detail() {
 		{
 			label: (
 				<>
-					Tasks{" "}
-					<Badge
-						count={taskTableParams[0]?.pagination?.total}
-						color="#00000040"
-					/>
+					Tasks <Badge count={taskTableData?.length ?? 0} color="#00000040" />
 				</>
 			),
 			key: "tasks",
