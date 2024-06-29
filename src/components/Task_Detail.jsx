@@ -19,7 +19,7 @@ import {
 	Pagination,
 	Modal,
 } from "antd";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -45,6 +45,7 @@ import { useDeleteConfirm } from "./Component_Hooks";
 const Task_Detail = () => {
 	//Tasks Route Component
 	const location = useLocation();
+	console.log(useParams());
 	const selectedTask = location.pathname?.split("/")[2] ?? undefined;
 	const [selectedProject, setSelectedProject] = useState();
 
@@ -474,7 +475,6 @@ const Task_Detail = () => {
 				padding: 12,
 				backgroundColor: "gray",
 			}}>
-			<Spin spinning={loading} fullscreen={true} />
 			<Button
 				className="goback-button"
 				icon={<ArrowLeftOutlined />}
@@ -550,302 +550,304 @@ const Task_Detail = () => {
 					}
 				}) || <></>}
 			</Menu>
-
-			<div
-				id="inside"
-				style={{
-					width: collapsed ? "calc(100vw - 104px)" : "calc(100vw - 280px)",
-					height: "calc(100vh - 24px)",
-					overflow: "auto",
-					margin: 0,
-				}}>
+			<Spin spinning={loading}>
 				<div
+					id="inside"
 					style={{
-						width: "100%",
-						minHeight: "calc(100vh - 24px)",
-						padding: "1rem",
-						// borderRadius: 10,
-						backgroundColor: "white",
+						width: collapsed ? "calc(100vw - 104px)" : "calc(100vw - 280px)",
+						height: "calc(100vh - 24px)",
+						overflow: "auto",
+						margin: 0,
 					}}>
-					<Space
-						direction="vertical"
-						size="large"
+					<div
 						style={{
 							width: "100%",
-							position: "relative",
+							minHeight: "calc(100vh - 24px)",
+							padding: "1rem",
+							// borderRadius: 10,
+							backgroundColor: "white",
 						}}>
 						<Space
 							direction="vertical"
-							size="small"
+							size="large"
 							style={{
 								width: "100%",
-								padding: "1rem 1rem 0rem 1rem",
+								position: "relative",
 							}}>
-							<Typography.Title
-								level={2}
+							<Space
+								direction="vertical"
+								size="small"
 								style={{
-									margin: 0,
-									// gap: 50,
-									width: "70%",
-								}}
-								editable={{
-									onChange: (txt) => {
-										setEditing(true);
-										if (txt?.length >= 1) {
-											setValues((val) => {
-												return { ...val, name: txt };
-											});
-										}
-									},
-									icon: (
-										<EditOutlined
-											style={{
-												marginLeft: 8,
-											}}
-										/>
-									),
-								}}
-								copyable={true}>
-								{values?.name}
-							</Typography.Title>
-							<Flex
-								style={{
-									justifyContent: "space-between",
+									width: "100%",
+									padding: "1rem 1rem 0rem 1rem",
 								}}>
-								<Typography.Text
+								<Typography.Title
+									level={2}
 									style={{
-										marginLeft: 12,
-									}}>
-									By {values?.createdBy?.name} , On{" "}
-									{new Date(values?.createdAt)?.toDateString()}
-								</Typography.Text>
-								<Typography.Text
-									style={{
-										marginLeft: 12,
-										transition: "transform 0.2s ease, opacity 0.2s ease",
-									}}>
-									Last Updated on {new Date(values?.updatedAt)?.toDateString()}
-								</Typography.Text>
-							</Flex>
-						</Space>
-						<Divider
-							style={{
-								margin: "8px 0px",
-								backgroundColor: "lightgray",
-							}}
-						/>
-
-						<Collapse
-							collapsible="icon"
-							expandIcon={() => {
-								return (
-									<ConfigProvider
-										theme={{
-											components: {
-												Badge: { statusSize: 12 },
-											},
-										}}>
-										{statusBadge[values?.status]}
-									</ConfigProvider>
-								);
-							}}
-							size="large"
-							items={[
-								{
-									key: "1",
-									label: (
-										<div>
-											<div
-												style={{
-													fontSize: "24px",
-												}}>
-												{values?.status?.charAt(0).toUpperCase() +
-													values?.status?.slice(1)}
-												<Dropdown
-													menu={{
-														items: statusDropdown,
-														selectable: true,
-														selectedKeys: [values?.status],
-														onSelect: ({ key }) => {
-															setEditing(true);
-															setValues((val) => {
-																return { ...val, status: key };
-															});
-														},
-													}}
-													trigger={["click"]}>
-													<DownOutlined
-														style={{ fontSize: 20, marginLeft: 4 }}
-													/>
-												</Dropdown>
-											</div>
-											<div
-												style={{
-													fontSize: "12px",
-													width: "50%",
-													textWrap: "nowrap",
-													textOverflow: "ellipsis",
-													overflow: "hidden",
-												}}>
-												Current Status
-											</div>
-										</div>
-									),
-									children: (
-										<Segmented
-											style={{
-												marginLeft: 30,
-												flexWrap: "wrap",
-												textWrap: "wrap",
-											}}
-											value={values?.status}
-											options={statusDropdown}
-											onChange={(value) => {
-												setEditing(true);
+										margin: 0,
+										// gap: 50,
+										width: "70%",
+									}}
+									editable={{
+										onChange: (txt) => {
+											setEditing(true);
+											if (txt?.length >= 1) {
 												setValues((val) => {
-													return { ...val, status: value };
+													return { ...val, name: txt };
 												});
-											}}></Segmented>
-									),
-								},
-							]}></Collapse>
+											}
+										},
+										icon: (
+											<EditOutlined
+												style={{
+													marginLeft: 8,
+												}}
+											/>
+										),
+									}}
+									copyable={true}>
+									{values?.name}
+								</Typography.Title>
+								<Flex
+									style={{
+										justifyContent: "space-between",
+									}}>
+									<Typography.Text
+										style={{
+											marginLeft: 12,
+										}}>
+										By {values?.createdBy?.name} , On{" "}
+										{new Date(values?.createdAt)?.toDateString()}
+									</Typography.Text>
+									<Typography.Text
+										style={{
+											marginLeft: 12,
+											transition: "transform 0.2s ease, opacity 0.2s ease",
+										}}>
+										Last Updated on{" "}
+										{new Date(values?.updatedAt)?.toDateString()}
+									</Typography.Text>
+								</Flex>
+							</Space>
+							<Divider
+								style={{
+									margin: "8px 0px",
+									backgroundColor: "lightgray",
+								}}
+							/>
 
-						<Collapse
-							// collapsible="icon"
-							size="large"
-							items={[
-								{
-									key: "1",
-									label: (
-										<div>
-											<div
-												style={{
-													fontSize: "24px",
-												}}>
-												Description
+							<Collapse
+								collapsible="icon"
+								expandIcon={() => {
+									return (
+										<ConfigProvider
+											theme={{
+												components: {
+													Badge: { statusSize: 12 },
+												},
+											}}>
+											{statusBadge[values?.status]}
+										</ConfigProvider>
+									);
+								}}
+								size="large"
+								items={[
+									{
+										key: "1",
+										label: (
+											<div>
+												<div
+													style={{
+														fontSize: "24px",
+													}}>
+													{values?.status?.charAt(0).toUpperCase() +
+														values?.status?.slice(1)}
+													<Dropdown
+														menu={{
+															items: statusDropdown,
+															selectable: true,
+															selectedKeys: [values?.status],
+															onSelect: ({ key }) => {
+																setEditing(true);
+																setValues((val) => {
+																	return { ...val, status: key };
+																});
+															},
+														}}
+														trigger={["click"]}>
+														<DownOutlined
+															style={{ fontSize: 20, marginLeft: 4 }}
+														/>
+													</Dropdown>
+												</div>
+												<div
+													style={{
+														fontSize: "12px",
+														width: "50%",
+														textWrap: "nowrap",
+														textOverflow: "ellipsis",
+														overflow: "hidden",
+													}}>
+													Current Status
+												</div>
 											</div>
-											<div
+										),
+										children: (
+											<Segmented
 												style={{
-													fontSize: "12px",
-													width: "50%",
-													textWrap: "nowrap",
-													textOverflow: "ellipsis",
-													overflow: "hidden",
+													marginLeft: 30,
+													flexWrap: "wrap",
+													textWrap: "wrap",
+												}}
+												value={values?.status}
+												options={statusDropdown}
+												onChange={(value) => {
+													setEditing(true);
+													setValues((val) => {
+														return { ...val, status: value };
+													});
+												}}></Segmented>
+										),
+									},
+								]}></Collapse>
+
+							<Collapse
+								// collapsible="icon"
+								size="large"
+								items={[
+									{
+										key: "1",
+										label: (
+											<div>
+												<div
+													style={{
+														fontSize: "24px",
+													}}>
+													Description
+												</div>
+												<div
+													style={{
+														fontSize: "12px",
+														width: "50%",
+														textWrap: "nowrap",
+														textOverflow: "ellipsis",
+														overflow: "hidden",
+													}}>
+													{values?.description}
+												</div>
+											</div>
+										),
+										children: (
+											<Typography.Paragraph
+												copyable={true}
+												editable={{
+													onChange: (txt) => {
+														setEditing(true);
+														if (txt?.length >= 1) {
+															setValues((val) => {
+																return { ...val, description: txt };
+															});
+														}
+													},
+													icon: (
+														<EditOutlined
+															style={{
+																marginLeft: 8,
+															}}
+														/>
+													),
+												}}
+												style={{
+													marginLeft: 30,
+													marginBottom: 0,
 												}}>
 												{values?.description}
+											</Typography.Paragraph>
+										),
+									},
+								]}></Collapse>
+							<Collapse
+								// collapsible="icon"
+								defaultActiveKey={["1"]}
+								contentPadding={2}
+								size="large"
+								items={[
+									{
+										key: "1",
+										label: (
+											<div
+												style={{
+													fontSize: "24px",
+												}}>
+												Task Information
 											</div>
-										</div>
-									),
-									children: (
-										<Typography.Paragraph
-											copyable={true}
-											editable={{
-												onChange: (txt) => {
-													setEditing(true);
-													if (txt?.length >= 1) {
-														setValues((val) => {
-															return { ...val, description: txt };
-														});
-													}
-												},
-												icon: (
-													<EditOutlined
-														style={{
-															marginLeft: 8,
-														}}
-													/>
-												),
-											}}
-											style={{
-												marginLeft: 30,
-												marginBottom: 0,
-											}}>
-											{values?.description}
-										</Typography.Paragraph>
-									),
-								},
-							]}></Collapse>
-						<Collapse
-							// collapsible="icon"
-							defaultActiveKey={["1"]}
-							contentPadding={2}
-							size="large"
-							items={[
-								{
-									key: "1",
-									label: (
-										<div
-											style={{
-												fontSize: "24px",
-											}}>
-											Task Information
-										</div>
-									),
-									children: (
-										<Descriptions
-											responsive={true}
-											style={{}}
-											// title="User Info"
-											bordered={true}
-											items={taskInformation}
-										/>
-									),
-								},
-							]}></Collapse>
+										),
+										children: (
+											<Descriptions
+												responsive={true}
+												style={{}}
+												// title="User Info"
+												bordered={true}
+												items={taskInformation}
+											/>
+										),
+									},
+								]}></Collapse>
 
-						<Tabs
-							defaultActiveKey="comment"
-							tabPosition="top"
-							style={{ minHeight: 240, padding: "0px 16px" }}
-							items={taskTabs}
-						/>
+							<Tabs
+								defaultActiveKey="comment"
+								tabPosition="top"
+								style={{ minHeight: 240, padding: "0px 16px" }}
+								items={taskTabs}
+							/>
 
-						<div
-							style={{
-								width: "50%",
-								position: "absolute",
-								top: 0,
-								right: 0,
-								display: "flex",
-								justifyContent: "end",
-								flexWrap: "wrap",
-								gap: 8,
-							}}>
-							<Button
-								onClick={handleSave}
-								size="large"
-								type="primary"
-								disabled={!editing}>
-								Save
-							</Button>
-							<Button
-								onClick={handleTaskValue}
-								size="large"
-								disabled={!editing}
-								type="primary"
-								danger>
-								Reset
-							</Button>
-							<Button
-								icon={<DeleteOutlined />}
-								size="large"
-								danger
-								onClick={() => {
-									showTaskDeleteConfirm(values?._id, () => {
+							<div
+								style={{
+									width: "50%",
+									position: "absolute",
+									top: 0,
+									right: 0,
+									display: "flex",
+									justifyContent: "end",
+									flexWrap: "wrap",
+									gap: 8,
+								}}>
+								<Button
+									onClick={handleSave}
+									size="large"
+									type="primary"
+									disabled={!editing}>
+									Save
+								</Button>
+								<Button
+									onClick={handleTaskValue}
+									size="large"
+									disabled={!editing}
+									type="primary"
+									danger>
+									Reset
+								</Button>
+								<Button
+									icon={<DeleteOutlined />}
+									size="large"
+									danger
+									onClick={() => {
+										showTaskDeleteConfirm(values?._id, () => {
+											navigate(-1);
+										});
+									}}></Button>
+								<Button
+									onClick={() => {
 										navigate(-1);
-									});
-								}}></Button>
-							<Button
-								onClick={() => {
-									navigate(-1);
-								}}
-								size="large">
-								Cancel
-							</Button>
-						</div>
-					</Space>
+									}}
+									size="large">
+									Cancel
+								</Button>
+							</div>
+						</Space>
+					</div>
 				</div>
-			</div>
+			</Spin>
 		</div>
 	);
 };

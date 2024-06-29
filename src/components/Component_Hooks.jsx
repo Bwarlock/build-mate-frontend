@@ -1,5 +1,5 @@
 import { Button, Modal, Space, Tag, Tooltip } from "antd";
-import { useDeleteData } from "../api/hooks";
+import { useDeleteData, useGetData } from "../api/hooks";
 import {
 	DeleteFilled,
 	ExclamationCircleFilled,
@@ -59,6 +59,7 @@ export const useDeleteConfirm = () => {
 export const useTableColumns = () => {
 	const { showTaskDeleteConfirm, showProjectDeleteConfirm } =
 		useDeleteConfirm();
+	const { getUserProfile } = useGetData();
 
 	const taskTableColumns = [
 		// TODO: add ID column
@@ -449,9 +450,9 @@ export const useTableColumns = () => {
 			ellipsis: {
 				showTitle: false,
 			},
-			render: (name) => (
-				<Tooltip placement="topLeft" title={name}>
-					<a>{name}</a>
+			render: (text, record) => (
+				<Tooltip placement="topLeft" title={text}>
+					<Link to={`/dashboard/staff_detail/${record?._id}`}>{text}</Link>
 				</Tooltip>
 			),
 		},

@@ -252,8 +252,8 @@ GetDocuments.v1 = function v1(params) {
 };
 
 // Check if a domain is active, to be used on login page, before rendering the login form
-export function CheckDomain(id) {
-	return CheckDomain.v1(id);
+export function CheckDomain(params) {
+	return CheckDomain.v1(params);
 }
 
 CheckDomain.v1 = function v1(params) {
@@ -261,5 +261,27 @@ CheckDomain.v1 = function v1(params) {
 		method: "get",
 		url: `/domain/is-domain-active`,
 		params: params,
+	});
+};
+
+export function GetProfile() {
+	return GetProfile.v1();
+}
+
+GetProfile.v1 = function v1() {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/user/me`,
+	});
+};
+
+export function GetUserProfile(id) {
+	return GetUserProfile.v1(id);
+}
+
+GetUserProfile.v1 = function v1(id) {
+	return AuthAxiosInstance({
+		method: "get",
+		url: `/user/profile/${id}`,
 	});
 };

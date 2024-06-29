@@ -226,14 +226,14 @@ body {
 	padding-bottom: 0px;
 }
 
-.navbar-menu .leftMenu {
+.leftMenu {
 	float: left;
 }
 
-.navbar-menu .rightMenu {
+.rightMenu {
+	display: block;
 	float: right;
 	min-width: 200px;
-	/* width: "max-content"; */
 }
 
 .menuButton {
@@ -279,10 +279,12 @@ body {
 		display: block;
 		margin-right: 10px;
 	}
-	.navbar-menu .rightMenu {
+	.rightMenu {
 		display: none;
+		max-width: 0px;
+		overflow: hidden;
 	}
-	.navbar-menu .leftMenu {
+	.leftMenu {
 		display: none;
 	}
 
@@ -321,3 +323,34 @@ body {
 	flex-direction: column;
 	padding: 1rem;
 }
+
+.notification-submenu {
+	width: 300px;
+}
+/* .profile-edit-form .ant-form-item-label {
+	position: absolute;
+	top: 50%;
+	left: 10px;
+	transform: translateY(-50%);
+	pointer-events: none;
+	transition: 0.2s ease all;
+	padding: 0px;
+	z-index: 2;
+}
+
+.profile-edit-form .ant-form-item-no-colon {
+	color: #aaa !important;
+}
+.profile-edit-form .ant-form-item {
+	position: relative;
+}
+.profile-edit-form input:focus + .ant-form-item-label {
+	position: absolute;
+	top: 4px;
+	left: 10px;
+	font-size: x-small;
+	pointer-events: none;
+	transition: 0.2s ease all;
+	padding: 0px;
+	z-index: 2;
+} */

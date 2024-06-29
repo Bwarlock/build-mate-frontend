@@ -30,6 +30,8 @@ import Project_Trash from "./components/Project_Trash";
 import Project_Detail from "./components/Project_Detail";
 import Profile from "./components/Profile";
 import Settings from "./components/Settings";
+import User_Profile from "./components/User_Profile";
+import Staff_Detail from "./components/Staff_Detail";
 
 function App() {
 	return (
@@ -62,13 +64,17 @@ function App() {
 						<Route path="/dashboard/add_staff" element={<Add_Staff />}></Route>
 						<Route path="/dashboard/add_task" element={<Add_Task />}></Route> */}
 						<Route path="/dashboard/documents" element={<Document />}></Route>
-						<Route path="/dashboard/profile" element={<Profile />}></Route>
+						<Route path="/dashboard/profile" element={<User_Profile />}></Route>
 						<Route path="/dashboard/settings" element={<Settings />}></Route>
+						<Route
+							path="/dashboard/staff_detail/:id"
+							element={<Staff_Detail />}></Route>
 					</Route>
 					<Route
 						path="/project_detail/:id"
 						element={<Project_Detail />}></Route>
 					<Route path="/task_detail/:id" element={<Task_Detail />}></Route>
+
 					<Route
 						path="/dashboard/documents/:id"
 						element={<TextEditor />}></Route>

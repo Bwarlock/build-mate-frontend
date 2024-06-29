@@ -7,9 +7,11 @@ import { setStaffTableParams } from "../store/staffSlice";
 import { horizontalScroll } from "../util/functions";
 import { DeleteFilled } from "@ant-design/icons";
 import { useTableColumns } from "./Component_Hooks";
+import { useOutletContext } from "react-router-dom";
 
 const Staff = () => {
 	//Column Titles
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const { staffTableColumns } = useTableColumns();
 	const [openAddStaffDrawer, setOpenAddStaffDrawer] = useState(false);
 	const showAddStaffDrawer = () => {
@@ -44,7 +46,10 @@ const Staff = () => {
 		if (!staffTableData.length) {
 			getStaff();
 		}
-
+		setDrawerOpener(() => {
+			return showAddStaffDrawer;
+		});
+		setShowAddButton(true);
 		// return horizontalScroll();
 	}, []);
 	return (

@@ -2,7 +2,7 @@ import { Button, Checkbox, ConfigProvider, Form, Input, Radio } from "antd";
 import { useEffect, useState } from "react";
 import { useAddData } from "../api/hooks";
 import { Card, Flex, Modal, Pagination, Spin, Tooltip } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import RefIcon from "@ant-design/icons/lib/icons/AppstoreAddOutlined";
 import {
 	DeleteFilled,
@@ -16,8 +16,10 @@ import {
 import { useDeleteData, useGetData } from "../api/hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { setDocumentView } from "../store/documentSlice";
+import { enterKeyEvent } from "../util/functions";
 
 const Document = () => {
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const { addDocument } = useAddData();
 	const [values, setValues] = useState({
 		title: "",
@@ -26,6 +28,7 @@ const Document = () => {
 		writeUsers: [],
 	});
 	const handleSubmit = () => {
+		console.log(values.title, values.title && 1);
 		if (values.title) {
 			addDocument(values);
 		} else {
@@ -47,6 +50,10 @@ const Document = () => {
 	};
 	const hideModal = () => {
 		setShowAddDocument(false);
+	};
+	const handleOK = () => {
+		hideModal();
+		handleSubmit();
 	};
 	const handlePageChange = (page, pageSize) => {
 		getDocuments(
@@ -71,6 +78,10 @@ const Document = () => {
 		if (!documentTableData.length) {
 			getDocuments();
 		}
+		setDrawerOpener(() => {
+			return showModal;
+		});
+		setShowAddButton(true);
 	}, []);
 	const handleViewChange = (e) => {
 		dispatch(setDocumentView(e.target.value));
@@ -95,6 +106,11 @@ const Document = () => {
 	const handleDeleteDocument = (id) => {
 		// deleteProject(id);
 	};
+	useEffect(() => {
+		//doesnt work for some reason
+		// return enterKeyEvent(showAddDocument, handleOK)
+	}, [showAddDocument]);
+
 	return (
 		<div
 			className="insideOutlet"
@@ -321,16 +337,15 @@ const Document = () => {
 				okType="primary"
 				closable={true}
 				maskClosable={true}
-				onOk={() => {
-					hideModal();
-					handleSubmit();
-				}}
+				keyboard={true}
+				onOk={handleOK}
 				onCancel={hideModal}>
 				<Input
 					placeholder="Document Title"
 					value={values.title}
 					maxLength={56}
 					onChange={(e) => {
+						console.log(values.title);
 						setValues((val) => {
 							return { ...val, title: e.target.value };
 						});
@@ -338,16 +353,6 @@ const Document = () => {
 				/>
 			</Modal>
 		</div>
-	);
-
-	return (
-		// TODO: add list of docs here
-		<>
-			{/* Ask title and to add users in a popup */}
-			<Button type="primary" htmlType="submit" onClick={handleSubmit}>
-				Create new Document
-			</Button>
-		</>
 	);
 };
 export default Document;

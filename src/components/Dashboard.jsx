@@ -25,6 +25,8 @@ import Navbar from "./Navbar";
 
 const Dashboard = () => {
 	//Dashboard Route Component
+	const [drawerOpener, setDrawerOpener] = useState();
+	const [showAddButton, setShowAddButton] = useState(true);
 	const [collapsed, setCollapsed] = useState(false);
 	const [vanished, setVanished] = useState(false);
 	const logout = useLogout();
@@ -34,7 +36,7 @@ const Dashboard = () => {
 	const { user } = useSelector((state) => state.global);
 	const handleLogout = () => {
 		logout();
-		navigate("/login");
+		// navigate("/login");
 	};
 	const toggleCollapsed = () => {
 		setCollapsed(!collapsed);
@@ -242,8 +244,19 @@ const Dashboard = () => {
 					collapsed={collapsed}
 					toggleCollapsed={toggleCollapsed}
 					toggleVanished={toggleVanished}
+					drawerOpener={drawerOpener}
+					showAddButton={showAddButton}
 				/>
-				<Outlet context={{ vanished, collapsed, setVanished, setCollapsed }} />
+				<Outlet
+					context={{
+						vanished,
+						collapsed,
+						setVanished,
+						setCollapsed,
+						setDrawerOpener,
+						setShowAddButton,
+					}}
+				/>
 			</div>
 			{/* </Layout> */}
 		</div>

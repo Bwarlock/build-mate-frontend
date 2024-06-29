@@ -9,7 +9,7 @@ function Page_Not_Found() {
 				alignItems: "center",
 				minHeight: "100vh",
 			}}>
-			404 Page Does Not Exist
+			404 Page Not Found
 		</div>
 	);
 }

@@ -23,10 +23,11 @@ import {
 	ExclamationCircleFilled,
 	UndoOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { AuthAxiosInstance } from "../api/axios";
 
 const Task_Trash = () => {
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const columns = [
 		// TODO: add ID column
 		// Manipulate the API response in the hooks to include the ID
@@ -235,6 +236,7 @@ const Task_Trash = () => {
 		if (!taskTableData.length) {
 			getTrashTasks();
 		}
+		setShowAddButton(false);
 		// return horizontalScroll();
 	}, []);
 	return (

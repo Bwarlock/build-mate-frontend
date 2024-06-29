@@ -22,6 +22,8 @@ import {
 	UpdateProject,
 	RestoreTask,
 	RestoreProject,
+	GetProfile,
+	GetUserProfile,
 } from "./api";
 import { useDispatch, useSelector } from "react-redux";
 import { clearGlobal, storeUser } from "../store/globalSlice";
@@ -81,6 +83,11 @@ import {
 	setDocumentTotal,
 	storeDocumentTable,
 } from "../store/documentSlice";
+import {
+	clearProfile,
+	profileLoading,
+	storeProfileData,
+} from "../store/profileSlice";
 
 // Api Hooks For Redirect and Other React Logic
 
@@ -105,6 +112,7 @@ export const useLogin = () => {
 
 export const useLogout = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	function logout() {
 		dispatch(clearGlobal());
 		dispatch(clearClient());
@@ -112,7 +120,9 @@ export const useLogout = () => {
 		dispatch(clearTask());
 		dispatch(clearProject());
 		dispatch(clearDocument());
+		dispatch(clearProfile());
 		localStorage.clear();
+		navigate("/login");
 	}
 	return logout;
 };
@@ -583,7 +593,7 @@ export const useGetData = () => {
 	function getDocument(id) {
 		GetDocument.v1(id)
 			.then((res) => {
-				console.log(res);
+				// console.log(res);
 			})
 			.catch((e) => {
 				// Navigate to documents page if the document is not found
@@ -604,7 +614,6 @@ export const useGetData = () => {
 		}
 		GetDocuments.v1(params)
 			.then((res) => {
-				console.log(res);
 				if (res?.data?.documents?.length ?? null) {
 					dispatch(
 						storeDocumentTable(
@@ -613,7 +622,6 @@ export const useGetData = () => {
 							})
 						)
 					);
-					console.log("inside");
 					dispatch(setDocumentTotal(res.data?.count ?? 200));
 				} else {
 					dispatch(storeDocumentTable([]));
@@ -649,6 +657,38 @@ export const useGetData = () => {
 				}, 5000);
 			});
 	}
+	function getProfile() {
+		dispatch(profileLoading(true));
+		GetProfile.v1()
+			.then((res) => {
+				if (res?.data?.user ?? null) {
+					console.log(res?.data?.user);
+					dispatch(storeProfileData(res?.data?.user));
+				} else {
+					dispatch(storeClientTable({}));
+				}
+				dispatch(profileLoading(false));
+			})
+			.catch((e) => {
+				dispatch(profileLoading(false));
+				message.error(
+					e.response?.data?.message ||
+						"There was an error while fetching the profile data. Please try again or contact support."
+				);
+			});
+	}
+	function getUserProfile(id) {
+		GetUserProfile.v1(id)
+			.then((res) => {
+				console.log(res?.data);
+			})
+			.catch((e) => {
+				message.error(
+					e.response?.data?.message ||
+						"There was an error while fetching the profile data. Please try again or contact support."
+				);
+			});
+	}
 
 	return {
 		getClients,
@@ -664,6 +704,8 @@ export const useGetData = () => {
 		getDocument,
 		getDocuments,
 		checkDomain,
+		getProfile,
+		getUserProfile,
 	};
 };
 

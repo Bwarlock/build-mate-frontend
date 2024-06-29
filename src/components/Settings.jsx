@@ -24,12 +24,20 @@ import {
 } from "antd";
 import Dragger from "antd/es/upload/Dragger";
 import React, { useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+	Link,
+	useLocation,
+	useNavigate,
+	useOutletContext,
+} from "react-router-dom";
 
 function Settings() {
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const location = useLocation();
 	const navigate = useNavigate();
-
+	useEffect(() => {
+		setShowAddButton(false);
+	}, []);
 	useEffect(() => {
 		if (location.hash == "") {
 			navigate("/dashboard/settings#my-profile", { replace: true });
@@ -74,12 +82,12 @@ function Settings() {
 						<h2 style={{ margin: 0 }}>Personal info</h2>
 						<div>Update your photo and presonal details here</div>
 					</div>
+					<Divider />
 					<Form
 						// form={formValidate}
 						name="editProfile"
 						colon={false}
 						size="large"
-						// layout="vertical"
 						labelAlign="left"
 						labelCol={{ span: 6 }}
 						wrapperCol={{ span: 12 }}

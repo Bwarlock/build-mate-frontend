@@ -6,10 +6,11 @@ import Add_Task from "./Add_Task";
 import { setTaskTableParams } from "../store/taskSlice";
 import { horizontalScroll } from "../util/functions";
 import { DeleteFilled, ExclamationCircleFilled } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { useDeleteConfirm, useTableColumns } from "./Component_Hooks";
 
 const Task_Table = () => {
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const [openAddTaskDrawer, setOpenAddTaskDrawer] = useState(false);
 	const { taskTableColumns } = useTableColumns();
 	const showAddTaskDrawer = () => {
@@ -46,6 +47,10 @@ const Task_Table = () => {
 		if (!taskTableData?.length) {
 			getTasks();
 		}
+		setDrawerOpener(() => {
+			return showAddTaskDrawer;
+		});
+		setShowAddButton(true);
 		// return horizontalScroll();
 	}, []);
 	return (

@@ -4,13 +4,15 @@ import Add_Project from "./Add_Project";
 import { setProjectView } from "../store/projectSlice";
 import { TableOutlined } from "@ant-design/icons";
 import RefIcon from "@ant-design/icons/lib/icons/AppstoreAddOutlined";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Project_Table from "./Project_Table";
 import Project_Card from "./Project_Card";
+import { useOutletContext } from "react-router-dom";
 
 //Need To Modularize the Table And Card
 //Also with all other components
 function Project() {
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const [openAddProjectDrawer, setOpenAddProjectDrawer] = useState(false);
 	const dispatch = useDispatch();
 	const { view: projectView } = useSelector((state) => state.project);
@@ -26,7 +28,12 @@ function Project() {
 	const handleViewChange = (e) => {
 		dispatch(setProjectView(e.target.value));
 	};
-
+	useEffect(() => {
+		setDrawerOpener(() => {
+			return showAddProjectDrawer;
+		});
+		setShowAddButton(true);
+	}, []);
 	return (
 		<>
 			<Drawer

@@ -7,9 +7,11 @@ import { horizontalScroll } from "../util/functions";
 import { setClientTableParams } from "../store/clientSlice";
 import { DeleteFilled } from "@ant-design/icons";
 import { useTableColumns } from "./Component_Hooks";
+import { useOutletContext } from "react-router-dom";
 
 const Clients = () => {
 	//Column Titles
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
 	const { clientTableColumns } = useTableColumns();
 	const [openAddClientDrawer, setOpenAddClientDrawer] = useState(false);
 	const showAddClientDrawer = () => {
@@ -45,7 +47,10 @@ const Clients = () => {
 		if (!clientTableData.length) {
 			getClients();
 		}
-
+		setDrawerOpener(() => {
+			return showAddClientDrawer;
+		});
+		setShowAddButton(true);
 		// return horizontalScroll();
 	}, []);
 	return (

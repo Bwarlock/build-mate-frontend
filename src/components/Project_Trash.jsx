@@ -21,10 +21,13 @@ import {
 	ExclamationCircleFilled,
 	UndoOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
+import { useTableColumns } from "./Component_Hooks";
 
 function Project_Trash() {
 	//Projects Page Component
+	const { setDrawerOpener, setShowAddButton } = useOutletContext();
+
 	const columns = [
 		// TODO: add ID column
 		// Manipulate the API response in the hooks to include the ID
@@ -261,7 +264,7 @@ function Project_Trash() {
 		if (!projectTableData.length) {
 			getTrashProjects();
 		}
-
+		setShowAddButton(false);
 		// return horizontalScroll();
 	}, []);
 

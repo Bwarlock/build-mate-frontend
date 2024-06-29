@@ -16,6 +16,7 @@ import staffReducer from "./staffSlice";
 import taskReducer from "./taskSlice";
 import projectReducer from "./projectSlice";
 import documentReducer from "./documentSlice";
+import profileReducer from "./profileSlice";
 
 const persistConfig = {
 	key: "root",
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
 	task: taskReducer,
 	project: projectReducer,
 	document: documentReducer,
+	profile: profileReducer,
 });
 
 // Store Definition

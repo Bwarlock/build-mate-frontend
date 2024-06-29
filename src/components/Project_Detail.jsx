@@ -746,7 +746,6 @@ const Project_Detail = () => {
 				padding: 12,
 				backgroundColor: "gray",
 			}}>
-			<Spin spinning={loading} fullscreen={true} />
 			<Button
 				className="goback-button"
 				icon={<ArrowLeftOutlined />}
@@ -815,73 +814,74 @@ const Project_Detail = () => {
 					);
 				}) || <></>}
 			</Menu>
-
-			<div
-				id="inside"
-				style={{
-					width: collapsed ? "calc(100vw - 104px)" : "calc(100vw - 280px)",
-					height: "calc(100vh - 24px)",
-					overflow: "auto",
-					margin: 0,
-				}}>
+			<Spin spinning={loading}>
 				<div
+					id="inside"
 					style={{
-						width: "100%",
-						minHeight: "calc(100vh - 24px)",
-						// borderRadius: 10,
-						backgroundColor: "white",
-						position: "relative",
-						padding: "1rem",
+						width: collapsed ? "calc(100vw - 104px)" : "calc(100vw - 280px)",
+						height: "calc(100vh - 24px)",
+						overflow: "auto",
+						margin: 0,
 					}}>
-					<Tabs
-						defaultActiveKey="information"
-						tabPosition="top"
-						style={{ minHeight: 240, padding: "0px 16px" }}
-						items={projectTabs}
-						tabBarExtraContent={
-							<div
-								style={{
-									display: "flex",
-									flexWrap: "wrap",
-									gap: 8,
-									marginBottom: 8,
-								}}>
-								<Button
-									onClick={handleSave}
-									size="large"
-									type="primary"
-									disabled={!editing}>
-									Save
-								</Button>
-								<Button
-									onClick={handleProjectValue}
-									size="large"
-									disabled={!editing}
-									type="primary"
-									danger>
-									Reset
-								</Button>
-								<Button
-									icon={<DeleteOutlined />}
-									size="large"
-									danger
-									onClick={() => {
-										showProjectDeleteConfirm(values?._id, () => {
+					<div
+						style={{
+							width: "100%",
+							minHeight: "calc(100vh - 24px)",
+							// borderRadius: 10,
+							backgroundColor: "white",
+							position: "relative",
+							padding: "1rem",
+						}}>
+						<Tabs
+							defaultActiveKey="information"
+							tabPosition="top"
+							style={{ minHeight: 240, padding: "0px 16px" }}
+							items={projectTabs}
+							tabBarExtraContent={
+								<div
+									style={{
+										display: "flex",
+										flexWrap: "wrap",
+										gap: 8,
+										marginBottom: 8,
+									}}>
+									<Button
+										onClick={handleSave}
+										size="large"
+										type="primary"
+										disabled={!editing}>
+										Save
+									</Button>
+									<Button
+										onClick={handleProjectValue}
+										size="large"
+										disabled={!editing}
+										type="primary"
+										danger>
+										Reset
+									</Button>
+									<Button
+										icon={<DeleteOutlined />}
+										size="large"
+										danger
+										onClick={() => {
+											showProjectDeleteConfirm(values?._id, () => {
+												navigate(-1);
+											});
+										}}></Button>
+									<Button
+										onClick={() => {
 											navigate(-1);
-										});
-									}}></Button>
-								<Button
-									onClick={() => {
-										navigate(-1);
-									}}
-									size="large">
-									Cancel
-								</Button>
-							</div>
-						}
-					/>
+										}}
+										size="large">
+										Cancel
+									</Button>
+								</div>
+							}
+						/>
+					</div>
 				</div>
-			</div>
+			</Spin>
 		</div>
 	);
 };

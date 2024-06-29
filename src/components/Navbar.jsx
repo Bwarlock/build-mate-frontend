@@ -5,17 +5,27 @@ import RightMenu from "./RightMenu";
 import {
 	CaretLeftFilled,
 	CaretRightFilled,
+	MenuFoldOutlined,
 	MenuOutlined,
+	MenuUnfoldOutlined,
 	PlusCircleOutlined,
 } from "@ant-design/icons";
 import { useLocation } from "react-router-dom";
+import { useLogout } from "../api/hooks";
 
-const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
+const Navbar = ({
+	vanished,
+	collapsed,
+	toggleCollapsed,
+	toggleVanished,
+	drawerOpener,
+	showAddButton,
+}) => {
 	const [visible, setVisible] = useState(false);
 	const showDrawer = () => {
 		setVisible(!visible);
 	};
-
+	
 	// If you do not want to auto-close the mobile drawer when a path is selected
 	// Delete or comment out the code block below
 	// From here
@@ -54,6 +64,8 @@ const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
 										? toggleVanished()
 										: toggleCollapsed();
 								}}
+								type="text"
+								size="large"
 								style={
 									{
 										// transition: "all 0.3s cubic-bezier(0.2, 0, 0, 1) 0s",
@@ -61,21 +73,28 @@ const Navbar = ({ vanished, collapsed, toggleCollapsed, toggleVanished }) => {
 									}
 								}
 								icon={
-									vanished ? <CaretRightFilled /> : <CaretLeftFilled />
+									vanished ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />
 								}></Button>
-							<Button
-								type="link"
-								style={{
-									padding: 0,
-									margin: "auto",
-									marginLeft: "16px",
-								}}>
-								<PlusCircleOutlined
-									style={{
-										fontSize: 32,
+							{showAddButton && (
+								<Button
+									onClick={() => {
+										drawerOpener();
 									}}
-								/>
-							</Button>
+									type="link"
+									style={{
+										padding: 0,
+										margin: "auto",
+										marginLeft: "8px",
+									}}
+									size="large"
+									icon={
+										<PlusCircleOutlined
+											style={{
+												fontSize: 24,
+											}}
+										/>
+									}></Button>
+							)}
 						</div>
 
 						{/* <div className="leftMenu">
